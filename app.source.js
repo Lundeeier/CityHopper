@@ -486,6 +486,9 @@ var O = {
       new_password_placeholder: "Nytt passord",
       save_new_password: "Lagre nytt passord",
       note_placeholder: "Hvordan var det? Skriv et notat",
+      crash_title: "Noe gikk galt",
+      crash_body: "Appen st\xF8tte p\xE5 en uventet feil. Last inn p\xE5 nytt for \xE5 pr\xF8ve igjen.",
+      crash_reload: "Last inn p\xE5 nytt",
       nav_profile: "Profil",
       my_profile: "Min profil",
       profile_bio: "Om meg",
@@ -656,6 +659,9 @@ var O = {
       new_password_placeholder: "New password",
       save_new_password: "Save new password",
       note_placeholder: "How was it? Leave a note",
+      crash_title: "Something went wrong",
+      crash_body: "The app hit an unexpected error. Reload to try again.",
+      crash_reload: "Reload",
       nav_profile: "Profile",
       my_profile: "My profile",
       profile_bio: "About me",
@@ -828,6 +834,9 @@ var O = {
       new_password_placeholder: "Nieuw wachtwoord",
       save_new_password: "Nieuw wachtwoord opslaan",
       note_placeholder: "Hoe was het? Schrijf een notitie",
+      crash_title: "Er ging iets mis",
+      crash_body: "De app liep tegen een onverwachte fout aan. Herlaad om het opnieuw te proberen.",
+      crash_reload: "Herladen",
       nav_profile: "Profiel",
       my_profile: "Mijn profiel",
       profile_bio: "Over mij",
@@ -2317,8 +2326,20 @@ function ChChat({ meId, user, onClose }) {
   }
   ((0, U.useEffect)(() => {
     load();
-    let t = setInterval(load, 8e3);
-    return () => clearInterval(t);
+    let ch = ze
+      .channel(`chat-${meId}-${other}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (ev) => {
+        let m = ev.new;
+        m &&
+          ((m.sender_id === meId && m.recipient_id === other) ||
+            (m.sender_id === other && m.recipient_id === meId)) &&
+          load();
+      })
+      .subscribe();
+    let t = setInterval(load, 3e4);
+    return () => {
+      (clearInterval(t), ze.removeChannel(ch));
+    };
   }, [meId, other]),
     (0, U.useEffect)(() => {
       try {
@@ -2727,8 +2748,17 @@ function n5({ session: e, onLogout: t }) {
   }
   (0, U.useEffect)(() => {
     chLoadBell();
-    let F = setInterval(chLoadBell, 3e4);
-    return () => clearInterval(F);
+    let F = e.user.id,
+      te = ze
+        .channel(`bell-${F}`)
+        .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, () => chLoadBell())
+        .on("postgres_changes", { event: "*", schema: "public", table: "friends" }, () => chLoadBell())
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "visits" }, () => chLoadBell())
+        .subscribe(),
+      Se = setInterval(chLoadBell, 12e4);
+    return () => {
+      (clearInterval(Se), ze.removeChannel(te));
+    };
   }, [e.user.id]);
   async function chAddPhoto(F) {
     let te = [...(F.target.files || [])];
@@ -5280,6 +5310,67 @@ function d5({ onDone: e }) {
     ],
   });
 }
+class ChBoundary extends U.Component {
+  constructor(props) {
+    (super(props), (this.state = { dead: !1 }));
+  }
+  static getDerivedStateFromError() {
+    return { dead: !0 };
+  }
+  componentDidCatch(err) {
+    console.error("CityHopper:", err);
+  }
+  render() {
+    let lang = "no";
+    try {
+      lang = localStorage.getItem("ch_lang") || "no";
+    } catch {}
+    return this.state.dead
+      ? (0, T.jsxs)("div", {
+          style: {
+            background: O.bg,
+            color: O.text,
+            minHeight: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 14,
+            padding: 28,
+            textAlign: "center",
+            fontFamily: "'Inter', system-ui, sans-serif",
+          },
+          children: [
+            (0, T.jsx)("div", {
+              style: { fontSize: 20, fontWeight: 700 },
+              children: P(lang, "crash_title"),
+            }),
+            (0, T.jsx)("div", {
+              style: { color: O.sub, fontSize: 15, maxWidth: 340, lineHeight: 1.5 },
+              children: P(lang, "crash_body"),
+            }),
+            (0, T.jsx)("button", {
+              onClick: () => window.location.reload(),
+              style: {
+                background: O.accent,
+                color: O.accentInk,
+                border: "none",
+                borderRadius: 4,
+                fontFamily: "inherit",
+                fontSize: 16,
+                fontWeight: 600,
+                padding: "13px 26px",
+                marginTop: 6,
+                cursor: "pointer",
+              },
+              children: P(lang, "crash_reload"),
+            }),
+          ],
+        })
+      : this.props.children;
+  }
+}
+
 function f5() {
   let [e, t] = (0, U.useState)(void 0),
     [n, i] = (0, U.useState)(!1);
@@ -5312,4 +5403,4 @@ function f5() {
           : (0, T.jsx)(h5, {})
   );
 }
-(0, r8.createRoot)(document.getElementById("root")).render((0, T.jsx)(f5, {}));
+(0, r8.createRoot)(document.getElementById("root")).render((0, T.jsx)(ChBoundary, { children: (0, T.jsx)(f5, {}) }));

@@ -4,6 +4,7 @@
 import { build } from "esbuild";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, copyFile, rm } from "node:fs/promises";
+import { spawn } from "node:child_process";
 
 const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
 
@@ -18,6 +19,11 @@ await build({
   target: "es2020",
   define: { "process.env.NODE_ENV": '"production"' },
   outfile: "dist/app.js",
+});
+
+await new Promise((ok, no) => {
+  const t = spawn(process.execPath, ["smoke.mjs"], { stdio: "inherit" });
+  t.on("exit", (code) => (code === 0 ? ok() : no(new Error("Røyktesten feilet — publiserer ikke."))));
 });
 
 const bundle = await readFile("dist/app.js");

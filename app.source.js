@@ -1088,9 +1088,15 @@ async function ChPostTown(postcode, country) {
     let hit = res && res[0];
     if (hit) {
       let a = hit.address || {},
-        raw = a.city || a.town || a.village || a.municipality || null,
+        raw = a.city || a.town || a.village || null,
         name = raw ? d8(raw) : null;
-      name && (out = { place: name, lat: +hit.lat, lng: +hit.lon });
+      // Aldri bytt et stedsnavn mot navnet paa kommunen eller fylket det ligger i.
+      (name &&
+        (ChFold(name) === ChFold(a.municipality || "\u0000") ||
+          ChFold(name) === ChFold(a.county || "\u0000") ||
+          ChFold(name) === ChFold(a.state || "\u0000")) &&
+        (name = null),
+        name && (out = { place: name, lat: +hit.lat, lng: +hit.lon }));
     }
   } catch {}
   Ch_POST_CACHE.set(key, out);
@@ -1118,9 +1124,15 @@ async function e5(e, t) {
           v = d8(g, e, h === "municipality"),
           y = o8(f);
         if (!v || !y) return;
-        let m = (v + y).toLowerCase();
-        l.some((k) => (k.place + k.country).toLowerCase() === m) ||
-          l.push({ place: v, country: y, lat: +c.lat, lng: +c.lon, postcode: f.postcode || null });
+        let m = ChKey(v, y);
+        l.some((k) => ChKey(k.place, k.country) === m) ||
+          l.push({
+            place: ChCanon(v, y),
+            country: y,
+            lat: +c.lat,
+            lng: +c.lon,
+            postcode: f.postcode || null,
+          });
       }),
       l.length)
     )
@@ -1278,7 +1290,7 @@ var Ch_ALIAS = [
   ["GR", ["Thessaloniki", "Saloniki", "Thessalonica", "Salonika"]],
   ["GR", ["Iraklio", "Heraklion", "Iraklion"]],
   ["GR", ["Kerkyra", "Corfu", "Korfu"]],
-  ["GR", ["Rodos", "Rhodes", "Rhodos"]],
+  ["GR", ["Rhodos", "Rodos", "Rhodes"]],
   ["GR", ["Chania", "Hania", "Canea"]],
   ["GR", ["Patra", "Patras"]],
   ["GR", ["Thira", "Santorini", "Fira"]],

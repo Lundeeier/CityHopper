@@ -488,6 +488,7 @@ var O = {
       save_new_password: "Lagre nytt passord",
       note_placeholder: "Hvordan var det? Skriv et notat",
       favorite_city: "Min favorittby",
+      settings_title: "Innstillinger",
       favorite_city_other: "Favorittby",
       change_choice: "Endre",
       choose_place: "Velg sted",
@@ -670,6 +671,7 @@ var O = {
       save_new_password: "Save new password",
       note_placeholder: "How was it? Leave a note",
       favorite_city: "My favourite city",
+      settings_title: "Settings",
       favorite_city_other: "Favourite city",
       change_choice: "Change",
       choose_place: "Choose place",
@@ -854,6 +856,7 @@ var O = {
       save_new_password: "Nieuw wachtwoord opslaan",
       note_placeholder: "Hoe was het? Schrijf een notitie",
       favorite_city: "Mijn favoriete stad",
+      settings_title: "Instellingen",
       favorite_city_other: "Favoriete stad",
       change_choice: "Wijzigen",
       choose_place: "Kies plaats",
@@ -2070,7 +2073,7 @@ function ChAvatar({ url, name, size = 40, onClick }) {
       });
 }
 
-function ChPanel({ title, onClose, children, hideBack: chHB }) {
+function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
   return (0, T.jsxs)("div", {
     className: "ch-sheet",
     style: {
@@ -2081,7 +2084,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB }) {
       bottom: "calc(78px + env(safe-area-inset-bottom))",
       maxWidth: 620,
       margin: "0 auto",
-      zIndex: 800,
+      zIndex: 1100,
       background: O.bg,
       color: O.text,
       display: "flex",
@@ -2118,6 +2121,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB }) {
             style: { fontSize: 17, fontWeight: 700, flex: 1, minWidth: 0 },
             children: title,
           }),
+          chAct || null,
         ],
       }),
       (0, T.jsx)("div", { style: { flex: 1, overflowY: "auto", padding: 16 }, children }),
@@ -2342,6 +2346,97 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
   });
 }
 
+function ChSettings({ meId, onClose, onLogout }) {
+  let [lang, setLang] = Un(),
+    [priv, setPriv] = (0, U.useState)(!1),
+    [msgOnly, setMsgOnly] = (0, U.useState)(!1),
+    [note, setNote] = (0, U.useState)("");
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    return (
+      (async () => {
+        let { data: pr } = await ze
+          .from("profiles")
+          .select("profile_private, messages_friends_only")
+          .eq("id", meId)
+          .maybeSingle();
+        alive && pr && (setPriv(!!pr.profile_private), setMsgOnly(!!pr.messages_friends_only));
+      })(),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [meId]);
+  async function save(patch) {
+    setNote("");
+    let { error } = await ze.from("profiles").update(patch).eq("id", meId);
+    setNote(error ? P(lang, "err_save_profile") : P(lang, "profile_saved"));
+  }
+  return (0, T.jsxs)(ChPanel, {
+    title: P(lang, "settings_title"),
+    onClose,
+    children: [
+      (0, T.jsx)(ChToggle, {
+        label: P(lang, "profile_private_label"),
+        checked: priv,
+        onChange: (v) => {
+          (setPriv(v), save({ profile_private: v }));
+        },
+      }),
+      (0, T.jsx)(ChToggle, {
+        label: P(lang, "msg_friends_only_label"),
+        checked: msgOnly,
+        onChange: (v) => {
+          (setMsgOnly(v), save({ messages_friends_only: v }));
+        },
+      }),
+      note && (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "6px 0 0" }, children: note }),
+      (0, T.jsx)("div", {
+        style: { display: "flex", gap: 8, margin: "24px 0 0", borderTop: `1px solid ${O.line}`, paddingTop: 20 },
+        children: ["no", "en", "nl"].map((code) =>
+          (0, T.jsx)(
+            "button",
+            {
+              onClick: () => setLang(code),
+              style: {
+                flex: 1,
+                background: "none",
+                border: `1px solid ${lang === code ? O.nav : O.line}`,
+                borderRadius: 4,
+                color: lang === code ? O.nav : O.sub,
+                fontFamily: "inherit",
+                fontSize: 14,
+                fontWeight: lang === code ? 600 : 400,
+                padding: "11px 0",
+                cursor: "pointer",
+              },
+              children: code.toUpperCase(),
+            },
+            code,
+          ),
+        ),
+      }),
+      onLogout &&
+        (0, T.jsx)("button", {
+          onClick: onLogout,
+          style: {
+            width: "100%",
+            marginTop: 14,
+            background: "none",
+            border: `1px solid ${O.line}`,
+            borderRadius: 4,
+            color: O.sub,
+            fontFamily: "inherit",
+            fontSize: 15,
+            padding: "13px 0",
+            cursor: "pointer",
+          },
+          children: P(lang, "logout"),
+        }),
+    ],
+  });
+}
+
 function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
   let [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
@@ -2470,6 +2565,35 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
   return (0, T.jsx)(ChPanel, {
     title: mine ? P(lang, "my_profile") : name || P(lang, "nav_profile"),
     hideBack: mine,
+    action: mine
+      ? (0, T.jsx)("button", {
+          onClick: () => onOpen({ type: "settings" }),
+          "aria-label": P(lang, "settings_title"),
+          style: {
+            background: "none",
+            border: "none",
+            padding: 4,
+            lineHeight: 0,
+            cursor: "pointer",
+            flex: "0 0 auto",
+          },
+          children: (0, T.jsxs)("svg", {
+            width: 22,
+            height: 22,
+            viewBox: "0 0 24 24",
+            fill: "none",
+            children: [
+              (0, T.jsx)("circle", { cx: "12", cy: "12", r: "3.2", stroke: O.sub, strokeWidth: "1.6" }),
+              (0, T.jsx)("path", {
+                d: "M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2L5.6 5.6",
+                stroke: O.sub,
+                strokeWidth: "1.6",
+                strokeLinecap: "round",
+              }),
+            ],
+          }),
+        })
+      : null,
     onClose,
     children: loading
       ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
@@ -2545,16 +2669,6 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
                               style: { color: O.sub, fontSize: 12, margin: "4px 0 10px", textAlign: "right" },
                               children: P(lang, "chars_left", { n: 180 - bio.length }),
                             }),
-                            (0, T.jsx)(ChToggle, {
-                              label: P(lang, "profile_private_label"),
-                              checked: priv,
-                              onChange: setPriv,
-                            }),
-                            (0, T.jsx)(ChToggle, {
-                              label: P(lang, "msg_friends_only_label"),
-                              checked: msgOnly,
-                              onChange: setMsgOnly,
-                            }),
                             (0, T.jsx)("div", { style: { height: 10 } }),
                             (0, T.jsx)("button", {
                               className: "ch-primary",
@@ -2562,54 +2676,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
                               disabled: busy,
                               children: busy ? P(lang, "saving") : P(lang, "save_changes"),
                             }),
-                            (0, T.jsx)("div", {
-                              style: {
-                                display: "flex",
-                                gap: 8,
-                                margin: "22px 0 0",
-                                borderTop: `1px solid ${O.line}`,
-                                paddingTop: 16,
-                              },
-                              children: ["no", "en", "nl"].map((code) =>
-                                (0, T.jsx)(
-                                  "button",
-                                  {
-                                    onClick: () => setLang(code),
-                                    style: {
-                                      flex: 1,
-                                      background: "none",
-                                      border: `1px solid ${lang === code ? O.nav : O.line}`,
-                                      borderRadius: 4,
-                                      color: lang === code ? O.nav : O.sub,
-                                      fontFamily: "inherit",
-                                      fontSize: 14,
-                                      fontWeight: lang === code ? 600 : 400,
-                                      padding: "10px 0",
-                                      cursor: "pointer",
-                                    },
-                                    children: code.toUpperCase(),
-                                  },
-                                  code,
-                                ),
-                              ),
-                            }),
-                            onLogout &&
-                              (0, T.jsx)("button", {
-                                onClick: onLogout,
-                                style: {
-                                  width: "100%",
-                                  marginTop: 12,
-                                  background: "none",
-                                  border: `1px solid ${O.line}`,
-                                  borderRadius: 4,
-                                  color: O.sub,
-                                  fontFamily: "inherit",
-                                  fontSize: 15,
-                                  padding: "12px 0",
-                                  cursor: "pointer",
-                                },
-                                children: P(lang, "logout"),
-                              }),
+
                           ],
                         })
                       : (0, T.jsxs)(T.Fragment, {
@@ -3415,7 +3482,7 @@ function n5({ session: e, onLogout: t }) {
         .ch * { box-sizing: border-box; }
         .ch { font-family: 'Inter', system-ui, sans-serif; max-width: 620px; margin: 0 auto;
           padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
-        .ch-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; display: flex;
+        .ch-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; display: flex;
           max-width: 620px; margin: 0 auto; background: ${O.bar};
           border-top: 1px solid ${O.line}; padding-bottom: env(safe-area-inset-bottom); }
         .ch-navbtn { flex: 1; background: none; border: none; font-family: inherit; cursor: pointer;
@@ -3583,7 +3650,9 @@ function n5({ session: e, onLogout: t }) {
                     "button",
                     {
                       className: "ch-navbtn",
-                      onClick: () => s(F),
+                      onClick: () => {
+                        (chSetView(null), s(F));
+                      },
                       "aria-label": te,
                       children: [
                         (0, T.jsx)("span", {
@@ -3618,7 +3687,9 @@ function n5({ session: e, onLogout: t }) {
                     {
                       className: "ch-navbtn",
                       "data-on": r === F,
-                      onClick: () => s(F),
+                      onClick: () => {
+                        (chSetView(null), s(F));
+                      },
                       children: [
                         (0, T.jsx)("span", { className: "ch-navicon", children: ChNavIcon(F, r === F) }),
                         (0, T.jsx)("span", { className: "ch-navtxt", "data-on": r === F, children: te }),
@@ -3864,10 +3935,16 @@ function n5({ session: e, onLogout: t }) {
               uid: chView.id,
               meId: e.user.id,
               onOpen: chSetView,
-              onLogout: chView.id === e.user.id ? t : null,
               onClose: () => {
                 (chSetView(null), chLoadBell());
               },
+            }),
+          chView &&
+            chView.type === "settings" &&
+            (0, T.jsx)(ChSettings, {
+              meId: e.user.id,
+              onLogout: t,
+              onClose: () => chSetView({ type: "profile", id: e.user.id }),
             }),
           chView &&
             chView.type === "chat" &&

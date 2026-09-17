@@ -1090,6 +1090,19 @@ function d8(e, t, n) {
 }
 var Ch_POST_CACHE = new Map();
 
+/* Kartdataene gir hvert sted en fast id (type + nummer). To innsjekker med
+   samme id er samme sted, uansett hvilket spraak navnet er skrevet paa.
+   Mangler id-en - som paa eldre innsjekker - faller vi tilbake paa navnet. */
+function ChOsm(hit) {
+  return hit && hit.osm_type && hit.osm_id
+    ? String(hit.osm_type).charAt(0).toUpperCase() + String(hit.osm_id)
+    : null;
+}
+
+function ChKeyOf(v) {
+  return v && v.osm_id ? "#" + v.osm_id : ChKey(v ? v.place : "", v ? v.country : "");
+}
+
 function ChDistKm(lat1, lng1, lat2, lng2) {
   if ([lat1, lng1, lat2, lng2].some((v) => typeof v != "number" || !isFinite(v))) return null;
   let R = 6371,
@@ -1133,7 +1146,7 @@ async function ChPostTown(postcode, country) {
           ChFold(name) === ChFold(a.county || "\u0000") ||
           ChFold(name) === ChFold(a.state || "\u0000")) &&
         (name = null),
-        name && (out = { place: name, lat: +hit.lat, lng: +hit.lon }));
+        name && (out = { place: name, lat: +hit.lat, lng: +hit.lon, osm: ChOsm(hit) }));
     }
   } catch {}
   Ch_POST_CACHE.set(key, out);
@@ -1153,7 +1166,7 @@ async function ChResolveList(list, onUpdate) {
     if (!hit || !ChPostOk(hit, it.lat, it.lng)) continue;
     let name = ChCanon(hit.place, it.country);
     if (ChKey(name, it.country) === ChKey(it.place, it.country)) continue;
-    ((out[i] = { ...it, place: name }), (changed = !0));
+    ((out[i] = { ...it, place: name, osm: hit.osm || it.osm }), (changed = !0));
   }
   if (!changed) return;
   let seen = new Set(),
@@ -1194,6 +1207,7 @@ async function e5(e, t) {
             lat: +c.lat,
             lng: +c.lon,
             postcode: f.postcode || null,
+            osm: ChOsm(c),
           });
       }),
       l.length)
@@ -1220,7 +1234,7 @@ async function f8(e, t) {
       s = ChRollUp(r, i.addresstype || i.type, i.name || h8(r, null)),
       l = d8(s),
       c = o8(r);
-    if (l && c) return { place: l, country: c, postcode: r.postcode || null };
+    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i) };
   } catch {}
   return await wf(
     `Koordinatene ${e}, ${t}. Hvilken by eller hvilket tettsted og land er dette? Bruk norske landnavn. Svar kun med JSON, ingen annen tekst: {"place":"stedsnavn","country":"land"}`,
@@ -1292,7 +1306,7 @@ var Ch_ALIAS = [
   ["CH", ["Neuchâtel", "Neuchatel", "Neuenburg"]],
   ["CH", ["Sion", "Sitten"]],
   ["CH", ["Biel", "Bienne"]],
-  ["CY", ["Nicosia", "Nikosia", "Lefkosia"]],
+  ["CY", ["Nicosia", "Nikosia", "Lefkosia", "Lefkoşa", "Lefkosa"]],
   ["CY", ["Limassol", "Lemesos"]],
   ["CY", ["Larnaca", "Larnaka"]],
   ["CY", ["Paphos", "Pafos"]],
@@ -2322,7 +2336,7 @@ function ChProfile({ uid, meId, onClose, onOpen }) {
                                   {
                                     className: "ch-item",
                                     children: (0, T.jsxs)("button", {
-                                      onClick: () => onOpen({ type: "feed", place: v.place, country: v.country }),
+                                      onClick: () => onOpen({ type: "feed", place: v.place, country: v.country, osm: v.osm_id || null }),
                                       style: {
                                         flex: 1,
                                         display: "flex",
@@ -2533,7 +2547,7 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
         if (friendIds.length && me && me.seen_feed_at) {
           let { data: vs } = await ze
             .from("visits")
-            .select("id, user_id, place, country, created_at")
+            .select("id, user_id, place, country, created_at, osm_id")
             .in("user_id", friendIds)
             .gt("created_at", me.seen_feed_at)
             .order("created_at", { ascending: !1 })
@@ -2578,7 +2592,7 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
             out.push({
               key: "c" + v.id,
               user: u,
-              open: { type: "feed", place: v.place, country: v.country },
+              open: { type: "feed", place: v.place, country: v.country, osm: v.osm_id || null },
               text: P(lang, "notif_checkin", { name: u ? u.username : "", place: v.place }),
             });
           }));
@@ -2637,17 +2651,17 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
   });
 }
 
-function ChPlaceFeed({ place, country, meId, onClose, onOpen }) {
+function ChPlaceFeed({ place, country, osm, meId, onClose, onOpen }) {
   let [lang] = Un(),
     [rows, setRows] = (0, U.useState)(null),
-    key = ChKey(place, country),
+    key = osm ? "#" + osm : ChKey(place, country),
     title = ChCanon(place, country);
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
       (async () => {
         let { data: vs } = await ze.from("visits").select("*").eq("country", country);
-        let mine = (vs || []).filter((v) => ChKey(v.place, v.country) === key);
+        let mine = (vs || []).filter((v) => ChKeyOf(v) === key);
         let ids = [...new Set(mine.map((v) => v.user_id))],
           people = new Map();
         if (ids.length) {
@@ -2784,6 +2798,7 @@ function n5({ session: e, onLogout: t }) {
     [chRate, chSetRate] = (0, U.useState)(null),
     [chPhotos, chSetPhotos] = (0, U.useState)([]),
     [chBusy, chSetBusy] = (0, U.useState)(!1),
+    [chOsm, chSetOsm] = (0, U.useState)(null),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
     [chBell, chSetBell] = (0, U.useState)(0);
@@ -2877,12 +2892,12 @@ function n5({ session: e, onLogout: t }) {
         (te ? D(P(n, "err_load_list")) : c(F || []), f(!1));
       })();
     }, []));
-  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP }) {
+  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP, osm: chO }) {
     let gt = (F || "").trim(),
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
     if (
-      l.some((Hn) => ChKey(Hn.place, Hn.country) === ChKey(gt, dn))
+      l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, osm_id: chOsm }))
     )
       return P(n, "err_already_logged", { place: gt });
     let { data: Zn, error: Qr } = await ze
@@ -2896,6 +2911,7 @@ function n5({ session: e, onLogout: t }) {
         comment: chC ?? null,
         rating: chR ?? null,
         photos: chP ?? [],
+        osm_id: chO ?? null,
       })
       .select()
       .single();
@@ -2910,12 +2926,13 @@ function n5({ session: e, onLogout: t }) {
       comment: chNote.trim() ? chNote.trim().slice(0, 160) : null,
       rating: chRate,
       photos: chPhotos,
+      osm: chOsm,
     });
     if (F) {
       D(F);
       return;
     }
-    (D(""), v(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), s("oversikt"));
+    (D(""), v(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
   }
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
@@ -2933,6 +2950,7 @@ function n5({ session: e, onLogout: t }) {
               dn = yf(gt.country) || "",
               Zn = gt.postcode ? await ChPostTown(gt.postcode, dn) : null;
             (v((ChPostOk(Zn, Se, at) && Zn.place) || gt.place || ""),
+              chSetOsm((ChPostOk(Zn, Se, at) && Zn.osm) || gt.osm || null),
               m(dn),
               S(P(n, "status_confirm_and_checkin")));
           } catch {
@@ -3421,12 +3439,18 @@ function n5({ session: e, onLogout: t }) {
                 (0, T.jsx)(i5, {
                   value: g,
                   country: y,
-                  onChange: v,
+                  onChange: (F) => (v(F), chSetOsm(null)),
                   onPick: async (F) => {
-                    (v(F.place), F.country && m(F.country), F.lat != null && A({ lat: F.lat, lng: F.lng }));
+                    (v(F.place),
+                      F.country && m(F.country),
+                      F.lat != null && A({ lat: F.lat, lng: F.lng }),
+                      chSetOsm(F.osm || null));
                     if (!F.postcode) return;
                     let te = await ChPostTown(F.postcode, F.country || y);
-                    te && te.place !== F.place && ChPostOk(te, F.lat, F.lng) && v(te.place);
+                    te &&
+                      te.place !== F.place &&
+                      ChPostOk(te, F.lat, F.lng) &&
+                      (v(te.place), chSetOsm(te.osm || F.osm || null));
                   },
                   onEnter: W,
                 }),
@@ -3499,6 +3523,7 @@ function n5({ session: e, onLogout: t }) {
             (0, T.jsx)(ChPlaceFeed, {
               place: chView.place,
               country: chView.country,
+              osm: chView.osm || null,
               meId: e.user.id,
               onOpen: chSetView,
               onClose: () => chSetView(null),
@@ -4207,7 +4232,7 @@ function s5({ session: e, onOpen: chOpen }) {
     [v, y] = (0, U.useState)("");
   (0, U.useEffect)(() => {
     (async () => {
-      let { data: N, error: M } = await ze.from("visits").select("user_id, country, place, rating");
+      let { data: N, error: M } = await ze.from("visits").select("user_id, country, place, rating, osm_id");
       if (M) {
         (y(P(t, "err_load_leaderboard")), r(!1));
         return;
@@ -4285,13 +4310,14 @@ function s5({ session: e, onOpen: chOpen }) {
     return (
       s.forEach((M) => {
         if (M.country !== f || M.rating == null) return;
-        let I = ChKey(M.place, M.country);
-        N.has(I) || N.set(I, { name: ChCanon(M.place, M.country), sum: 0, n: 0 });
+        let I = ChKeyOf(M);
+        N.has(I) || N.set(I, { name: ChCanon(M.place, M.country), sum: 0, n: 0, osm: M.osm_id || null });
         let Z = N.get(I);
+        ChCanon(M.place, M.country) !== M.place && (Z.name = ChCanon(M.place, M.country));
         ((Z.sum += Number(M.rating)), (Z.n += 1));
       }),
       [...N.entries()]
-        .map(([M, I]) => ({ id: M, name: I.name, avg: I.sum / I.n, n: I.n }))
+        .map(([M, I]) => ({ id: M, name: I.name, avg: I.sum / I.n, n: I.n, osm: I.osm }))
         .sort((M, I) => I.avg - M.avg || I.n - M.n || M.name.localeCompare(I.name, "nb"))
     );
   }, [s, f]);
@@ -4327,7 +4353,7 @@ function s5({ session: e, onOpen: chOpen }) {
                       children: [Z + 1, "."],
                     }),
                     (0, T.jsxs)("button", {
-                      onClick: () => chOpen && chOpen({ type: "feed", place: I.name, country: f }),
+                      onClick: () => chOpen && chOpen({ type: "feed", place: I.name, country: f, osm: I.osm }),
                       style: {
                         flex: 1,
                         minWidth: 0,

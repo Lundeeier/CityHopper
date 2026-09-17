@@ -346,19 +346,20 @@ function l8(e) {
   return t ? t.flag || s8(t.code) : "\u{1F30D}";
 }
 var O = {
-    bg: "#0F1B2E",
-    bar: "#0A1420",
-    row: "#172A44",
-    gap: "#0B1522",
+    bg: "#0B1524",
+    bar: "#16263C",
+    row: "#132338",
+    gap: "#0B1524",
     text: "#EDF2F9",
     sub: "#8CA0BE",
     accent: "#FFB238",
     accentInk: "#241505",
-    line: "#28405F",
+    line: "#1E3048",
     warn: "#F2665A",
-    land: "#233A57",
+    land: "#22384F",
     border: "#4C6D93",
-    brass: "#FFB238",
+    brass: "#45C4B0",
+    nav: "#45C4B0",
   },
   yf = (e) => e && e.charAt(0).toUpperCase() + e.slice(1),
   _c = {
@@ -486,6 +487,8 @@ var O = {
       new_password_placeholder: "Nytt passord",
       save_new_password: "Lagre nytt passord",
       note_placeholder: "Hvordan var det? Skriv et notat",
+      search_places: "S\xF8k etter sted",
+      tab_top: "Topplister",
       crash_title: "Noe gikk galt",
       crash_body: "Appen st\xF8tte p\xE5 en uventet feil. Last inn p\xE5 nytt for \xE5 pr\xF8ve igjen.",
       crash_reload: "Last inn p\xE5 nytt",
@@ -659,6 +662,8 @@ var O = {
       new_password_placeholder: "New password",
       save_new_password: "Save new password",
       note_placeholder: "How was it? Leave a note",
+      search_places: "Search places",
+      tab_top: "Leaderboards",
       crash_title: "Something went wrong",
       crash_body: "The app hit an unexpected error. Reload to try again.",
       crash_reload: "Reload",
@@ -834,6 +839,8 @@ var O = {
       new_password_placeholder: "Nieuw wachtwoord",
       save_new_password: "Nieuw wachtwoord opslaan",
       note_placeholder: "Hoe was het? Schrijf een notitie",
+      search_places: "Zoek plaatsen",
+      tab_top: "Ranglijsten",
       crash_title: "Er ging iets mis",
       crash_body: "De app liep tegen een onverwachte fout aan. Herlaad om het opnieuw te proberen.",
       crash_reload: "Herladen",
@@ -916,31 +923,37 @@ function P(e, t, n) {
     r
   );
 }
-function c8({ size: e = 26 }) {
+function c8({ size: e = 30 }) {
+  let t = e / 30;
   return (0, T.jsxs)("svg", {
-    width: e,
+    width: e * 1.25,
     height: e,
-    viewBox: "0 0 28 28",
+    viewBox: "0 0 38 30",
     fill: "none",
-    "aria-hidden": "true",
+    "aria-hidden": !0,
+    style: { display: "block", flex: "0 0 auto" },
     children: [
-      (0, T.jsx)("circle", { cx: "5", cy: "21", r: "2", fill: O.sub }),
       (0, T.jsx)("path", {
-        d: "M5 21 Q14 6 21 10",
-        stroke: O.sub,
-        strokeWidth: "1.6",
-        strokeDasharray: "1 3.4",
-        strokeLinecap: "round",
+        d: "M6 21 Q12 7 18 21",
         fill: "none",
+        stroke: O.accent,
+        strokeWidth: 2.2 / t > 3 ? 2.2 : 2.2,
+        strokeLinecap: "round",
       }),
       (0, T.jsx)("path", {
-        d: "M21 4.5c-3.3 0-6 2.6-6 6 0 4.6 6 10.5 6 10.5s6-5.9 6-10.5c0-3.4-2.7-6-6-6z",
-        fill: O.accent,
+        d: "M18 21 Q24 10 30 21",
+        fill: "none",
+        stroke: O.nav,
+        strokeWidth: 2.2,
+        strokeLinecap: "round",
       }),
-      (0, T.jsx)("circle", { cx: "21", cy: "10.5", r: "2.1", fill: O.bar }),
+      (0, T.jsx)("circle", { cx: "6", cy: "22", r: "3", fill: O.border }),
+      (0, T.jsx)("circle", { cx: "18", cy: "22", r: "3", fill: O.nav }),
+      (0, T.jsx)("circle", { cx: "30", cy: "22", r: "4", fill: O.accent }),
     ],
   });
 }
+
 var i8 = (e, t) => ({ x: ((t + 180) / 360) * Wr, y: ((90 - e) / 180) * qo }),
   Yy = (e, t) => ({ lat: 90 - (t / qo) * 180, lng: (e / Wr) * 360 - 180 });
 async function wf() {
@@ -1516,7 +1529,7 @@ function ChStar({ frac: e, size: t }) {
   });
 }
 
-function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang: r = "no" }) {
+function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang: r = "no", compact: chC = !1 }) {
   let s = (0, U.useRef)(null),
     l = (0, U.useRef)(!1);
   function c(h) {
@@ -1559,11 +1572,12 @@ function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang:
           fontFamily: "'Space Grotesk', monospace",
           fontSize: n > 24 ? 18 : 14,
           color: e == null ? O.sub : O.accent,
-          minWidth: 42,
+          minWidth: chC ? 34 : 42,
         },
         children: e == null ? "\u2013" : Number(e).toFixed(2),
       }),
       !i &&
+        !chC &&
         e != null &&
         (0, T.jsx)("button", {
           onClick: () => t(null),
@@ -1930,6 +1944,61 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
 }
 
 
+function ChNavIcon(name, on) {
+  let c = on ? O.nav : O.sub,
+    w = on ? 1.9 : 1.6;
+  return name === "oversikt"
+    ? (0, T.jsxs)("svg", {
+        width: 22,
+        height: 22,
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          (0, T.jsx)("path", { d: "M4 7h16", stroke: c, strokeWidth: w, strokeLinecap: "round" }),
+          (0, T.jsx)("path", { d: "M4 12h16", stroke: c, strokeWidth: w, strokeLinecap: "round" }),
+          (0, T.jsx)("path", { d: "M4 17h16", stroke: c, strokeWidth: w, strokeLinecap: "round" }),
+        ],
+      })
+    : name === "kart"
+      ? (0, T.jsx)("svg", {
+          width: 22,
+          height: 22,
+          viewBox: "0 0 24 24",
+          fill: "none",
+          children: (0, T.jsx)("path", {
+            d: "M9 18l-5 2.5V6L9 3.5 15 6l5-2.5V18l-5 2.5L9 18zM9 3.5V18M15 6v14.5",
+            stroke: c,
+            strokeWidth: w,
+            strokeLinejoin: "round",
+          }),
+        })
+      : name === "topplister"
+        ? (0, T.jsx)("svg", {
+            width: 22,
+            height: 22,
+            viewBox: "0 0 24 24",
+            fill: "none",
+            children: (0, T.jsx)("path", {
+              d: "M7 4h10v5a5 5 0 01-10 0V4zM12 14v4M8 21h8M7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3",
+              stroke: c,
+              strokeWidth: w,
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+            }),
+          })
+        : (0, T.jsxs)("svg", {
+            width: 22,
+            height: 22,
+            viewBox: "0 0 24 24",
+            fill: "none",
+            children: [
+              (0, T.jsx)("circle", { cx: "9", cy: "8", r: "3.2", stroke: c, strokeWidth: w }),
+              (0, T.jsx)("path", { d: "M3.5 19a5.5 5.5 0 0111 0", stroke: c, strokeWidth: w, strokeLinecap: "round" }),
+              (0, T.jsx)("path", { d: "M16 6.2a3 3 0 010 5.6M17.5 19a5.4 5.4 0 00-2-4.2", stroke: c, strokeWidth: w, strokeLinecap: "round" }),
+            ],
+          });
+}
+
 function ChAvatarUrl(path) {
   return ze.storage.from("avatars").getPublicUrl(path).data.publicUrl;
 }
@@ -2051,8 +2120,8 @@ function ChToggle({ label, checked, onChange }) {
   });
 }
 
-function ChProfile({ uid, meId, onClose, onOpen }) {
-  let [lang] = Un(),
+function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
+  let [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
     [rel, setRel] = (0, U.useState)(null),
     [visits, setVisits] = (0, U.useState)([]),
@@ -2255,6 +2324,54 @@ function ChProfile({ uid, meId, onClose, onOpen }) {
                               disabled: busy,
                               children: busy ? P(lang, "saving") : P(lang, "save_changes"),
                             }),
+                            (0, T.jsx)("div", {
+                              style: {
+                                display: "flex",
+                                gap: 8,
+                                margin: "22px 0 0",
+                                borderTop: `1px solid ${O.line}`,
+                                paddingTop: 16,
+                              },
+                              children: ["no", "en", "nl"].map((code) =>
+                                (0, T.jsx)(
+                                  "button",
+                                  {
+                                    onClick: () => setLang(code),
+                                    style: {
+                                      flex: 1,
+                                      background: "none",
+                                      border: `1px solid ${lang === code ? O.nav : O.line}`,
+                                      borderRadius: 4,
+                                      color: lang === code ? O.nav : O.sub,
+                                      fontFamily: "inherit",
+                                      fontSize: 14,
+                                      fontWeight: lang === code ? 600 : 400,
+                                      padding: "10px 0",
+                                      cursor: "pointer",
+                                    },
+                                    children: code.toUpperCase(),
+                                  },
+                                  code,
+                                ),
+                              ),
+                            }),
+                            onLogout &&
+                              (0, T.jsx)("button", {
+                                onClick: onLogout,
+                                style: {
+                                  width: "100%",
+                                  marginTop: 12,
+                                  background: "none",
+                                  border: `1px solid ${O.line}`,
+                                  borderRadius: 4,
+                                  color: O.sub,
+                                  fontFamily: "inherit",
+                                  fontSize: 15,
+                                  padding: "12px 0",
+                                  cursor: "pointer",
+                                },
+                                children: P(lang, "logout"),
+                              }),
                           ],
                         })
                       : (0, T.jsxs)(T.Fragment, {
@@ -2799,6 +2916,7 @@ function n5({ session: e, onLogout: t }) {
     [chPhotos, chSetPhotos] = (0, U.useState)([]),
     [chBusy, chSetBusy] = (0, U.useState)(!1),
     [chOsm, chSetOsm] = (0, U.useState)(null),
+    [chQ, chSetQ] = (0, U.useState)(""),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
     [chBell, chSetBell] = (0, U.useState)(0);
@@ -2932,7 +3050,7 @@ function n5({ session: e, onLogout: t }) {
       D(F);
       return;
     }
-    (D(""), v(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
+    (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
   }
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
@@ -3022,6 +3140,14 @@ function n5({ session: e, onLogout: t }) {
           }))
       );
     }, [l]),
+    chGroups = (0, U.useMemo)(() => {
+      let F = ChFold(chQ);
+      return F
+        ? he
+            .map((te) => ({ ...te, list: te.list.filter((Se) => ChFold(Se.place).includes(F)) }))
+            .filter((te) => te.list.length > 0 || ChFold(te.display).includes(F))
+        : he;
+    }, [he, chQ]),
     K = l.filter((F) => F.lat != null && F.lng != null),
     Ie = l.filter((F) => F.lat == null || F.lng == null),
     mt = (F) =>
@@ -3029,9 +3155,10 @@ function n5({ session: e, onLogout: t }) {
         ? `https://www.google.com/maps/search/?api=1&query=${F.lat},${F.lng}`
         : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${F.place}, ${F.country}`),
     Go = [
-      ["innsjekk", P(n, "tab_checkin")],
       ["oversikt", P(n, "tab_overview")],
       ["kart", P(n, "tab_map")],
+      ["innsjekk", P(n, "tab_checkin")],
+      ["topplister", P(n, "tab_top")],
       ["venner", P(n, "tab_social")],
     ];
   return (0, T.jsxs)("div", {
@@ -3043,7 +3170,26 @@ function n5({ session: e, onLogout: t }) {
         ${Vy}
         .leaflet-container { font-family: 'Inter', sans-serif; background: ${O.bg}; }
         .ch * { box-sizing: border-box; }
-        .ch { font-family: 'Inter', system-ui, sans-serif; max-width: 620px; margin: 0 auto; }
+        .ch { font-family: 'Inter', system-ui, sans-serif; max-width: 620px; margin: 0 auto;
+          padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+        .ch-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; display: flex;
+          max-width: 620px; margin: 0 auto; background: ${O.bar};
+          border-top: 1px solid ${O.line}; padding-bottom: env(safe-area-inset-bottom); }
+        .ch-navbtn { flex: 1; background: none; border: none; font-family: inherit; cursor: pointer;
+          display: flex; flex-direction: column; align-items: center; gap: 3px;
+          padding: 9px 0 10px; position: relative; }
+        .ch-navicon { display: block; line-height: 0; }
+        .ch-navtxt { font-size: 10px; color: ${O.sub}; }
+        .ch-navtxt[data-on="true"] { color: ${O.nav}; font-weight: 600; }
+        .ch-navtxt[data-main="true"] { color: ${O.accent}; font-weight: 600; }
+        .ch-navmain { width: 48px; height: 48px; border-radius: 50%; background: ${O.accent};
+          display: flex; align-items: center; justify-content: center; margin-top: -18px;
+          border: 3px solid ${O.bar}; }
+        .ch-navdot { position: absolute; top: 8px; left: 50%; margin-left: 6px; width: 8px;
+          height: 8px; border-radius: 50%; background: ${O.warn}; }
+        .ch-search { width: 100%; border: none; border-bottom: 2px solid ${O.gap};
+          background: ${O.bar}; padding: 13px 16px; font-size: 15px; color: ${O.text}; }
+        .ch-search::placeholder { color: ${O.sub}; }
         .ch input, .ch textarea, .ch select { font-family: inherit; }
         .ch-sheet, .ch-sheet * { box-sizing: border-box; }
         .ch-sheet textarea, .ch-sheet input { font-family: inherit; }
@@ -3181,80 +3327,65 @@ function n5({ session: e, onLogout: t }) {
                     size: 32,
                     onClick: () => chSetView({ type: "profile", id: e.user.id }),
                   }),
-                  (0, T.jsxs)("select", {
-                    value: n,
-                    onChange: (F) => i(F.target.value),
-                    "aria-label": "Language",
-                    style: {
-                      background: O.row,
-                      border: `1px solid ${O.line}`,
-                      color: O.text,
-                      borderRadius: 4,
-                      padding: "6px 6px",
-                      fontSize: 13,
-                      fontFamily: "inherit",
-                      cursor: "pointer",
-                    },
-                    children: [
-                      (0, T.jsx)("option", { value: "no", children: "NO" }),
-                      (0, T.jsx)("option", { value: "en", children: "EN" }),
-                      (0, T.jsx)("option", { value: "nl", children: "NL" }),
-                    ],
-                  }),
-                  (0, T.jsx)("button", {
-                    onClick: t,
-                    style: {
-                      background: "none",
-                      border: `1px solid ${O.line}`,
-                      color: O.sub,
-                      borderRadius: 4,
-                      padding: "7px 12px",
-                      fontSize: 13,
-                      fontFamily: "inherit",
-                      cursor: "pointer",
-                    },
-                    children: P(n, "logout"),
-                  }),
+
                 ],
               }),
             ],
           }),
-          (0, T.jsx)("div", {
-            style: { display: "flex", background: O.bar, borderBottom: `2px solid ${O.gap}` },
+          (0, T.jsx)("nav", {
+            className: "ch-nav",
             children: Go.map(([F, te]) =>
-              (0, T.jsxs)(
-                "button",
-                {
-                  className: "ch-tab",
-                  "data-on": r === F,
-                  onClick: () => s(F),
-                  style: { position: "relative" },
-                  children: [
-                    te,
-                    F === "venner" &&
-                      G > 0 &&
-                      (0, T.jsx)("span", {
-                        style: {
-                          position: "absolute",
-                          top: 6,
-                          right: 4,
-                          minWidth: 16,
-                          height: 16,
-                          padding: "0 4px",
-                          borderRadius: 8,
-                          background: O.warn,
-                          color: "#fff",
-                          fontSize: 11,
-                          fontWeight: 700,
-                          lineHeight: "16px",
-                          textAlign: "center",
-                        },
-                        children: G,
-                      }),
-                  ],
-                },
-                F,
-              ),
+              F === "innsjekk"
+                ? (0, T.jsxs)(
+                    "button",
+                    {
+                      className: "ch-navbtn",
+                      onClick: () => s(F),
+                      "aria-label": te,
+                      children: [
+                        (0, T.jsx)("span", {
+                          className: "ch-navmain",
+                          "data-on": r === F,
+                          children: (0, T.jsxs)("svg", {
+                            width: 26,
+                            height: 26,
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            children: [
+                              (0, T.jsx)("path", {
+                                d: "M12 3a6 6 0 016 6c0 4.6-6 12-6 12S6 13.6 6 9a6 6 0 016-6z",
+                                fill: O.accentInk,
+                              }),
+                              (0, T.jsx)("circle", { cx: "12", cy: "9", r: "2.4", fill: O.accent }),
+                            ],
+                          }),
+                        }),
+                        (0, T.jsx)("span", {
+                          className: "ch-navtxt",
+                          "data-on": r === F,
+                          "data-main": !0,
+                          children: te,
+                        }),
+                      ],
+                    },
+                    F,
+                  )
+                : (0, T.jsxs)(
+                    "button",
+                    {
+                      className: "ch-navbtn",
+                      "data-on": r === F,
+                      onClick: () => s(F),
+                      children: [
+                        (0, T.jsx)("span", { className: "ch-navicon", children: ChNavIcon(F, r === F) }),
+                        (0, T.jsx)("span", { className: "ch-navtxt", "data-on": r === F, children: te }),
+                        F === "venner" &&
+                          G > 0 &&
+                          (0, T.jsx)("span", { className: "ch-navdot" }),
+                      ],
+                    },
+                    F,
+                  ),
             ),
           }),
           r === "oversikt" &&
@@ -3267,6 +3398,14 @@ function n5({ session: e, onLogout: t }) {
                     (0, T.jsx)(a8, { label: P(n, "places"), value: l.length }),
                   ],
                 }),
+                l.length > 12 &&
+                  (0, T.jsx)("input", {
+                    className: "ch-search",
+                    type: "search",
+                    value: chQ,
+                    placeholder: P(n, "search_places"),
+                    onChange: (F) => chSetQ(F.target.value),
+                  }),
                 h
                   ? (0, T.jsx)("p", {
                       style: { color: O.sub, fontSize: 15, padding: 16 },
@@ -3277,7 +3416,7 @@ function n5({ session: e, onLogout: t }) {
                         style: { color: O.sub, fontSize: 15, padding: "24px 16px", textAlign: "center" },
                         children: P(n, "empty_log"),
                       })
-                    : he.map((F) =>
+                    : chGroups.map((F) =>
                         (0, T.jsxs)(
                           "div",
                           {
@@ -3303,36 +3442,44 @@ function n5({ session: e, onLogout: t }) {
                                         onClick: () => chSetSheet(te),
                                         style: {
                                           flex: 1,
+                                          minWidth: 0,
                                           display: "flex",
                                           alignItems: "center",
-                                          gap: 8,
+                                          gap: 6,
                                           background: "none",
                                           border: "none",
                                           color: O.text,
                                           fontFamily: "inherit",
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           textAlign: "left",
                                           padding: 0,
                                           cursor: "pointer",
                                         },
                                         children: [
-                                          (0, T.jsx)("span", { style: { flex: 1 }, children: te.place }),
+                                          (0, T.jsx)("span", {
+                                            style: {
+                                              flex: 1,
+                                              minWidth: 0,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            },
+                                            children: te.place,
+                                          }),
                                           te.photos &&
                                             te.photos.length > 0 &&
                                             (0, T.jsx)("span", {
-                                              style: { color: O.sub, fontSize: 13 },
-                                              children: "\u{1F4F7} " + te.photos.length,
-                                            }),
-                                          te.rating != null &&
-                                            (0, T.jsxs)("span", {
-                                              style: {
-                                                color: O.accent,
-                                                fontFamily: "'Space Grotesk', monospace",
-                                                fontSize: 14,
-                                              },
-                                              children: ["\u2605 ", Number(te.rating).toFixed(2)],
+                                              style: { color: O.sub, fontSize: 12 },
+                                              children: "\u{1F4F7}" + te.photos.length,
                                             }),
                                         ],
+                                      }),
+                                      (0, T.jsx)(ChRating, {
+                                        value: te.rating == null ? null : Number(te.rating),
+                                        onChange: (Se) => chUpdate(te.id, { rating: Se }),
+                                        size: 15,
+                                        compact: !0,
+                                        lang: n,
                                       }),
                                       (0, T.jsx)("button", {
                                         className: "ch-x",
@@ -3366,29 +3513,8 @@ function n5({ session: e, onLogout: t }) {
               onSetLocateTarget: we,
               onConfirmLocate: et,
             }),
-          r === "venner" &&
-            (0, T.jsxs)("div", {
-              children: [
-                (0, T.jsxs)("div", {
-                  style: { display: "flex", gap: 8, padding: "14px 16px 0" },
-                  children: [
-                    (0, T.jsx)("button", {
-                      className: "ch-pill",
-                      "data-on": $e === "venner",
-                      onClick: () => xt("venner"),
-                      children: P(n, "tab_friends"),
-                    }),
-                    (0, T.jsx)("button", {
-                      className: "ch-pill",
-                      "data-on": $e === "topp",
-                      onClick: () => xt("topp"),
-                      children: P(n, "tab_leaderboards"),
-                    }),
-                  ],
-                }),
-                $e === "venner" ? (0, T.jsx)(a5, { session: e, onOpen: chSetView }) : (0, T.jsx)(s5, { session: e, onOpen: chSetView }),
-              ],
-            }),
+          r === "venner" && (0, T.jsx)(a5, { session: e, onOpen: chSetView }),
+          r === "topplister" && (0, T.jsx)(s5, { session: e, onOpen: chSetView }),
           r === "innsjekk" &&
             (0, T.jsxs)("div", {
               style: { padding: 16 },
@@ -3495,6 +3621,7 @@ function n5({ session: e, onLogout: t }) {
               uid: chView.id,
               meId: e.user.id,
               onOpen: chSetView,
+              onLogout: chView.id === e.user.id ? t : null,
               onClose: () => {
                 (chSetView(null), chLoadBell());
               },

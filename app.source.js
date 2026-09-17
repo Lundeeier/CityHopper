@@ -960,6 +960,15 @@ var Ch_ADMIN = [
     /\boblast$/i,
     /\bkrai$/i,
     /\bregional unit$/i,
+    /\bmunicipal unit$/i,
+    /\bmunicipal community$/i,
+    /\bmunicipal commune$/i,
+    /\bmunicipality$/i,
+    /\bmetropolitan municipality$/i,
+    /\brural municipality$/i,
+    /\badministrative unit$/i,
+    /\bmunicipal district$/i,
+    /\bcity municipality$/i,
     /\bmetropolitan area$/i,
     /\burban area$/i,
     /\bfylke$/i,
@@ -1131,6 +1140,31 @@ async function ChPostTown(postcode, country) {
   return out;
 }
 
+/* Slaar opp postnummeret for de oeverste forslagene, slik at lista viser
+   navnet du faktisk faar ved innsjekk. Ett oppslag om gangen, og bare for
+   de fire foerste, av hensyn til karttjenestens grenser. */
+async function ChResolveList(list, onUpdate) {
+  let out = list.slice(),
+    changed = !1;
+  for (let i = 0; i < Math.min(4, out.length); i++) {
+    let it = out[i];
+    if (!it.postcode) continue;
+    let hit = await ChPostTown(it.postcode, it.country);
+    if (!hit || !ChPostOk(hit, it.lat, it.lng)) continue;
+    let name = ChCanon(hit.place, it.country);
+    if (ChKey(name, it.country) === ChKey(it.place, it.country)) continue;
+    ((out[i] = { ...it, place: name }), (changed = !0));
+  }
+  if (!changed) return;
+  let seen = new Set(),
+    dedup = [];
+  for (let it of out) {
+    let key = ChKey(it.place, it.country);
+    seen.has(key) || (seen.add(key), dedup.push(it));
+  }
+  onUpdate(dedup);
+}
+
 async function e5(e, t) {
   let n = Jy(t);
   try {
@@ -1258,10 +1292,10 @@ var Ch_ALIAS = [
   ["CH", ["Neuchâtel", "Neuchatel", "Neuenburg"]],
   ["CH", ["Sion", "Sitten"]],
   ["CH", ["Biel", "Bienne"]],
-  ["CY", ["Lefkosia", "Nicosia", "Nikosia"]],
-  ["CY", ["Lemesos", "Limassol"]],
-  ["CY", ["Larnaka", "Larnaca"]],
-  ["CY", ["Pafos", "Paphos"]],
+  ["CY", ["Nicosia", "Nikosia", "Lefkosia"]],
+  ["CY", ["Limassol", "Lemesos"]],
+  ["CY", ["Larnaca", "Larnaka"]],
+  ["CY", ["Paphos", "Pafos"]],
   ["CZ", ["Praha", "Prague", "Prag"]],
   ["CZ", ["Brno", "Bruenn"]],
   ["CZ", ["Plzeň", "Plzen", "Pilsen"]],
@@ -1284,19 +1318,19 @@ var Ch_ALIAS = [
   ["DK", ["Aalborg", "Alborg"]],
   ["EE", ["Tallinn", "Reval"]],
   ["EE", ["Tartu", "Dorpat"]],
-  ["EG", ["Al Qahirah", "Cairo", "Kairo"]],
-  ["EG", ["Al Iskandariyah", "Alexandria", "Alexandria"]],
+  ["EG", ["Kairo", "Cairo", "Al Qahirah"]],
+  ["EG", ["Alexandria", "Al Iskandariyah"]],
   ["EG", ["Luxor", "Luksor"]],
   ["EG", ["Aswan", "Assuan"]],
   ["ES", ["Sevilla", "Seville"]],
   ["ES", ["Zaragoza", "Saragossa"]],
   ["ES", ["A Coruña", "A Coruna", "La Coruna", "Corunna"]],
-  ["ES", ["Donostia", "San Sebastian"]],
+  ["ES", ["San Sebastián", "San Sebastian", "Donostia"]],
   ["ES", ["Bilbao", "Bilbo"]],
   ["ES", ["Girona", "Gerona"]],
   ["ES", ["Alicante", "Alacant"]],
   ["ES", ["Valencia", "Valence"]],
-  ["ES", ["Eivissa", "Ibiza"]],
+  ["ES", ["Ibiza", "Eivissa"]],
   ["ES", ["Córdoba", "Cordoba", "Cordova"]],
   ["FI", ["Helsinki", "Helsingfors"]],
   ["FI", ["Turku", "Abo"]],
@@ -1314,14 +1348,14 @@ var Ch_ALIAS = [
   ["FR", ["Reims", "Rheims"]],
   ["FR", ["Lille", "Rijsel"]],
   ["GL", ["Nuuk", "Godthab"]],
-  ["GR", ["Athina", "Athens", "Athen", "Athinai"]],
+  ["GR", ["Athen", "Athens", "Athina", "Athinai"]],
   ["GR", ["Thessaloniki", "Saloniki", "Thessalonica", "Salonika"]],
-  ["GR", ["Iraklio", "Heraklion", "Iraklion"]],
-  ["GR", ["Kerkyra", "Corfu", "Korfu"]],
+  ["GR", ["Heraklion", "Iraklio", "Iraklion"]],
+  ["GR", ["Korfu", "Corfu", "Kerkyra"]],
   ["GR", ["Rhodos", "Rodos", "Rhodes"]],
   ["GR", ["Chania", "Hania", "Canea"]],
-  ["GR", ["Patra", "Patras"]],
-  ["GR", ["Thira", "Santorini", "Fira"]],
+  ["GR", ["Patras", "Patra"]],
+  ["GR", ["Santorini", "Thira", "Fira"]],
   ["HR", ["Zagreb", "Agram"]],
   ["HR", ["Rijeka", "Fiume"]],
   ["HR", ["Split", "Spalato"]],
@@ -3504,7 +3538,7 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
           v(!0);
           try {
             let R = await e5(m, t);
-            k && (c(R), f(R.length > 0));
+            (k && (c(R), f(R.length > 0)), k && R.length && ChResolveList(R, k0 => k && (c(k0), f(k0.length > 0))));
           } catch {
             k && (c([]), f(!1));
           }

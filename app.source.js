@@ -487,6 +487,13 @@ var O = {
       new_password_placeholder: "Nytt passord",
       save_new_password: "Lagre nytt passord",
       note_placeholder: "Hvordan var det? Skriv et notat",
+      favorite_city: "Min favorittby",
+      favorite_city_other: "Favorittby",
+      change_choice: "Endre",
+      choose_place: "Velg sted",
+      choose_photo: "Velg bilde",
+      no_favorite: "Ingen valgt enn\xE5",
+      pick_favorite: "Velg favorittby",
       search_places: "S\xF8k etter sted",
       tab_top: "Topplister",
       crash_title: "Noe gikk galt",
@@ -662,6 +669,13 @@ var O = {
       new_password_placeholder: "New password",
       save_new_password: "Save new password",
       note_placeholder: "How was it? Leave a note",
+      favorite_city: "My favourite city",
+      favorite_city_other: "Favourite city",
+      change_choice: "Change",
+      choose_place: "Choose place",
+      choose_photo: "Choose photo",
+      no_favorite: "None chosen yet",
+      pick_favorite: "Choose a favourite city",
       search_places: "Search places",
       tab_top: "Leaderboards",
       crash_title: "Something went wrong",
@@ -839,6 +853,13 @@ var O = {
       new_password_placeholder: "Nieuw wachtwoord",
       save_new_password: "Nieuw wachtwoord opslaan",
       note_placeholder: "Hoe was het? Schrijf een notitie",
+      favorite_city: "Mijn favoriete stad",
+      favorite_city_other: "Favoriete stad",
+      change_choice: "Wijzigen",
+      choose_place: "Kies plaats",
+      choose_photo: "Kies foto",
+      no_favorite: "Nog niets gekozen",
+      pick_favorite: "Kies een favoriete stad",
       search_places: "Zoek plaatsen",
       tab_top: "Ranglijsten",
       crash_title: "Er ging iets mis",
@@ -2049,13 +2070,18 @@ function ChAvatar({ url, name, size = 40, onClick }) {
       });
 }
 
-function ChPanel({ title, onClose, children }) {
+function ChPanel({ title, onClose, children, hideBack: chHB }) {
   return (0, T.jsxs)("div", {
     className: "ch-sheet",
     style: {
       position: "fixed",
-      inset: 0,
-      zIndex: 1300,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: "calc(78px + env(safe-area-inset-bottom))",
+      maxWidth: 620,
+      margin: "0 auto",
+      zIndex: 800,
       background: O.bg,
       color: O.text,
       display: "flex",
@@ -2074,19 +2100,20 @@ function ChPanel({ title, onClose, children }) {
           flex: "0 0 auto",
         },
         children: [
-          (0, T.jsx)("button", {
-            onClick: onClose,
-            style: {
-              background: "none",
-              border: "none",
-              color: O.accent,
-              fontSize: 24,
-              lineHeight: 1,
-              padding: "2px 6px 2px 0",
-              cursor: "pointer",
-            },
-            children: "\u2039",
-          }),
+          !chHB &&
+            (0, T.jsx)("button", {
+              onClick: onClose,
+              style: {
+                background: "none",
+                border: "none",
+                color: O.nav,
+                fontSize: 24,
+                lineHeight: 1,
+                padding: "2px 6px 2px 0",
+                cursor: "pointer",
+              },
+              children: "\u2039",
+            }),
           (0, T.jsx)("span", {
             style: { fontSize: 17, fontWeight: 700, flex: 1, minWidth: 0 },
             children: title,
@@ -2120,6 +2147,201 @@ function ChToggle({ label, checked, onChange }) {
   });
 }
 
+function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }) {
+  if (!mine && !fav) return null;
+  let head = (0, T.jsxs)("div", {
+    style: { display: "flex", alignItems: "center", margin: "22px 0 10px" },
+    children: [
+      (0, T.jsx)("span", {
+        style: { flex: 1, color: O.sub, fontSize: 12, fontWeight: 700, letterSpacing: ".06em" },
+        children: P(lang, mine ? "favorite_city" : "favorite_city_other").toUpperCase(),
+      }),
+      mine &&
+        (0, T.jsx)("button", {
+          onClick: () => setPick(pick ? null : "place"),
+          style: {
+            background: "none",
+            border: "none",
+            color: O.nav,
+            fontFamily: "inherit",
+            fontSize: 13,
+            padding: 0,
+            cursor: "pointer",
+          },
+          children: pick ? P(lang, "close_sheet") : P(lang, "change_choice"),
+        }),
+    ],
+  });
+
+  if (pick === "place")
+    return (0, T.jsxs)("div", {
+      style: { borderTop: `1px solid ${O.line}` },
+      children: [
+        head,
+        (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "0 0 8px" }, children: P(lang, "choose_place") }),
+        (0, T.jsx)("div", {
+          style: { maxHeight: 260, overflowY: "auto", border: `1px solid ${O.line}`, borderRadius: 6 },
+          children: visits
+            .slice()
+            .sort((a, b) => a.place.localeCompare(b.place, "nb"))
+            .map((v) =>
+              (0, T.jsxs)(
+                "button",
+                {
+                  onClick: async () => {
+                    (await saveFav({ favorite_visit_id: v.id, favorite_photo: null }),
+                      setPick(v.photos && v.photos.length > 1 ? "photo" : null));
+                  },
+                  style: {
+                    width: "100%",
+                    display: "flex",
+                    gap: 8,
+                    alignItems: "center",
+                    background: "none",
+                    border: "none",
+                    borderBottom: `1px solid ${O.line}`,
+                    color: O.text,
+                    fontFamily: "inherit",
+                    fontSize: 15,
+                    textAlign: "left",
+                    padding: "11px 12px",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    (0, T.jsx)("span", { style: { fontSize: 14 }, children: l8(v.country) }),
+                    (0, T.jsx)("span", { style: { flex: 1, minWidth: 0 }, children: v.place }),
+                    v.rating != null &&
+                      (0, T.jsx)("span", {
+                        style: { color: O.accent, fontFamily: "'Space Grotesk', monospace", fontSize: 13 },
+                        children: Number(v.rating).toFixed(2),
+                      }),
+                  ],
+                },
+                v.id,
+              ),
+            ),
+        }),
+      ],
+    });
+
+  if (pick === "photo" && fav)
+    return (0, T.jsxs)("div", {
+      style: { borderTop: `1px solid ${O.line}` },
+      children: [
+        head,
+        (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "0 0 8px" }, children: P(lang, "choose_photo") }),
+        (0, T.jsx)("div", {
+          style: { display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 },
+          children: (fav.photos || []).map((ph) =>
+            (0, T.jsx)(
+              "button",
+              {
+                onClick: async () => {
+                  (await saveFav({ favorite_photo: ph }), setPick(null));
+                },
+                style: {
+                  flex: "0 0 auto",
+                  padding: 0,
+                  border: `2px solid ${favPhoto === ph ? O.accent : "transparent"}`,
+                  borderRadius: 6,
+                  background: "none",
+                  cursor: "pointer",
+                  lineHeight: 0,
+                },
+                children: (0, T.jsx)("img", {
+                  src: ChPhotoUrl(ph),
+                  alt: "",
+                  style: { width: 96, height: 96, objectFit: "cover", borderRadius: 4, display: "block" },
+                }),
+              },
+              ph,
+            ),
+          ),
+        }),
+      ],
+    });
+
+  return (0, T.jsxs)("div", {
+    style: { borderTop: `1px solid ${O.line}` },
+    children: [
+      head,
+      fav
+        ? (0, T.jsxs)("div", {
+            style: { background: O.row, borderRadius: 8, overflow: "hidden" },
+            children: [
+              favPhoto
+                ? (0, T.jsx)("img", {
+                    src: ChPhotoUrl(favPhoto),
+                    alt: "",
+                    style: { width: "100%", height: 150, objectFit: "cover", display: "block" },
+                  })
+                : (0, T.jsx)("div", {
+                    style: {
+                      height: 96,
+                      background: O.land,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: O.border,
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontSize: 22,
+                    },
+                    children: fav.place,
+                  }),
+              (0, T.jsxs)("div", {
+                style: { padding: 14 },
+                children: [
+                  (0, T.jsxs)("button", {
+                    onClick: () => onOpen({ type: "feed", place: fav.place, country: fav.country, osm: fav.osm_id || null }),
+                    style: {
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      textAlign: "left",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                    },
+                    children: [
+                      (0, T.jsx)("div", { style: { fontSize: 18, fontWeight: 700, color: O.text }, children: fav.place }),
+                      (0, T.jsxs)("div", {
+                        style: { color: O.sub, fontSize: 13, marginTop: 2 },
+                        children: [l8(fav.country), " ", fav.country],
+                      }),
+                    ],
+                  }),
+                  fav.rating != null &&
+                    (0, T.jsx)("div", {
+                      style: { marginTop: 10 },
+                      children: (0, T.jsx)(ChRating, { value: Number(fav.rating), readOnly: !0, size: 18, lang }),
+                    }),
+                  fav.comment &&
+                    (0, T.jsx)("p", {
+                      style: { color: O.sub, fontSize: 14, lineHeight: 1.5, margin: "10px 0 0" },
+                      children: fav.comment,
+                    }),
+                ],
+              }),
+            ],
+          })
+        : (0, T.jsx)("button", {
+            onClick: () => setPick("place"),
+            style: {
+              width: "100%",
+              background: O.row,
+              border: `1px dashed ${O.line}`,
+              borderRadius: 8,
+              color: O.sub,
+              fontFamily: "inherit",
+              fontSize: 15,
+              padding: "26px 0",
+              cursor: "pointer",
+            },
+            children: P(lang, "pick_favorite"),
+          }),
+    ],
+  });
+}
+
 function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
   let [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
@@ -2131,6 +2353,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
     [msgOnly, setMsgOnly] = (0, U.useState)(!1),
     [busy, setBusy] = (0, U.useState)(!1),
     [note, setNote] = (0, U.useState)(""),
+    [pick, setPick] = (0, U.useState)(null),
     fileRef = (0, U.useRef)(null),
     mine = uid === meId;
   (0, U.useEffect)(() => {
@@ -2173,6 +2396,20 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
       }
     );
   }, [uid, meId, mine]);
+  let fav = (0, U.useMemo)(
+      () => (prof && prof.favorite_visit_id ? visits.find((v) => v.id === prof.favorite_visit_id) || null : null),
+      [prof, visits],
+    ),
+    favPhoto =
+      fav && fav.photos && fav.photos.length
+        ? prof && prof.favorite_photo && fav.photos.includes(prof.favorite_photo)
+          ? prof.favorite_photo
+          : fav.photos[0]
+        : null;
+  async function saveFav(patch) {
+    (setProf((pr) => ({ ...pr, ...patch })),
+      await ze.from("profiles").update(patch).eq("id", meId));
+  }
   let groups = (0, U.useMemo)(() => {
     let m = new Map();
     return (
@@ -2232,6 +2469,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
   let name = prof ? prof.username : "";
   return (0, T.jsx)(ChPanel, {
     title: mine ? P(lang, "my_profile") : name || P(lang, "nav_profile"),
+    hideBack: mine,
     onClose,
     children: loading
       ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
@@ -2429,9 +2667,11 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
                         }),
                       ],
                     }),
-                    (0, T.jsx)("div", {
-                      style: { margin: "0 -16px" },
-                      children: groups.map((g) =>
+                    ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }),
+                    !mine &&
+                      (0, T.jsx)("div", {
+                        style: { margin: "0 -16px" },
+                        children: groups.map((g) =>
                         (0, T.jsxs)(
                           "div",
                           {
@@ -2492,11 +2732,11 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
                                 ),
                               ),
                             ],
-                          },
-                          g.land,
+                            },
+                            g.land,
+                          ),
                         ),
-                      ),
-                    }),
+                      }),
                   ],
                 }),
           ],

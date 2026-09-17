@@ -951,7 +951,28 @@ function Jy(e) {
   let t = vf(e);
   return t ? (t.apiCode || t.code).toLowerCase() : null;
 }
-var Ch_SUB = new Set([
+var Ch_ADMIN = [
+    /\bcounty$/i,
+    /\bregion$/i,
+    /\bprovince$/i,
+    /\bprefecture$/i,
+    /\bgovernorate$/i,
+    /\boblast$/i,
+    /\bkrai$/i,
+    /\bregional unit$/i,
+    /\bmetropolitan area$/i,
+    /\burban area$/i,
+    /\bfylke$/i,
+    /\bl\u00e4n$/i,
+    /^region\b/i,
+    /^province of\b/i,
+    /^county of\b/i,
+  ],
+  ChIsAdmin = (name) => {
+    let t = String(name || "").trim();
+    return !t || Ch_ADMIN.some((r) => r.test(t));
+  },
+  Ch_SUB = new Set([
     "suburb",
     "quarter",
     "neighbourhood",
@@ -992,6 +1013,13 @@ var Ch_SUB = new Set([
     "gemeinde",
     "munic\xEDpio de",
     "municipiul",
+    "greater",
+    "metropolitan city of",
+    "metropolitan borough of",
+    "royal borough of",
+    "london borough of",
+    "city and county of",
+    "city and borough of",
     "municipal commune of",
     "municipal community of",
     "municipal unit of",
@@ -1123,7 +1151,7 @@ async function e5(e, t) {
           g = ChRollUp(f, h, c.name || h8(f, (c.display_name || "").split(",")[0])),
           v = d8(g, e, h === "municipality"),
           y = o8(f);
-        if (!v || !y) return;
+        if (!v || !y || ChIsAdmin(v)) return;
         let m = ChKey(v, y);
         l.some((k) => ChKey(k.place, k.country) === m) ||
           l.push({

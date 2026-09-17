@@ -2900,7 +2900,7 @@ function n5({ session: e, onLogout: t }) {
     [l, c] = (0, U.useState)([]),
     [h, f] = (0, U.useState)(!0),
     [g, v] = (0, U.useState)(""),
-    [y, m] = (0, U.useState)("Norge"),
+    [y, m] = (0, U.useState)(""),
     [k, A] = (0, U.useState)(null),
     [R, S] = (0, U.useState)(""),
     [b, w] = (0, U.useState)(!1),
@@ -2953,6 +2953,9 @@ function n5({ session: e, onLogout: t }) {
     }
     chSetBell(gt);
   }
+  (0, U.useEffect)(() => {
+    chSetView({ type: "profile", id: e.user.id });
+  }, [e.user.id]);
   (0, U.useEffect)(() => {
     chLoadBell();
     let F = e.user.id,

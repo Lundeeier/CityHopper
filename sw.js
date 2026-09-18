@@ -1,4 +1,4 @@
-var CACHE = "cityhopper-v3";
+var CACHE = "cityhopper-v4";
 
 /* index.html hentes alltid friskt, slik at versjonslappen på app.js er
    oppdatert. app.js, ikoner og manifest mellomlagres, og siden app.js har
@@ -82,6 +82,43 @@ self.addEventListener("fetch", function (e) {
         }
         return res;
       });
+    })
+  );
+});
+
+/* Varsler: tar imot push fra serveren og viser det, ogsaa naar appen er lukket. */
+self.addEventListener("push", function (e) {
+  var d = { title: "CityHopper", body: "", url: "/" };
+  try {
+    if (e.data) {
+      var j = e.data.json();
+      d.title = j.title || d.title;
+      d.body = j.body || "";
+      d.url = j.url || "/";
+    }
+  } catch (err) {
+    if (e.data) d.body = e.data.text();
+  }
+  e.waitUntil(
+    self.registration.showNotification(d.title, {
+      body: d.body,
+      icon: "icon-192.png",
+      badge: "icon-192.png",
+      data: { url: d.url },
+      tag: "cityhopper"
+    })
+  );
+});
+
+self.addEventListener("notificationclick", function (e) {
+  e.notification.close();
+  var url = (e.notification.data && e.notification.data.url) || "/";
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].url.indexOf(self.location.origin) === 0 && "focus" in list[i]) return list[i].focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
     })
   );
 });

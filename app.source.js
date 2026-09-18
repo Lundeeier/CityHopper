@@ -489,6 +489,13 @@ var O = {
       note_placeholder: "Hvordan var det? Skriv et notat",
       favorite_city: "Min favorittby",
       settings_title: "Innstillinger",
+      push_title: "F\xE5 beskjed n\xE5r det skjer noe",
+      push_body: "Vi sier fra n\xE5r du f\xE5r melding, venneforesp\xF8rsel, eller n\xE5r en venn sjekker inn et sted.",
+      push_enable: "Sl\xE5 p\xE5 varsler",
+      push_later: "Ikke n\xE5",
+      push_toggle: "Varsler p\xE5 telefonen",
+      push_blocked: "Varsler er blokkert. Sl\xE5 dem p\xE5 i telefonens innstillinger for nettleseren.",
+      push_unsupported: "Telefonen din st\xF8tter ikke varsler her. P\xE5 iPhone m\xE5 appen legges til p\xE5 hjem-skjermen fra Safari.",
       favorite_city_other: "Favorittby",
       change_choice: "Endre",
       choose_place: "Velg sted",
@@ -672,6 +679,13 @@ var O = {
       note_placeholder: "How was it? Leave a note",
       favorite_city: "My favourite city",
       settings_title: "Settings",
+      push_title: "Get notified when something happens",
+      push_body: "We'll let you know about messages, friend requests, and when a friend checks in somewhere.",
+      push_enable: "Turn on notifications",
+      push_later: "Not now",
+      push_toggle: "Notifications on this phone",
+      push_blocked: "Notifications are blocked. Turn them on in your phone's settings for the browser.",
+      push_unsupported: "Your phone doesn't support notifications here. On iPhone the app must be added to the Home Screen from Safari.",
       favorite_city_other: "Favourite city",
       change_choice: "Change",
       choose_place: "Choose place",
@@ -857,6 +871,13 @@ var O = {
       note_placeholder: "Hoe was het? Schrijf een notitie",
       favorite_city: "Mijn favoriete stad",
       settings_title: "Instellingen",
+      push_title: "Krijg bericht als er iets gebeurt",
+      push_body: "We laten het weten bij berichten, vriendschapsverzoeken en wanneer een vriend ergens incheckt.",
+      push_enable: "Meldingen aanzetten",
+      push_later: "Niet nu",
+      push_toggle: "Meldingen op deze telefoon",
+      push_blocked: "Meldingen zijn geblokkeerd. Zet ze aan in de instellingen van je telefoon.",
+      push_unsupported: "Je telefoon ondersteunt hier geen meldingen. Op iPhone moet de app via Safari op het beginscherm staan.",
       favorite_city_other: "Favoriete stad",
       change_choice: "Wijzigen",
       choose_place: "Kies plaats",
@@ -1968,6 +1989,127 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
 }
 
 
+var Ch_VAPID = "BLJG8G-Dek9cKGeXOEh0DoDCewpWr73IsaUdp3o6Il4H29ZxMQnMIaKQ7Gm-h1sguFwTfNqz11XH9Sndrs5bhS0";
+
+function ChB64(s) {
+  let pad = "=".repeat((4 - (s.length % 4)) % 4),
+    raw = atob((s + pad).replace(/-/g, "+").replace(/_/g, "/")),
+    out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+/* Varsler krever service worker, Push API og tillatelse. Paa iPhone finnes
+   PushManager bare naar appen er lagt til paa hjem-skjermen. */
+function ChPushSupported() {
+  return typeof window < "u" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+}
+
+function ChPushState() {
+  return ChPushSupported() ? Notification.permission : "unsupported";
+}
+
+async function ChPushOn(uid) {
+  if (!ChPushSupported()) return "unsupported";
+  let perm = Notification.permission;
+  if (perm === "default") perm = await Notification.requestPermission();
+  if (perm !== "granted") return perm === "denied" ? "denied" : "default";
+  let reg = await navigator.serviceWorker.ready,
+    sub =
+      (await reg.pushManager.getSubscription()) ||
+      (await reg.pushManager.subscribe({ userVisibleOnly: !0, applicationServerKey: ChB64(Ch_VAPID) })),
+    j = sub.toJSON();
+  if (!j.keys || !j.keys.p256dh) return "error";
+  let { error } = await ze
+    .from("push_subscriptions")
+    .upsert(
+      { user_id: uid, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth },
+      { onConflict: "endpoint" },
+    );
+  return error ? "error" : "granted";
+}
+
+async function ChPushOff(uid) {
+  if (!ChPushSupported()) return;
+  try {
+    let reg = await navigator.serviceWorker.ready,
+      sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      (await ze.from("push_subscriptions").delete().eq("endpoint", sub.endpoint), await sub.unsubscribe());
+    }
+  } catch {}
+}
+
+function ChPushPrompt({ lang, onEnable, onLater }) {
+  return (0, T.jsx)("div", {
+    className: "ch-sheet",
+    style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 1400,
+      background: "rgba(4,9,16,.78)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 24,
+    },
+    children: (0, T.jsxs)("div", {
+      style: {
+        width: "100%",
+        maxWidth: 340,
+        background: O.bar,
+        border: `1px solid ${O.line}`,
+        borderRadius: 12,
+        padding: 22,
+        textAlign: "center",
+        fontFamily: "'Inter', system-ui, sans-serif",
+      },
+      children: [
+        (0, T.jsxs)("svg", {
+          width: 40,
+          height: 40,
+          viewBox: "0 0 24 24",
+          fill: "none",
+          style: { display: "block", margin: "0 auto 12px" },
+          children: [
+            (0, T.jsx)("path", {
+              d: "M6 9a6 6 0 0112 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z",
+              stroke: O.accent,
+              strokeWidth: "1.7",
+              strokeLinejoin: "round",
+            }),
+            (0, T.jsx)("path", { d: "M10 18a2 2 0 004 0", stroke: O.accent, strokeWidth: "1.7" }),
+          ],
+        }),
+        (0, T.jsx)("div", {
+          style: { fontSize: 18, fontWeight: 700, marginBottom: 8 },
+          children: P(lang, "push_title"),
+        }),
+        (0, T.jsx)("p", {
+          style: { color: O.sub, fontSize: 14, lineHeight: 1.5, margin: "0 0 18px" },
+          children: P(lang, "push_body"),
+        }),
+        (0, T.jsx)("button", { className: "ch-primary", onClick: onEnable, children: P(lang, "push_enable") }),
+        (0, T.jsx)("button", {
+          onClick: onLater,
+          style: {
+            width: "100%",
+            marginTop: 10,
+            background: "none",
+            border: "none",
+            color: O.sub,
+            fontFamily: "inherit",
+            fontSize: 14,
+            padding: "10px 0",
+            cursor: "pointer",
+          },
+          children: P(lang, "push_later"),
+        }),
+      ],
+    }),
+  });
+}
+
 function ChNavIcon(name, on) {
   let c = on ? O.nav : O.sub,
     w = on ? 1.9 : 1.6;
@@ -2396,7 +2538,8 @@ function ChSettings({ meId, onClose, onLogout }) {
   let [lang, setLang] = Un(),
     [priv, setPriv] = (0, U.useState)(!1),
     [msgOnly, setMsgOnly] = (0, U.useState)(!1),
-    [note, setNote] = (0, U.useState)("");
+    [note, setNote] = (0, U.useState)(""),
+    [push, setPush] = (0, U.useState)(ChPushState());
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
@@ -2422,6 +2565,34 @@ function ChSettings({ meId, onClose, onLogout }) {
     title: P(lang, "settings_title"),
     onClose,
     children: [
+      (0, T.jsx)(ChToggle, {
+        label: P(lang, "push_toggle"),
+        checked: push === "granted",
+        onChange: async (v) => {
+          if (!v) {
+            (await ChPushOff(meId), setPush(ChPushState()));
+            return;
+          }
+          let r = await ChPushOn(meId);
+          (setPush(r),
+            setNote(
+              r === "denied"
+                ? P(lang, "push_blocked")
+                : r === "unsupported"
+                  ? P(lang, "push_unsupported")
+                  : r === "error"
+                    ? P(lang, "err_save_profile")
+                    : "",
+            ));
+        },
+      }),
+      push !== "granted" &&
+        push !== "default" &&
+        (0, T.jsx)("p", {
+          style: { color: O.sub, fontSize: 12, lineHeight: 1.45, margin: "0 0 10px" },
+          children: push === "denied" ? P(lang, "push_blocked") : P(lang, "push_unsupported"),
+        }),
+      (0, T.jsx)("div", { style: { height: 6, borderBottom: `1px solid ${O.line}`, marginBottom: 10 } }),
       (0, T.jsx)(ChToggle, {
         label: P(lang, "profile_private_label"),
         checked: priv,
@@ -3184,6 +3355,7 @@ function n5({ session: e, onLogout: t }) {
     [chBusy, chSetBusy] = (0, U.useState)(!1),
     [chOsm, chSetOsm] = (0, U.useState)(null),
     [chQ, chSetQ] = (0, U.useState)(""),
+    [chAsk, chSetAsk] = (0, U.useState)(!1),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
     [chBell, chSetBell] = (0, U.useState)(0);
@@ -3222,7 +3394,18 @@ function n5({ session: e, onLogout: t }) {
   }
   (0, U.useEffect)(() => {
     chSetView({ type: "profile", id: e.user.id });
+    let F = !1;
+    try {
+      F = localStorage.getItem("ch_push_asked") === "1";
+    } catch {}
+    ChPushSupported() && Notification.permission === "default" && !F && chSetAsk(!0);
   }, [e.user.id]);
+  function chAskDone() {
+    try {
+      localStorage.setItem("ch_push_asked", "1");
+    } catch {}
+    chSetAsk(!1);
+  }
   (0, U.useEffect)(() => {
     chLoadBell();
     let F = e.user.id,
@@ -3897,6 +4080,14 @@ function n5({ session: e, onLogout: t }) {
               onOpen: chSetView,
               onClose: () => {
                 (chSetView(null), chLoadBell());
+              },
+            }),
+          chAsk &&
+            (0, T.jsx)(ChPushPrompt, {
+              lang: n,
+              onLater: chAskDone,
+              onEnable: async () => {
+                (await ChPushOn(e.user.id), chAskDone());
               },
             }),
           chView &&

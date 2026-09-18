@@ -2513,23 +2513,6 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
     (setProf((pr) => ({ ...pr, ...patch })),
       await ze.from("profiles").update(patch).eq("id", meId));
   }
-  let groups = (0, U.useMemo)(() => {
-    let m = new Map();
-    return (
-      visits.forEach((v) => {
-        let name = yc(v.country)?.name || v.country;
-        (m.has(name) || m.set(name, []), m.get(name).push(v));
-      }),
-      Array.from(m.entries())
-        .sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0], "nb"))
-        .map(([name, list]) => ({
-          land: name,
-          display: name,
-          flag: l8(name),
-          list: list.slice().sort((x, y) => x.place.localeCompare(y.place, "nb")),
-        }))
-    );
-  }, [visits]);
   let friend = !!rel && rel.status === "accepted",
     canSee = mine || !prof || !prof.profile_private || friend,
     countries = new Set(visits.map((v) => v.country)).size,
@@ -2743,75 +2726,6 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
                       ],
                     }),
                     ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }),
-                    !mine &&
-                      (0, T.jsx)("div", {
-                        style: { margin: "0 -16px" },
-                        children: groups.map((g) =>
-                        (0, T.jsxs)(
-                          "div",
-                          {
-                            children: [
-                              (0, T.jsxs)("div", {
-                                className: "ch-country",
-                                children: [
-                                  (0, T.jsx)("span", { style: { fontSize: 17 }, children: g.flag }),
-                                  (0, T.jsx)("span", { style: { flex: 1 }, children: g.display }),
-                                  (0, T.jsx)("span", {
-                                    style: { fontFamily: "'Space Grotesk', monospace" },
-                                    children: g.list.length,
-                                  }),
-                                ],
-                              }),
-                              g.list.map((v) =>
-                                (0, T.jsx)(
-                                  "div",
-                                  {
-                                    className: "ch-item",
-                                    children: (0, T.jsxs)("button", {
-                                      onClick: () => onOpen({ type: "feed", place: v.place, country: v.country, osm: v.osm_id || null }),
-                                      style: {
-                                        flex: 1,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 8,
-                                        background: "none",
-                                        border: "none",
-                                        color: O.text,
-                                        fontFamily: "inherit",
-                                        fontSize: 17,
-                                        textAlign: "left",
-                                        padding: 0,
-                                        cursor: "pointer",
-                                      },
-                                      children: [
-                                        (0, T.jsx)("span", { style: { flex: 1 }, children: v.place }),
-                                        v.photos &&
-                                          v.photos.length > 0 &&
-                                          (0, T.jsx)("span", {
-                                            style: { color: O.sub, fontSize: 13 },
-                                            children: "\u{1F4F7} " + v.photos.length,
-                                          }),
-                                        v.rating != null &&
-                                          (0, T.jsxs)("span", {
-                                            style: {
-                                              color: O.accent,
-                                              fontFamily: "'Space Grotesk', monospace",
-                                              fontSize: 14,
-                                            },
-                                            children: ["\u2605 ", Number(v.rating).toFixed(2)],
-                                          }),
-                                      ],
-                                    }),
-                                  },
-                                  v.id,
-                                ),
-                              ),
-                            ],
-                            },
-                            g.land,
-                          ),
-                        ),
-                      }),
                   ],
                 }),
           ],

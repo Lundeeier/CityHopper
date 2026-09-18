@@ -2279,32 +2279,50 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
       head,
       fav
         ? (0, T.jsxs)("div", {
-            style: { background: O.row, borderRadius: 8, overflow: "hidden" },
+            style: {
+              background: O.row,
+              borderRadius: 8,
+              padding: 12,
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+            },
             children: [
               favPhoto
                 ? (0, T.jsx)("img", {
                     src: ChPhotoUrl(favPhoto),
                     alt: "",
-                    style: { width: "100%", height: 150, objectFit: "cover", display: "block" },
+                    style: {
+                      width: 76,
+                      height: 76,
+                      objectFit: "cover",
+                      borderRadius: 6,
+                      display: "block",
+                      flex: "0 0 auto",
+                    },
                   })
                 : (0, T.jsx)("div", {
                     style: {
-                      height: 96,
+                      width: 76,
+                      height: 76,
+                      borderRadius: 6,
+                      flex: "0 0 auto",
                       background: O.land,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       color: O.border,
                       fontFamily: "'Space Grotesk', sans-serif",
-                      fontSize: 22,
+                      fontSize: 26,
                     },
-                    children: fav.place,
+                    children: (fav.place || "?").trim().charAt(0).toUpperCase(),
                   }),
               (0, T.jsxs)("div", {
-                style: { padding: 14 },
+                style: { flex: 1, minWidth: 0 },
                 children: [
                   (0, T.jsxs)("button", {
-                    onClick: () => onOpen({ type: "feed", place: fav.place, country: fav.country, osm: fav.osm_id || null }),
+                    onClick: () =>
+                      onOpen({ type: "feed", place: fav.place, country: fav.country, osm: fav.osm_id || null }),
                     style: {
                       background: "none",
                       border: "none",
@@ -2312,23 +2330,43 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       textAlign: "left",
                       cursor: "pointer",
                       fontFamily: "inherit",
+                      maxWidth: "100%",
                     },
                     children: [
-                      (0, T.jsx)("div", { style: { fontSize: 18, fontWeight: 700, color: O.text }, children: fav.place }),
+                      (0, T.jsx)("div", {
+                        style: {
+                          fontSize: 17,
+                          fontWeight: 600,
+                          color: O.text,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        },
+                        children: fav.place,
+                      }),
                       (0, T.jsxs)("div", {
-                        style: { color: O.sub, fontSize: 13, marginTop: 2 },
+                        style: { color: O.sub, fontSize: 12, marginTop: 1 },
                         children: [l8(fav.country), " ", fav.country],
                       }),
                     ],
                   }),
                   fav.rating != null &&
                     (0, T.jsx)("div", {
-                      style: { marginTop: 10 },
-                      children: (0, T.jsx)(ChRating, { value: Number(fav.rating), readOnly: !0, size: 18, lang }),
+                      style: { marginTop: 6 },
+                      children: (0, T.jsx)(ChRating, { value: Number(fav.rating), readOnly: !0, size: 14, lang }),
                     }),
                   fav.comment &&
                     (0, T.jsx)("p", {
-                      style: { color: O.sub, fontSize: 14, lineHeight: 1.5, margin: "10px 0 0" },
+                      style: {
+                        color: O.sub,
+                        fontSize: 13,
+                        lineHeight: 1.45,
+                        margin: "6px 0 0",
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      },
                       children: fav.comment,
                     }),
                 ],

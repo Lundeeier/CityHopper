@@ -2081,7 +2081,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
       top: 0,
       left: 0,
       right: 0,
-      bottom: "calc(78px + env(safe-area-inset-bottom))",
+      bottom: 0,
       maxWidth: 620,
       margin: "0 auto",
       zIndex: 1100,
@@ -2124,7 +2124,15 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
           chAct || null,
         ],
       }),
-      (0, T.jsx)("div", { style: { flex: 1, overflowY: "auto", padding: 16 }, children }),
+      (0, T.jsx)("div", {
+        style: {
+          flex: 1,
+          overflowY: "auto",
+          padding: 16,
+          paddingBottom: "calc(94px + env(safe-area-inset-bottom))",
+        },
+        children,
+      }),
     ],
   });
 }
@@ -2583,12 +2591,12 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
             viewBox: "0 0 24 24",
             fill: "none",
             children: [
-              (0, T.jsx)("circle", { cx: "12", cy: "12", r: "3.2", stroke: O.sub, strokeWidth: "1.6" }),
+              (0, T.jsx)("circle", { cx: "12", cy: "12", r: "3.1", stroke: O.sub, strokeWidth: "1.6" }),
               (0, T.jsx)("path", {
-                d: "M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2L5.6 5.6",
+                d: "M19.1 13.6a7.6 7.6 0 000-3.2l1.8-1.3-1.8-3.1-2.1.8a7.6 7.6 0 00-2.8-1.6L13.9 2h-3.8l-.3 2.2a7.6 7.6 0 00-2.8 1.6l-2.1-.8-1.8 3.1 1.8 1.3a7.6 7.6 0 000 3.2l-1.8 1.3 1.8 3.1 2.1-.8a7.6 7.6 0 002.8 1.6l.3 2.2h3.8l.3-2.2a7.6 7.6 0 002.8-1.6l2.1.8 1.8-3.1z",
                 stroke: O.sub,
-                strokeWidth: "1.6",
-                strokeLinecap: "round",
+                strokeWidth: "1.5",
+                strokeLinejoin: "round",
               }),
             ],
           }),

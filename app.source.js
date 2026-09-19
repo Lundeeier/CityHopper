@@ -2241,6 +2241,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
           gap: 10,
           background: O.bar,
           padding: "12px 14px",
+          paddingTop: "calc(12px + env(safe-area-inset-top))",
           borderBottom: `2px solid ${O.gap}`,
           flex: "0 0 auto",
         },
@@ -3699,6 +3700,7 @@ function n5({ session: e, onLogout: t }) {
               justifyContent: "space-between",
               background: O.bar,
               padding: "14px 16px",
+              paddingTop: "calc(14px + env(safe-area-inset-top))",
             },
             children: [
               (0, T.jsxs)("div", {

@@ -3931,14 +3931,14 @@ function n5({ session: e, onLogout: t }) {
                                               style: { color: O.sub, fontSize: 12 },
                                               children: "\u{1F4F7}" + te.photos.length,
                                             }),
+                                          (0, T.jsx)(ChRating, {
+                                            value: te.rating == null ? null : Number(te.rating),
+                                            readOnly: !0,
+                                            size: 15,
+                                            compact: !0,
+                                            lang: n,
+                                          }),
                                         ],
-                                      }),
-                                      (0, T.jsx)(ChRating, {
-                                        value: te.rating == null ? null : Number(te.rating),
-                                        onChange: (Se) => chUpdate(te.id, { rating: Se }),
-                                        size: 15,
-                                        compact: !0,
-                                        lang: n,
                                       }),
                                       (0, T.jsx)("button", {
                                         className: "ch-x",

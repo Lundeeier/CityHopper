@@ -2655,7 +2655,7 @@ function ChSettings({ meId, onClose, onLogout }) {
   });
 }
 
-function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
+function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
   let [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
     [rel, setRel] = (0, U.useState)(null),
@@ -2767,8 +2767,59 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
     title: mine ? P(lang, "my_profile") : name || P(lang, "nav_profile"),
     hideBack: mine,
     action: mine
-      ? (0, T.jsx)("button", {
-          onClick: () => onOpen({ type: "settings" }),
+      ? (0, T.jsxs)("div", {
+          style: { display: "flex", alignItems: "center", gap: 4, flex: "0 0 auto" },
+          children: [
+            (0, T.jsxs)("button", {
+              onClick: () => onOpen({ type: "notifs" }),
+              "aria-label": P(lang, "notifications"),
+              style: {
+                position: "relative",
+                background: "none",
+                border: "none",
+                padding: 4,
+                lineHeight: 0,
+                cursor: "pointer",
+              },
+              children: [
+                (0, T.jsxs)("svg", {
+                  width: 22,
+                  height: 22,
+                  viewBox: "0 0 24 24",
+                  fill: "none",
+                  children: [
+                    (0, T.jsx)("path", {
+                      d: "M6 9a6 6 0 0112 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z",
+                      stroke: O.sub,
+                      strokeWidth: "1.7",
+                      strokeLinejoin: "round",
+                    }),
+                    (0, T.jsx)("path", { d: "M10 18a2 2 0 004 0", stroke: O.sub, strokeWidth: "1.7" }),
+                  ],
+                }),
+                chBell > 0 &&
+                  (0, T.jsx)("span", {
+                    style: {
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      minWidth: 16,
+                      height: 16,
+                      padding: "0 4px",
+                      borderRadius: 8,
+                      background: O.warn,
+                      color: "#fff",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      lineHeight: "16px",
+                      textAlign: "center",
+                    },
+                    children: chBell > 99 ? "99+" : chBell,
+                  }),
+              ],
+            }),
+            (0, T.jsx)("button", {
+              onClick: () => onOpen({ type: "settings" }),
           "aria-label": P(lang, "settings_title"),
           style: {
             background: "none",
@@ -2793,6 +2844,8 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout }) {
               }),
             ],
           }),
+            }),
+          ],
         })
       : null,
     onClose,
@@ -4080,6 +4133,7 @@ function n5({ session: e, onLogout: t }) {
               uid: chView.id,
               meId: e.user.id,
               onOpen: chSetView,
+              bell: chBell,
               onClose: () => {
                 (chSetView(null), chLoadBell());
               },

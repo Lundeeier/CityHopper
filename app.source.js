@@ -527,6 +527,26 @@ var O = {
       hide_locked: "Skjul l\xE5ste",
       new_badge: "Nytt merke",
       no_results: "Ingen treff.",
+      stats_title: "Statistikk",
+      compare_open: "Sammenlign med meg",
+      compare_title: "{name} og deg",
+      cmp_both: "Begge har v\xE6rt",
+      cmp_only_them: "Bare {name}",
+      cmp_only_me: "Bare du",
+      cmp_none: "Ingen steder \xE5 sammenligne enn\xE5.",
+      stats_open: "Reisetall",
+      st_north: "Nordligst",
+      st_south: "S\xF8rligst",
+      st_east: "\xD8stligst",
+      st_west: "Vestligst",
+      st_far: "Lengst mellom to steder",
+      st_first: "F\xF8rste innsjekk",
+      st_last: "Siste innsjekk",
+      st_month: "Mest aktive m\xE5ned",
+      st_years: "\xC5r for \xE5r",
+      st_no_dates: "Fyll inn bes\xF8ksdato p\xE5 stedene for \xE5 se tall per \xE5r.",
+      st_km: "{n} km",
+      st_places_n: "{n} steder",
       new_badges: "{n} nye merker",
       empty_places: "Ingen steder enn\xE5. Trykk Sjekk inn for \xE5 legge til det f\xF8rste.",
       empty_friends: "Ingen venner enn\xE5. S\xF8k opp brukernavnet til noen du kjenner.",
@@ -771,6 +791,26 @@ var O = {
       hide_locked: "Hide locked",
       new_badge: "New badge",
       no_results: "No matches.",
+      stats_title: "Statistics",
+      compare_open: "Compare with me",
+      compare_title: "{name} and you",
+      cmp_both: "Both of you",
+      cmp_only_them: "Only {name}",
+      cmp_only_me: "Only you",
+      cmp_none: "Nothing to compare yet.",
+      stats_open: "Travel numbers",
+      st_north: "Furthest north",
+      st_south: "Furthest south",
+      st_east: "Furthest east",
+      st_west: "Furthest west",
+      st_far: "Longest gap between two places",
+      st_first: "First check-in",
+      st_last: "Latest check-in",
+      st_month: "Busiest month",
+      st_years: "Year by year",
+      st_no_dates: "Add visit dates to your places to see yearly numbers.",
+      st_km: "{n} km",
+      st_places_n: "{n} places",
       new_badges: "{n} new badges",
       empty_places: "No places yet. Tap Check in to add your first.",
       empty_friends: "No friends yet. Search for someone's username.",
@@ -1017,6 +1057,26 @@ var O = {
       hide_locked: "Vergrendelde verbergen",
       new_badge: "Nieuwe badge",
       no_results: "Geen resultaten.",
+      stats_title: "Statistieken",
+      compare_open: "Vergelijk met mij",
+      compare_title: "{name} en jij",
+      cmp_both: "Allebei",
+      cmp_only_them: "Alleen {name}",
+      cmp_only_me: "Alleen jij",
+      cmp_none: "Nog niets om te vergelijken.",
+      stats_open: "Reiscijfers",
+      st_north: "Noordelijkst",
+      st_south: "Zuidelijkst",
+      st_east: "Oostelijkst",
+      st_west: "Westelijkst",
+      st_far: "Grootste afstand tussen twee plaatsen",
+      st_first: "Eerste check-in",
+      st_last: "Laatste check-in",
+      st_month: "Drukste maand",
+      st_years: "Jaar per jaar",
+      st_no_dates: "Vul bezoekdata in om jaarcijfers te zien.",
+      st_km: "{n} km",
+      st_places_n: "{n} plaatsen",
       new_badges: "{n} nieuwe badges",
       empty_places: "Nog geen plaatsen. Tik op Inchecken om je eerste toe te voegen.",
       empty_friends: "Nog geen vrienden. Zoek op iemands gebruikersnaam.",
@@ -3109,6 +3169,281 @@ function ChSettings({ meId, onClose, onLogout }) {
   });
 }
 
+function ChComparePanel({ uid, meId, name, onClose, onOpen }) {
+  let [lang] = Un(),
+    [rows, setRows] = (0, U.useState)(null);
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    return (
+      (async () => {
+        let { data: a } = await ze.from("visits").select("*").eq("user_id", meId),
+          { data: b } = await ze.from("visits").select("*").eq("user_id", uid);
+        if (!alive) return;
+        let mine = new Map(),
+          theirs = new Map();
+        (a || []).forEach((v) => mine.set(ChKeyOf(v), v));
+        (b || []).forEach((v) => theirs.set(ChKeyOf(v), v));
+        let both = [],
+          onlyMe = [],
+          onlyThem = [];
+        for (let [k, v] of mine) (theirs.has(k) ? both : onlyMe).push(v);
+        for (let [k, v] of theirs) mine.has(k) || onlyThem.push(v);
+        let sort = (l) => l.sort((x, y) => (x.country + x.place).localeCompare(y.country + y.place, "nb"));
+        setRows({ both: sort(both), onlyMe: sort(onlyMe), onlyThem: sort(onlyThem) });
+      })(),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [uid, meId]);
+  function block(title, list, tone) {
+    return (0, T.jsxs)("div", {
+      style: { marginBottom: 22 },
+      children: [
+        (0, T.jsxs)("p", {
+          style: { color: O.sub, fontSize: 12, fontWeight: 700, letterSpacing: ".06em", margin: "0 0 8px" },
+          children: [title.toUpperCase(), "  ", (0, T.jsx)("span", { style: { color: tone }, children: list.length })],
+        }),
+        list.length === 0
+          ? (0, T.jsx)("p", { style: { color: O.sub, fontSize: 14 }, children: "\u2013" })
+          : (0, T.jsx)("div", {
+              style: { display: "flex", flexWrap: "wrap", gap: 6 },
+              children: list.map((v) =>
+                (0, T.jsxs)(
+                  "button",
+                  {
+                    onClick: () =>
+                      onOpen({ type: "feed", place: v.place, country: v.country, osm: v.osm_id || null }),
+                    style: {
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 5,
+                      background: O.row,
+                      border: `1px solid ${tone}`,
+                      borderRadius: 14,
+                      color: O.text,
+                      fontFamily: "inherit",
+                      fontSize: 13,
+                      padding: "5px 10px",
+                      cursor: "pointer",
+                    },
+                    children: [
+                      (0, T.jsx)("span", { style: { fontSize: 12 }, children: l8(v.country) }),
+                      v.place,
+                    ],
+                  },
+                  v.id,
+                ),
+              ),
+            }),
+      ],
+    });
+  }
+  return (0, T.jsx)(ChPanel, {
+    title: P(lang, "compare_title", { name }),
+    onClose,
+    children:
+      rows === null
+        ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
+        : rows.both.length + rows.onlyMe.length + rows.onlyThem.length === 0
+          ? (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15 }, children: P(lang, "cmp_none") })
+          : (0, T.jsxs)(T.Fragment, {
+              children: [
+                block(P(lang, "cmp_both"), rows.both, O.accent),
+                block(P(lang, "cmp_only_them", { name }), rows.onlyThem, O.nav),
+                block(P(lang, "cmp_only_me"), rows.onlyMe, O.border),
+              ],
+            }),
+  });
+}
+
+function ChStatRow({ label, value, sub }) {
+  return (0, T.jsxs)("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 10,
+      padding: "12px 0",
+      borderBottom: `1px solid ${O.line}`,
+    },
+    children: [
+      (0, T.jsx)("span", { style: { flex: "0 0 45%", color: O.sub, fontSize: 13 }, children: label }),
+      (0, T.jsxs)("span", {
+        style: { flex: 1, minWidth: 0 },
+        children: [
+          (0, T.jsx)("span", { style: { fontSize: 15, fontWeight: 600 }, children: value }),
+          sub && (0, T.jsx)("span", { style: { color: O.sub, fontSize: 12, display: "block" }, children: sub }),
+        ],
+      }),
+    ],
+  });
+}
+
+function ChStatsPanel({ uid, onClose }) {
+  let [lang] = Un(),
+    [visits, setVisits] = (0, U.useState)(null);
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    return (
+      (async () => {
+        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        alive && setVisits(data || []);
+      })(),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [uid]);
+
+  let st = (0, U.useMemo)(() => {
+    if (!visits) return null;
+    let withPos = visits.filter((v) => v.lat != null && v.lng != null),
+      byLat = [...withPos].sort((a, b) => b.lat - a.lat),
+      byLng = [...withPos].sort((a, b) => b.lng - a.lng),
+      far = null;
+    for (let i = 0; i < withPos.length; i++)
+      for (let j = i + 1; j < withPos.length; j++) {
+        let d = ChDistKm(withPos[i].lat, withPos[i].lng, withPos[j].lat, withPos[j].lng);
+        (d != null && (!far || d > far.km)) && (far = { km: d, a: withPos[i], b: withPos[j] });
+      }
+    let dated = visits.filter((v) => v.visited_on).sort((a, b) => String(a.visited_on).localeCompare(String(b.visited_on))),
+      months = new Map(),
+      years = new Map();
+    for (let v of dated) {
+      let m = String(v.visited_on).slice(0, 7),
+        y = String(v.visited_on).slice(0, 4);
+      (months.set(m, (months.get(m) || 0) + 1), years.has(y) || years.set(y, []));
+      years.get(y).push(v);
+    }
+    let topMonth = [...months.entries()].sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0] || null;
+    return {
+      north: byLat[0] || null,
+      south: byLat[byLat.length - 1] || null,
+      east: byLng[0] || null,
+      west: byLng[byLng.length - 1] || null,
+      far,
+      first: dated[0] || null,
+      last: dated[dated.length - 1] || null,
+      topMonth,
+      years: [...years.entries()]
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .map(([y, list]) => {
+          let rated = list.filter((v) => v.rating != null);
+          return {
+            year: y,
+            places: list.length,
+            countries: new Set(list.map((v) => v.country)).size,
+            avg: rated.length ? rated.reduce((a, v) => a + Number(v.rating), 0) / rated.length : null,
+          };
+        }),
+    };
+  }, [visits]);
+
+  let月 = null;
+  return (0, T.jsx)(ChPanel, {
+    title: P(lang, "stats_title"),
+    onClose,
+    children:
+      st === null
+        ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
+        : (0, T.jsxs)(T.Fragment, {
+            children: [
+              st.north &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_north"),
+                  value: st.north.place,
+                  sub: st.north.country,
+                }),
+              st.south &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_south"),
+                  value: st.south.place,
+                  sub: st.south.country,
+                }),
+              st.east &&
+                (0, T.jsx)(ChStatRow, { label: P(lang, "st_east"), value: st.east.place, sub: st.east.country }),
+              st.west &&
+                (0, T.jsx)(ChStatRow, { label: P(lang, "st_west"), value: st.west.place, sub: st.west.country }),
+              st.far &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_far"),
+                  value: P(lang, "st_km", { n: Math.round(st.far.km).toLocaleString("nb-NO") }),
+                  sub: st.far.a.place + " \u2013 " + st.far.b.place,
+                }),
+              st.first &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_first"),
+                  value: st.first.place,
+                  sub: st.first.visited_on,
+                }),
+              st.last &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_last"),
+                  value: st.last.place,
+                  sub: st.last.visited_on,
+                }),
+              st.topMonth &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_month"),
+                  value: st.topMonth[0],
+                  sub: P(lang, "st_places_n", { n: st.topMonth[1] }),
+                }),
+              (0, T.jsx)("p", {
+                style: {
+                  color: O.sub,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: ".06em",
+                  margin: "24px 0 4px",
+                },
+                children: P(lang, "st_years").toUpperCase(),
+              }),
+              st.years.length === 0
+                ? (0, T.jsx)("p", {
+                    style: { color: O.sub, fontSize: 14, lineHeight: 1.5 },
+                    children: P(lang, "st_no_dates"),
+                  })
+                : st.years.map((y) =>
+                    (0, T.jsxs)(
+                      "div",
+                      {
+                        style: {
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 10,
+                          padding: "12px 0",
+                          borderBottom: `1px solid ${O.line}`,
+                        },
+                        children: [
+                          (0, T.jsx)("span", {
+                            style: {
+                              fontFamily: "'Space Grotesk', monospace",
+                              fontSize: 18,
+                              fontWeight: 700,
+                              color: O.accent,
+                              flex: "0 0 60px",
+                            },
+                            children: y.year,
+                          }),
+                          (0, T.jsx)("span", {
+                            style: { flex: 1, fontSize: 14 },
+                            children:
+                              y.countries + " " + P(lang, "countries") + ", " + y.places + " " + P(lang, "places"),
+                          }),
+                          (0, T.jsx)("span", {
+                            style: { color: O.accent, fontFamily: "'Space Grotesk', monospace", fontSize: 14 },
+                            children: y.avg == null ? "\u2013" : y.avg.toFixed(2),
+                          }),
+                        ],
+                      },
+                      y.year,
+                    ),
+                  ),
+            ],
+          }),
+  });
+}
+
 function ChBadgeToast({ badges, lang, onClose }) {
   ((0, U.useEffect)(() => {
     let t = setTimeout(onClose, 6e3);
@@ -3671,6 +4006,22 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                             }),
                             (0, T.jsx)("div", { style: { height: 10 } }),
                             (0, T.jsx)("button", {
+                              onClick: () => onOpen({ type: "compare", id: uid, name }),
+                              style: {
+                                width: "100%",
+                                background: "none",
+                                border: `1px solid ${O.nav}`,
+                                borderRadius: 4,
+                                color: O.nav,
+                                fontFamily: "inherit",
+                                fontSize: 15,
+                                padding: "12px 0",
+                                cursor: "pointer",
+                              },
+                              children: P(lang, "compare_open"),
+                            }),
+                            (0, T.jsx)("div", { style: { height: 10 } }),
+                            (0, T.jsx)("button", {
                               onClick: rel ? void 0 : addFriend,
                               disabled: !!rel || busy,
                               style: {
@@ -3712,6 +4063,39 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                       ],
                     }),
                     ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }),
+                    (0, T.jsxs)("button", {
+                      onClick: () => onOpen({ type: "stats", id: uid }),
+                      style: {
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        marginTop: 14,
+                        background: "none",
+                        border: "none",
+                        color: O.text,
+                        fontFamily: "inherit",
+                        cursor: "pointer",
+                        padding: "10px 0",
+                      },
+                      children: [
+                        (0, T.jsxs)("svg", {
+                          width: 22,
+                          height: 22,
+                          viewBox: "0 0 24 24",
+                          fill: "none",
+                          style: { flex: "0 0 auto" },
+                          children: [
+                            (0, T.jsx)("path", { d: "M4 20V10M10 20V4M16 20v-7M22 20H2", stroke: O.nav, strokeWidth: "1.8", strokeLinecap: "round" }),
+                          ],
+                        }),
+                        (0, T.jsx)("span", {
+                          style: { flex: 1, textAlign: "left", fontSize: 15, fontWeight: 600 },
+                          children: P(lang, "stats_open"),
+                        }),
+                        (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
+                      ],
+                    }),
                     (0, T.jsxs)("button", {
                       onClick: () => onOpen({ type: "badges", id: uid }),
                       style: {
@@ -4173,7 +4557,6 @@ function n5({ session: e, onLogout: t }) {
     [chOsm, chSetOsm] = (0, U.useState)(null),
     [chQ, chSetQ] = (0, U.useState)(""),
     [chNytt, chSetNytt] = (0, U.useState)(null),
-    chFoer = (0, U.useRef)(null),
     [chAsk, chSetAsk] = (0, U.useState)(!1),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
@@ -4325,20 +4708,26 @@ function n5({ session: e, onLogout: t }) {
     }
     (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
   }
-  // Sammenligner merkene foer og etter hver innsjekk og viser de nye
+  /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
+     alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
   (0, U.useEffect)(() => {
-    if (!chFoer.current) {
-      chFoer.current = new Set(
-        ChBadges(l, n)
-          .filter((F) => F.earned)
-          .map((F) => F.id),
-      );
-      return;
+    if (h) return;
+    let F = "ch_badges_" + e.user.id,
+      te = ChBadges(l, n).filter((at) => at.earned),
+      Se = te.map((at) => at.id),
+      gt = null;
+    try {
+      let dn = localStorage.getItem(F);
+      dn && (gt = new Set(JSON.parse(dn)));
+    } catch {}
+    if (gt) {
+      let dn = te.filter((Zn) => !gt.has(Zn.id));
+      dn.length && chSetNytt(dn);
     }
-    let F = ChBadges(l, n).filter((te) => te.earned),
-      Se = F.filter((te) => !chFoer.current.has(te.id));
-    ((chFoer.current = new Set(F.map((te) => te.id))), Se.length && chSetNytt(Se));
-  }, [l, n]);
+    try {
+      localStorage.setItem(F, JSON.stringify(Se));
+    } catch {}
+  }, [l, n, h, e.user.id]);
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
       (D(P(n, "err_no_geo")), M(!0));
@@ -4936,6 +5325,21 @@ function n5({ session: e, onLogout: t }) {
               onEnable: async () => {
                 (await ChPushOn(e.user.id), chAskDone());
               },
+            }),
+          chView &&
+            chView.type === "compare" &&
+            (0, T.jsx)(ChComparePanel, {
+              uid: chView.id,
+              meId: e.user.id,
+              name: chView.name,
+              onOpen: chSetView,
+              onClose: () => chSetView({ type: "profile", id: chView.id }),
+            }),
+          chView &&
+            chView.type === "stats" &&
+            (0, T.jsx)(ChStatsPanel, {
+              uid: chView.id,
+              onClose: () => chSetView({ type: "profile", id: chView.id }),
             }),
           chView &&
             chView.type === "badges" &&

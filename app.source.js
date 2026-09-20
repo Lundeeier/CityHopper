@@ -536,6 +536,18 @@ var O = {
       cmp_none: "Ingen steder \xE5 sammenligne enn\xE5.",
       stats_open: "Reisetall",
       st_north: "Nordligst",
+      st_high: "H\xF8yest over havet",
+      st_cap_high: "H\xF8yeste hovedstad",
+      st_cap_low: "Laveste hovedstad",
+      st_low: "Lavest over havet",
+      st_masl: "{n} moh.",
+      st_world: "Andel av verdens land",
+      st_caps: "Hovedsteder bes\xF8kt",
+      st_caps_sub: "{n} % av landene dine",
+      st_cap_north: "Nordligste hovedstad",
+      st_cap_south: "S\xF8rligste hovedstad",
+      st_cap_east: "\xD8stligste hovedstad",
+      st_cap_west: "Vestligste hovedstad",
       st_south: "S\xF8rligst",
       st_east: "\xD8stligst",
       st_west: "Vestligst",
@@ -800,6 +812,18 @@ var O = {
       cmp_none: "Nothing to compare yet.",
       stats_open: "Travel numbers",
       st_north: "Furthest north",
+      st_high: "Highest above sea level",
+      st_cap_high: "Highest capital",
+      st_cap_low: "Lowest capital",
+      st_low: "Lowest above sea level",
+      st_masl: "{n} m",
+      st_world: "Share of the world's countries",
+      st_caps: "Capitals visited",
+      st_caps_sub: "{n}% of your countries",
+      st_cap_north: "Northernmost capital",
+      st_cap_south: "Southernmost capital",
+      st_cap_east: "Easternmost capital",
+      st_cap_west: "Westernmost capital",
       st_south: "Furthest south",
       st_east: "Furthest east",
       st_west: "Furthest west",
@@ -1066,6 +1090,18 @@ var O = {
       cmp_none: "Nog niets om te vergelijken.",
       stats_open: "Reiscijfers",
       st_north: "Noordelijkst",
+      st_high: "Hoogst boven zeeniveau",
+      st_cap_high: "Hoogste hoofdstad",
+      st_cap_low: "Laagste hoofdstad",
+      st_low: "Laagst boven zeeniveau",
+      st_masl: "{n} m",
+      st_world: "Aandeel van alle landen",
+      st_caps: "Hoofdsteden bezocht",
+      st_caps_sub: "{n}% van jouw landen",
+      st_cap_north: "Noordelijkste hoofdstad",
+      st_cap_south: "Zuidelijkste hoofdstad",
+      st_cap_east: "Oostelijkste hoofdstad",
+      st_cap_west: "Westelijkste hoofdstad",
       st_south: "Zuidelijkst",
       st_east: "Oostelijkst",
       st_west: "Westelijkst",
@@ -3279,6 +3315,30 @@ function ChStatRow({ label, value, sub }) {
   });
 }
 
+/* Henter meter over havet fra Open-Meteo for steder som mangler det.
+   Inntil 100 koordinater per foresporsel, og bare for dine egne steder. */
+async function ChFillElevation(visits, uid) {
+  let mangler = visits.filter((v) => v.user_id === uid && v.lat != null && v.lng != null && v.elevation == null);
+  if (!mangler.length) return 0;
+  let gjort = 0;
+  for (let i = 0; i < mangler.length; i += 100) {
+    let del = mangler.slice(i, i + 100),
+      lat = del.map((v) => v.lat).join(","),
+      lng = del.map((v) => v.lng).join(",");
+    try {
+      let r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`),
+        j = await r.json();
+      if (!j || !Array.isArray(j.elevation)) continue;
+      for (let k = 0; k < del.length; k++) {
+        let m = j.elevation[k];
+        if (m == null) continue;
+        (await ze.from("visits").update({ elevation: m }).eq("id", del[k].id), (del[k].elevation = m), gjort++);
+      }
+    } catch {}
+  }
+  return gjort;
+}
+
 function ChStatsPanel({ uid, onClose }) {
   let [lang] = Un(),
     [visits, setVisits] = (0, U.useState)(null);
@@ -3287,7 +3347,9 @@ function ChStatsPanel({ uid, onClose }) {
     return (
       (async () => {
         let { data } = await ze.from("visits").select("*").eq("user_id", uid);
-        alive && setVisits(data || []);
+        if (!alive) return;
+        (setVisits(data || []),
+          (await ChFillElevation(data || [], uid)) && alive && setVisits([...(data || [])]));
       })(),
       () => {
         alive = !1;
@@ -3306,7 +3368,17 @@ function ChStatsPanel({ uid, onClose }) {
         let d = ChDistKm(withPos[i].lat, withPos[i].lng, withPos[j].lat, withPos[j].lng);
         (d != null && (!far || d > far.km)) && (far = { km: d, a: withPos[i], b: withPos[j] });
       }
-    let dated = visits.filter((v) => v.visited_on).sort((a, b) => String(a.visited_on).localeCompare(String(b.visited_on))),
+    let withEl = visits.filter((v) => v.elevation != null).sort((a, b) => b.elevation - a.elevation),
+      capList = visits.filter((v) => {
+        let c = yc(v.country);
+        return c && c.capital && ChKey(v.place, v.country) === ChKey(c.capital, v.country);
+      }),
+      capPos = capList.filter((v) => v.lat != null && v.lng != null),
+      capLat = [...capPos].sort((a, b) => b.lat - a.lat),
+      capLng = [...capPos].sort((a, b) => b.lng - a.lng),
+      capEl = capList.filter((v) => v.elevation != null).sort((a, b) => b.elevation - a.elevation),
+      landKoder = new Set(visits.map((v) => (yc(v.country) || {}).code).filter(Boolean)),
+      dated = visits.filter((v) => v.visited_on).sort((a, b) => String(a.visited_on).localeCompare(String(b.visited_on))),
       months = new Map(),
       years = new Map();
     for (let v of dated) {
@@ -3317,6 +3389,18 @@ function ChStatsPanel({ uid, onClose }) {
     }
     let topMonth = [...months.entries()].sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0] || null;
     return {
+      high: withEl[0] || null,
+      low: withEl[withEl.length - 1] || null,
+      worldPct: landKoder.size ? (landKoder.size / vc.length) * 100 : 0,
+      worldN: landKoder.size,
+      caps: capList.length,
+      capsPct: landKoder.size ? Math.round((capList.length / landKoder.size) * 100) : 0,
+      capNorth: capLat[0] || null,
+      capSouth: capLat[capLat.length - 1] || null,
+      capEast: capLng[0] || null,
+      capWest: capLng[capLng.length - 1] || null,
+      capHigh: capEl[0] || null,
+      capLow: capEl[capEl.length - 1] || null,
       north: byLat[0] || null,
       south: byLat[byLat.length - 1] || null,
       east: byLng[0] || null,
@@ -3364,6 +3448,64 @@ function ChStatsPanel({ uid, onClose }) {
                 (0, T.jsx)(ChStatRow, { label: P(lang, "st_east"), value: st.east.place, sub: st.east.country }),
               st.west &&
                 (0, T.jsx)(ChStatRow, { label: P(lang, "st_west"), value: st.west.place, sub: st.west.country }),
+              st.capNorth &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_north"),
+                  value: st.capNorth.place,
+                  sub: st.capNorth.country,
+                }),
+              st.capSouth &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_south"),
+                  value: st.capSouth.place,
+                  sub: st.capSouth.country,
+                }),
+              st.capEast &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_east"),
+                  value: st.capEast.place,
+                  sub: st.capEast.country,
+                }),
+              st.capWest &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_west"),
+                  value: st.capWest.place,
+                  sub: st.capWest.country,
+                }),
+              st.high &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_high"),
+                  value: st.high.place,
+                  sub: P(lang, "st_masl", { n: Math.round(st.high.elevation) }) + " \u2022 " + st.high.country,
+                }),
+              st.low &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_low"),
+                  value: st.low.place,
+                  sub: P(lang, "st_masl", { n: Math.round(st.low.elevation) }) + " \u2022 " + st.low.country,
+                }),
+              st.capHigh &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_high"),
+                  value: st.capHigh.place,
+                  sub: P(lang, "st_masl", { n: Math.round(st.capHigh.elevation) }) + " \u2022 " + st.capHigh.country,
+                }),
+              st.capLow &&
+                (0, T.jsx)(ChStatRow, {
+                  label: P(lang, "st_cap_low"),
+                  value: st.capLow.place,
+                  sub: P(lang, "st_masl", { n: Math.round(st.capLow.elevation) }) + " \u2022 " + st.capLow.country,
+                }),
+              (0, T.jsx)(ChStatRow, {
+                label: P(lang, "st_world"),
+                value: st.worldPct.toFixed(1).replace(".", ",") + " %",
+                sub: st.worldN + " / " + vc.length,
+              }),
+              (0, T.jsx)(ChStatRow, {
+                label: P(lang, "st_caps"),
+                value: String(st.caps),
+                sub: P(lang, "st_caps_sub", { n: st.capsPct }),
+              }),
               st.far &&
                 (0, T.jsx)(ChStatRow, {
                   label: P(lang, "st_far"),

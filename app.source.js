@@ -3228,11 +3228,16 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
             });
           }));
         (alive && setItems(out),
-          ze
+          await ze
             .from("profiles")
             .update({ seen_feed_at: new Date().toISOString() })
-            .eq("id", meId)
-            .then(() => onSeen && onSeen()));
+            .eq("id", meId),
+          await ze
+            .from("messages")
+            .update({ read_at: new Date().toISOString() })
+            .eq("recipient_id", meId)
+            .is("read_at", null),
+          onSeen && onSeen());
       })(),
       () => {
         alive = !1;

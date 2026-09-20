@@ -489,6 +489,37 @@ var O = {
       note_placeholder: "Hvordan var det? Skriv et notat",
       favorite_city: "Min favorittby",
       settings_title: "Innstillinger",
+      tab_badges: "Merker",
+      badges_title: "Merker",
+      badges_earned: "{n} av {t}",
+      visited_on: "Bes\xF8kt dato",
+      visited_on_unset: "Ikke satt",
+      b_countries: "{n} land",
+      b_places: "{n} steder",
+      b_capitals: "{n} hovedsteder",
+      b_week: "Perfect week",
+      b_week_desc: "Innsjekk hver dag mandag til s\xF8ndag",
+      b_streak: "{n} dager p\xE5 rad",
+      b_three: "Tre land p\xE5 \xE9n dag",
+      b_nordic: "Norden komplett",
+      b_rater: "Vurdert {n} steder",
+      b_photo: "Bilder p\xE5 {n} steder",
+      b_writer: "Notat p\xE5 {n} steder",
+      b_night: "Nattugle",
+      b_night_desc: "Innsjekk mellom midnatt og fem",
+      b_group_countries: "Land",
+      b_group_counts: "Milep\xE6ler",
+      b_group_special: "Bragder",
+      cont_EU: "Europa",
+      cont_AS: "Asia",
+      cont_AF: "Afrika",
+      cont_NA: "Nord-Amerika",
+      cont_SA: "Sør-Amerika",
+      cont_OC: "Oseania",
+      cont_AN: "Antarktis",
+      b_cont: "{name} komplett",
+      b_cont_all: "Alle verdensdeler",
+      b_locked: "Ikke oppn\xE5dd enn\xE5",
       push_title: "F\xE5 beskjed n\xE5r det skjer noe",
       push_body: "Vi sier fra n\xE5r du f\xE5r melding, venneforesp\xF8rsel, eller n\xE5r en venn sjekker inn et sted.",
       push_enable: "Sl\xE5 p\xE5 varsler",
@@ -679,6 +710,37 @@ var O = {
       note_placeholder: "How was it? Leave a note",
       favorite_city: "My favourite city",
       settings_title: "Settings",
+      tab_badges: "Badges",
+      badges_title: "Badges",
+      badges_earned: "{n} of {t}",
+      visited_on: "Date visited",
+      visited_on_unset: "Not set",
+      b_countries: "{n} countries",
+      b_places: "{n} places",
+      b_capitals: "{n} capitals",
+      b_week: "Perfect week",
+      b_week_desc: "A check-in every day from Monday to Sunday",
+      b_streak: "{n} days in a row",
+      b_three: "Three countries in one day",
+      b_nordic: "All of the Nordics",
+      b_rater: "Rated {n} places",
+      b_photo: "Photos on {n} places",
+      b_writer: "Notes on {n} places",
+      b_night: "Night owl",
+      b_night_desc: "A check-in between midnight and five",
+      b_group_countries: "Countries",
+      b_group_counts: "Milestones",
+      b_group_special: "Feats",
+      cont_EU: "Europe",
+      cont_AS: "Asia",
+      cont_AF: "Africa",
+      cont_NA: "North America",
+      cont_SA: "South America",
+      cont_OC: "Oceania",
+      cont_AN: "Antarctica",
+      b_cont: "All of {name}",
+      b_cont_all: "Every continent",
+      b_locked: "Not earned yet",
       push_title: "Get notified when something happens",
       push_body: "We'll let you know about messages, friend requests, and when a friend checks in somewhere.",
       push_enable: "Turn on notifications",
@@ -871,6 +933,37 @@ var O = {
       note_placeholder: "Hoe was het? Schrijf een notitie",
       favorite_city: "Mijn favoriete stad",
       settings_title: "Instellingen",
+      tab_badges: "Badges",
+      badges_title: "Badges",
+      badges_earned: "{n} van {t}",
+      visited_on: "Datum bezocht",
+      visited_on_unset: "Niet ingesteld",
+      b_countries: "{n} landen",
+      b_places: "{n} plaatsen",
+      b_capitals: "{n} hoofdsteden",
+      b_week: "Perfecte week",
+      b_week_desc: "Elke dag inchecken van maandag tot zondag",
+      b_streak: "{n} dagen op rij",
+      b_three: "Drie landen op \xE9\xE9n dag",
+      b_nordic: "Heel Scandinavi\xEB",
+      b_rater: "{n} plaatsen beoordeeld",
+      b_photo: "Foto's bij {n} plaatsen",
+      b_writer: "Notities bij {n} plaatsen",
+      b_night: "Nachtuil",
+      b_night_desc: "Inchecken tussen middernacht en vijf",
+      b_group_countries: "Landen",
+      b_group_counts: "Mijlpalen",
+      b_group_special: "Prestaties",
+      cont_EU: "Europa",
+      cont_AS: "Azië",
+      cont_AF: "Afrika",
+      cont_NA: "Noord-Amerika",
+      cont_SA: "Zuid-Amerika",
+      cont_OC: "Oceanië",
+      cont_AN: "Antarctica",
+      b_cont: "Heel {name}",
+      b_cont_all: "Alle werelddelen",
+      b_locked: "Nog niet behaald",
       push_title: "Krijg bericht als er iets gebeurt",
       push_body: "We laten het weten bij berichten, vriendschapsverzoeken en wanneer een vriend ergens incheckt.",
       push_enable: "Meldingen aanzetten",
@@ -1799,7 +1892,8 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
     [A, R] = (0, U.useState)(!1),
     [S, b] = (0, U.useState)(""),
     [chGone, chSetGone] = (0, U.useState)([]),
-    [chAdded, chSetAdded] = (0, U.useState)([]);
+    [chAdded, chSetAdded] = (0, U.useState)([]),
+    [chDate, chSetDate] = (0, U.useState)(e.visited_on ? String(e.visited_on).slice(0, 10) : "");
   function chClose() {
     (chAdded.length && ze.storage.from("visit-photos").remove(chAdded), s());
   }
@@ -1827,6 +1921,7 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
       comment: c.trim() ? c.trim().slice(0, 160) : null,
       rating: f,
       photos: v,
+      visited_on: chDate || null,
     });
     (R(!1),
       I
@@ -1942,6 +2037,28 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
           children: P(l, "rating_label"),
         }),
         (0, T.jsx)(ChRating, { value: f, onChange: g, readOnly: n, lang: l, size: 38 }),
+        (0, T.jsx)("p", {
+          style: {
+            color: O.sub,
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: ".06em",
+            margin: "18px 0 8px",
+          },
+          children: P(l, "visited_on"),
+        }),
+        n
+          ? (0, T.jsx)("p", {
+              style: { fontSize: 15, margin: 0 },
+              children: chDate || P(l, "visited_on_unset"),
+            })
+          : (0, T.jsx)("input", {
+              className: "ch-field",
+              type: "date",
+              value: chDate,
+              max: new Date().toISOString().slice(0, 10),
+              onChange: (I) => chSetDate(I.target.value),
+            }),
         S && (0, T.jsx)("p", { style: { color: O.warn, fontSize: 14, margin: "12px 0 0" }, children: S }),
         (0, T.jsx)("div", { style: { height: 18 } }),
         !n &&
@@ -2127,6 +2244,232 @@ function ChPushPrompt({ lang, onEnable, onLater }) {
       ],
     }),
   });
+}
+
+var Ch_CONT = {
+  EU: ["AD", "AL", "AT", "AX", "BA", "BE", "BG", "BY", "CH", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FO", "FR", "GB", "GB-ENG", "GB-SCT", "GB-WLS", "GB-NIR", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT", "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS", "RU", "SE", "SI", "SJ", "SK", "SM", "UA", "VA", "XK"],
+  AS: ["AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CC", "CN", "CX", "GE", "HK", "ID", "IL", "IN", "IO", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA", "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA", "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "VN", "YE"],
+  AF: ["AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ", "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR", "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SH", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW"],
+  NA: ["AG", "AI", "AW", "BB", "BL", "BM", "BQ", "BS", "BZ", "CA", "CR", "CU", "CW", "DM", "DO", "GD", "GL", "GP", "GT", "HN", "HT", "JM", "KN", "KY", "LC", "MF", "MQ", "MS", "MX", "NI", "PA", "PM", "PR", "SV", "SX", "TC", "TT", "US", "VC", "VG", "VI"],
+  SA: ["AR", "BO", "BR", "CL", "CO", "EC", "FK", "GF", "GS", "GY", "PE", "PY", "SR", "UY", "VE"],
+  OC: ["AS", "AU", "CK", "FJ", "FM", "GU", "HM", "KI", "MH", "MP", "NC", "NF", "NR", "NU", "NZ", "PF", "PG", "PN", "PW", "SB", "TF", "TK", "TO", "TV", "UM", "VU", "WF", "WS"],
+  AN: ["AQ", "BV"],
+};
+
+var Ch_CONT_OF = (() => {
+  let m = new Map();
+  for (let k of Object.keys(Ch_CONT)) for (let c of Ch_CONT[k]) m.set(c, k);
+  return m;
+})();
+
+var Ch_NORDIC = ["NO", "SE", "DK", "FI", "IS"];
+
+function ChDayKey(v) {
+  // Bruker datoen du har satt. Er den ikke satt, teller besoket ikke i dagbaserte merker.
+  return v && v.visited_on ? String(v.visited_on).slice(0, 10) : null;
+}
+
+function ChStreak(days) {
+  let sorted = [...days].sort(),
+    best = 0,
+    run = 0,
+    prev = null;
+  for (let d of sorted) {
+    let t = Date.parse(d + "T00:00:00Z");
+    run = prev !== null && t - prev === 864e5 ? run + 1 : 1;
+    ((best = Math.max(best, run)), (prev = t));
+  }
+  return best;
+}
+
+function ChPerfectWeek(days) {
+  let set = new Set(days);
+  for (let d of set) {
+    let t = new Date(d + "T00:00:00Z"),
+      wd = (t.getUTCDay() + 6) % 7,
+      mon = new Date(t.getTime() - wd * 864e5),
+      ok = !0;
+    for (let i = 0; i < 7; i++)
+      if (!set.has(new Date(mon.getTime() + i * 864e5).toISOString().slice(0, 10))) {
+        ok = !1;
+        break;
+      }
+    if (ok) return !0;
+  }
+  return !1;
+}
+
+/* Regner ut alle merkene fra innsjekkene. Ingenting lagres: endrer du et sted,
+   endrer merkene seg med. */
+function ChBadges(visits, lang) {
+  let codes = new Set(),
+    days = [],
+    perDay = new Map(),
+    caps = 0,
+    rated = 0,
+    withPhoto = 0,
+    withNote = 0,
+    night = !1;
+  for (let v of visits) {
+    let c = yc(v.country);
+    c && codes.add(c.code);
+    let d = ChDayKey(v);
+    if (d) {
+      (days.push(d), perDay.has(d) || perDay.set(d, new Set()));
+      c && perDay.get(d).add(c.code);
+    }
+    if (c && c.capital && ChKey(v.place, v.country) === ChKey(c.capital, v.country)) caps++;
+    if (v.rating != null) rated++;
+    if (v.photos && v.photos.length) withPhoto++;
+    if (v.comment) withNote++;
+    if (v.created_at) {
+      let h = new Date(v.created_at).getHours();
+      h >= 0 && h < 5 && (night = !0);
+    }
+  }
+  let nCountries = codes.size,
+    nPlaces = visits.length,
+    uniqueDays = [...new Set(days)],
+    streak = ChStreak(uniqueDays),
+    three = [...perDay.values()].some((s) => s.size >= 3),
+    out = [];
+
+  for (let c of vc)
+    out.push({
+      id: "land-" + c.code,
+      group: "countries",
+      label: c.name,
+      flag: l8(c.name),
+      earned: codes.has(c.code),
+    });
+
+  for (let i = 1; i <= Math.max(nCountries, 1); i++)
+    out.push({
+      id: "ant-land-" + i,
+      group: "counts",
+      label: P(lang, "b_countries", { n: i }),
+      num: i,
+      earned: nCountries >= i,
+    });
+  if (nCountries < 200)
+    out.push({
+      id: "ant-land-" + (nCountries + 1),
+      group: "counts",
+      label: P(lang, "b_countries", { n: nCountries + 1 }),
+      num: nCountries + 1,
+      earned: !1,
+    });
+
+  for (let n of [1, 10, 25, 50, 100, 150, 200, 250, 500])
+    out.push({
+      id: "ant-sted-" + n,
+      group: "counts",
+      label: P(lang, "b_places", { n }),
+      num: n,
+      earned: nPlaces >= n,
+    });
+  for (let n of [1, 5, 10, 25])
+    out.push({
+      id: "ant-hov-" + n,
+      group: "counts",
+      label: P(lang, "b_capitals", { n }),
+      num: n,
+      icon: "cup",
+      earned: caps >= n,
+    });
+
+  (out.push({
+    id: "uke",
+    group: "special",
+    label: P(lang, "b_week"),
+    desc: P(lang, "b_week_desc"),
+    icon: "cal",
+    earned: ChPerfectWeek(uniqueDays),
+  }),
+    [3, 7, 14, 30].forEach((n) =>
+      out.push({
+        id: "rad-" + n,
+        group: "special",
+        label: P(lang, "b_streak", { n }),
+        num: n,
+        icon: "cal",
+        earned: streak >= n,
+      }),
+    ),
+    out.push({
+      id: "tre-land",
+      group: "special",
+      label: P(lang, "b_three"),
+      icon: "pin",
+      earned: three,
+    }),
+    out.push({
+      id: "norden",
+      group: "special",
+      label: P(lang, "b_nordic"),
+      icon: "pin",
+      earned: Ch_NORDIC.every((c) => codes.has(c)),
+    }),
+    (() => {
+      let hit = new Set();
+      for (let c of codes) {
+        let k = Ch_CONT_OF.get(c);
+        k && hit.add(k);
+      }
+      for (let k of Object.keys(Ch_CONT))
+        out.push({
+          id: "kont-" + k,
+          group: "special",
+          label: P(lang, "cont_" + k),
+          icon: "globe",
+          cont: k,
+          earned: hit.has(k),
+        });
+      out.push({
+        id: "kont-alle",
+        group: "special",
+        label: P(lang, "b_cont_all"),
+        icon: "globe",
+        earned: hit.size >= 7,
+      });
+    })(),
+    [10, 50, 100].forEach((n) =>
+      out.push({
+        id: "vurdert-" + n,
+        group: "special",
+        label: P(lang, "b_rater", { n }),
+        num: n,
+        icon: "star",
+        earned: rated >= n,
+      }),
+    ),
+    [10, 50].forEach((n) =>
+      out.push({
+        id: "foto-" + n,
+        group: "special",
+        label: P(lang, "b_photo", { n }),
+        num: n,
+        icon: "cam",
+        earned: withPhoto >= n,
+      }),
+    ),
+    out.push({
+      id: "notat-25",
+      group: "special",
+      label: P(lang, "b_writer", { n: 25 }),
+      num: 25,
+      icon: "pen",
+      earned: withNote >= 25,
+    }),
+    out.push({
+      id: "natt",
+      group: "special",
+      label: P(lang, "b_night"),
+      desc: P(lang, "b_night_desc"),
+      icon: "moon",
+      earned: night,
+    }));
+  return out;
 }
 
 function ChNavIcon(name, on) {
@@ -2677,6 +3020,142 @@ function ChSettings({ meId, onClose, onLogout }) {
   });
 }
 
+function ChBadgeFace({ b, size: sz = 56 }) {
+  let on = b.earned,
+    ring = on ? (b.group === "countries" ? O.nav : O.accent) : "#22384F",
+    ink = on ? (b.group === "countries" ? O.nav : O.accent) : O.border;
+  return (0, T.jsxs)("div", {
+    style: {
+      width: sz,
+      height: sz,
+      borderRadius: "50%",
+      border: `2px ${on ? "solid" : "dashed"} ${ring}`,
+      background: on ? O.row : "#0F1D2E",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flex: "0 0 auto",
+      opacity: on ? 1 : 0.75,
+    },
+    children: [
+      b.group === "countries"
+        ? on
+          ? (0, T.jsx)("span", { style: { fontSize: Math.round(sz * 0.46) }, children: b.flag })
+          : (0, T.jsxs)("svg", {
+              width: sz * 0.4,
+              height: sz * 0.4,
+              viewBox: "0 0 24 24",
+              fill: "none",
+              children: [
+                (0, T.jsx)("rect", { x: "5", y: "10", width: "14", height: "11", rx: "2", stroke: ink, strokeWidth: "1.8" }),
+                (0, T.jsx)("path", { d: "M8 10V7a4 4 0 018 0v3", stroke: ink, strokeWidth: "1.8" }),
+              ],
+            })
+        : b.num != null
+          ? (0, T.jsx)("span", {
+              style: {
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: Math.round(sz * (String(b.num).length > 2 ? 0.3 : 0.36)),
+                color: ink,
+              },
+              children: b.num,
+            })
+          : (0, T.jsx)("span", {
+              style: { fontSize: Math.round(sz * 0.4), color: ink, lineHeight: 1 },
+              children: "\u2605",
+            }),
+    ],
+  });
+}
+
+function ChBadgesPanel({ uid, meId, onClose }) {
+  let [lang] = Un(),
+    [visits, setVisits] = (0, U.useState)(null),
+    [tab, setTab] = (0, U.useState)("counts");
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    return (
+      (async () => {
+        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        alive && setVisits(data || []);
+      })(),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [uid]);
+  let all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang) : []), [visits, lang]),
+    mine = all.filter((b) => b.group === tab),
+    shown = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
+    got = all.filter((b) => b.earned).length;
+  return (0, T.jsxs)(ChPanel, {
+    title: P(lang, "badges_title"),
+    onClose,
+    children: [
+      (0, T.jsx)("p", {
+        style: { color: O.sub, fontSize: 13, margin: "0 0 14px" },
+        children: P(lang, "badges_earned", { n: got, t: all.length }),
+      }),
+      (0, T.jsx)("div", {
+        style: { display: "flex", gap: 8, marginBottom: 16 },
+        children: [
+          ["counts", P(lang, "b_group_counts")],
+          ["special", P(lang, "b_group_special")],
+          ["countries", P(lang, "b_group_countries")],
+        ].map(([k, t]) =>
+          (0, T.jsx)(
+            "button",
+            {
+              onClick: () => setTab(k),
+              style: {
+                flex: 1,
+                background: "none",
+                border: `1px solid ${tab === k ? O.nav : O.line}`,
+                borderRadius: 4,
+                color: tab === k ? O.nav : O.sub,
+                fontFamily: "inherit",
+                fontSize: 13,
+                fontWeight: tab === k ? 600 : 400,
+                padding: "9px 0",
+                cursor: "pointer",
+              },
+              children: t,
+            },
+            k,
+          ),
+        ),
+      }),
+      visits === null
+        ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
+        : (0, T.jsx)("div", {
+            style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "18px 8px" },
+            children: shown.map((b) =>
+              (0, T.jsxs)(
+                "div",
+                {
+                  style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6 },
+                  children: [
+                    (0, T.jsx)(ChBadgeFace, { b }),
+                    (0, T.jsx)("span", {
+                      style: {
+                        fontSize: 10,
+                        lineHeight: 1.3,
+                        textAlign: "center",
+                        color: b.earned ? O.text : O.border,
+                      },
+                      children: b.label,
+                    }),
+                  ],
+                },
+                b.id,
+              ),
+            ),
+          }),
+    ],
+  });
+}
+
 function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
   let [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
@@ -2731,7 +3210,10 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
       }
     );
   }, [uid, meId, mine]);
-  let fav = (0, U.useMemo)(
+  let badgeAll = (0, U.useMemo)(() => ChBadges(visits, lang), [visits, lang]),
+    badgeGot = badgeAll.filter((b) => b.earned).length,
+    badgePeek = badgeAll.filter((b) => b.earned).slice(-3),
+    fav = (0, U.useMemo)(
       () => (prof && prof.favorite_visit_id ? visits.find((v) => v.id === prof.favorite_visit_id) || null : null),
       [prof, visits],
     ),
@@ -3011,6 +3493,41 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                       ],
                     }),
                     ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }),
+                    (0, T.jsxs)("button", {
+                      onClick: () => onOpen({ type: "badges", id: uid }),
+                      style: {
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        marginTop: 22,
+                        paddingTop: 16,
+                        borderTop: `1px solid ${O.line}`,
+                        background: "none",
+                        border: "none",
+                        borderTopStyle: "solid",
+                        color: O.text,
+                        fontFamily: "inherit",
+                        cursor: "pointer",
+                      },
+                      children: [
+                        (0, T.jsxs)("div", {
+                          style: { display: "flex", gap: 6, flex: "0 0 auto" },
+                          children: badgePeek.map((b) =>
+                            (0, T.jsx)(ChBadgeFace, { b, size: 34 }, b.id),
+                          ),
+                        }),
+                        (0, T.jsx)("span", {
+                          style: { flex: 1, textAlign: "left", fontSize: 15, fontWeight: 600 },
+                          children: P(lang, "badges_title"),
+                        }),
+                        (0, T.jsx)("span", {
+                          style: { color: O.sub, fontSize: 13 },
+                          children: P(lang, "badges_earned", { n: badgeGot, t: badgeAll.length }),
+                        }),
+                        (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
+                      ],
+                    }),
                   ],
                 }),
           ],
@@ -3564,6 +4081,7 @@ function n5({ session: e, onLogout: t }) {
         rating: chR ?? null,
         photos: chP ?? [],
         osm_id: chO ?? null,
+        visited_on: new Date().toISOString().slice(0, 10),
       })
       .select()
       .single();
@@ -4172,6 +4690,13 @@ function n5({ session: e, onLogout: t }) {
               onEnable: async () => {
                 (await ChPushOn(e.user.id), chAskDone());
               },
+            }),
+          chView &&
+            chView.type === "badges" &&
+            (0, T.jsx)(ChBadgesPanel, {
+              uid: chView.id,
+              meId: e.user.id,
+              onClose: () => chSetView({ type: "profile", id: chView.id }),
             }),
           chView &&
             chView.type === "settings" &&

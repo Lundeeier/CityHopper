@@ -1,4 +1,4 @@
-var CACHE = "cityhopper-v4";
+var CACHE = "cityhopper-v5";
 
 /* index.html hentes alltid friskt, slik at versjonslappen på app.js er
    oppdatert. app.js, ikoner og manifest mellomlagres, og siden app.js har
@@ -27,7 +27,7 @@ self.addEventListener("activate", function (e) {
 });
 
 function isAsset(url) {
-  return /\/(app\.js|icon-192\.png|icon-512\.png|manifest\.webmanifest)$/.test(url.pathname);
+  return /\/(app\.js|leaflet\.js|icon-192\.png|icon-512\.png|manifest\.webmanifest)$/.test(url.pathname);
 }
 
 /* Rydder bort tidligere versjoner av samme fil, slik at mellomlageret

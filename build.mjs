@@ -26,11 +26,32 @@ await new Promise((ok, no) => {
   t.on("exit", (code) => (code === 0 ? ok() : no(new Error("Røyktesten feilet — publiserer ikke."))));
 });
 
+// Kartbiblioteket i egen fil, lastes forst naar Kart-fanen apnes
+await build({
+  stdin: {
+    contents: 'import L from "leaflet"; window.L = L;',
+    resolveDir: ".",
+    loader: "js",
+  },
+  bundle: true,
+  minify: true,
+  format: "iife",
+  target: "es2020",
+  outfile: "dist/leaflet.js",
+});
+
+const leafletBundle = await readFile("dist/leaflet.js");
+const leafletVersion = createHash("sha256").update(leafletBundle).digest("hex").slice(0, 10);
+
 const bundle = await readFile("dist/app.js");
 const version = createHash("sha256").update(bundle).digest("hex").slice(0, 10);
 
 const html = await readFile("index.html", "utf8");
-const patched = html.replace(/app\.js(\?v=[^"']*)?/g, `app.js?v=${version}`);
+let patched = html.replace(/app\.js(\?v=[^"']*)?/g, `app.js?v=${version}`);
+patched = patched.replace(
+  "<script src=",
+  `<script>window.__CH_LEAFLET_V="${leafletVersion}";</script>\n<script src=`,
+);
 if (patched === html && !html.includes("app.js")) {
   throw new Error("Fant ikke app.js-referansen i index.html");
 }
@@ -38,4 +59,4 @@ await writeFile("dist/index.html", patched);
 
 for (const f of STATIC) await copyFile(f, `dist/${f}`);
 
-console.log(`Bygget ferdig. Versjon ${version}, ${(bundle.length / 1024).toFixed(0)} kB.`);
+console.log(`Bygget ferdig. Versjon ${version}, app ${(bundle.length / 1024).toFixed(0)} kB + kart ${(leafletBundle.length / 1024).toFixed(0)} kB.`);

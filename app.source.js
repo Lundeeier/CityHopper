@@ -1,9 +1,25 @@
 import * as U from "react";
 import * as r8 from "react-dom/client";
 import * as T from "react/jsx-runtime";
-import Leaflet from "leaflet";
 import { createClient } from "@supabase/supabase-js";
-var Ra = { default: Leaflet };
+/* Kartbiblioteket er stort og brukes bare i Kart-fanen, saa det lastes ned
+   forst naar kartet faktisk aapnes. */
+var Ra = { default: null },
+  Ch_LEAFLET = null;
+function ChLoadLeaflet() {
+  return (
+    Ch_LEAFLET ||
+    (Ch_LEAFLET = new Promise((ok, no) => {
+      if (window.L) return ((Ra.default = window.L), ok(window.L));
+      let sc = document.createElement("script");
+      ((sc.src = "leaflet.js?v=" + (window.__CH_LEAFLET_V || "1")),
+        (sc.async = !0),
+        (sc.onload = () => ((Ra.default = window.L), ok(window.L))),
+        (sc.onerror = () => no(new Error("kartbiblioteket lastet ikke"))),
+        document.head.appendChild(sc));
+    }))
+  );
+}
 export const ze = createClient(
   "https://nmrevqsxjqtrobxqklfj.supabase.co",
   "sb_publishable_LRYZZcrOH0NnaHDum328dA_0hfB3xge",
@@ -3357,6 +3373,37 @@ function ChComparePanel({ uid, meId, name, onClose, onOpen }) {
   });
 }
 
+/* Fjerneste par: storst avstand er det samme som minst vinkel-produkt mellom
+   punktene som retningsvektorer. Vi regner om en gang, og den indre lokken blir
+   tre multiplikasjoner i stedet for trigonometri. Samme svar, langt raskere. */
+function ChFarthest(points) {
+  if (points.length < 2) return null;
+  let n = points.length,
+    x = new Float64Array(n),
+    y = new Float64Array(n),
+    z = new Float64Array(n),
+    r = Math.PI / 180;
+  for (let i = 0; i < n; i++) {
+    let la = points[i].lat * r,
+      lo = points[i].lng * r,
+      c = Math.cos(la);
+    ((x[i] = c * Math.cos(lo)), (y[i] = c * Math.sin(lo)), (z[i] = Math.sin(la)));
+  }
+  let min = 2,
+    ai = 0,
+    bi = 0;
+  for (let i = 0; i < n; i++) {
+    let xi = x[i],
+      yi = y[i],
+      zi = z[i];
+    for (let j = i + 1; j < n; j++) {
+      let d = xi * x[j] + yi * y[j] + zi * z[j];
+      d < min && ((min = d), (ai = i), (bi = j));
+    }
+  }
+  return { km: 6371 * Math.acos(Math.max(-1, Math.min(1, min))), a: points[ai], b: points[bi] };
+}
+
 function ChStatRow({ label, value, sub }) {
   return (0, T.jsxs)("div", {
     style: {
@@ -3379,30 +3426,6 @@ function ChStatRow({ label, value, sub }) {
   });
 }
 
-/* Henter meter over havet fra Open-Meteo for steder som mangler det.
-   Inntil 100 koordinater per foresporsel, og bare for dine egne steder. */
-async function ChFillElevation(visits, uid) {
-  let mangler = visits.filter((v) => v.user_id === uid && v.lat != null && v.lng != null && v.elevation == null);
-  if (!mangler.length) return 0;
-  let gjort = 0;
-  for (let i = 0; i < mangler.length; i += 100) {
-    let del = mangler.slice(i, i + 100),
-      lat = del.map((v) => v.lat).join(","),
-      lng = del.map((v) => v.lng).join(",");
-    try {
-      let r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`),
-        j = await r.json();
-      if (!j || !Array.isArray(j.elevation)) continue;
-      for (let k = 0; k < del.length; k++) {
-        let m = j.elevation[k];
-        if (m == null) continue;
-        (await ze.from("visits").update({ elevation: m }).eq("id", del[k].id), (del[k].elevation = m), gjort++);
-      }
-    } catch {}
-  }
-  return gjort;
-}
-
 function ChStatsPanel({ uid, onClose }) {
   let [lang] = Un(),
     [visits, setVisits] = (0, U.useState)(null);
@@ -3411,9 +3434,7 @@ function ChStatsPanel({ uid, onClose }) {
     return (
       (async () => {
         let { data } = await ze.from("visits").select("*").eq("user_id", uid);
-        if (!alive) return;
-        (setVisits(data || []),
-          (await ChFillElevation(data || [], uid)) && alive && setVisits([...(data || [])]));
+        alive && setVisits(data || []);
       })(),
       () => {
         alive = !1;
@@ -3426,12 +3447,7 @@ function ChStatsPanel({ uid, onClose }) {
     let withPos = visits.filter((v) => v.lat != null && v.lng != null),
       byLat = [...withPos].sort((a, b) => b.lat - a.lat),
       byLng = [...withPos].sort((a, b) => b.lng - a.lng),
-      far = null;
-    for (let i = 0; i < withPos.length; i++)
-      for (let j = i + 1; j < withPos.length; j++) {
-        let d = ChDistKm(withPos[i].lat, withPos[i].lng, withPos[j].lat, withPos[j].lng);
-        (d != null && (!far || d > far.km)) && (far = { km: d, a: withPos[i], b: withPos[j] });
-      }
+      far = ChFarthest(withPos);
     let withEl = visits.filter((v) => v.elevation != null).sort((a, b) => b.elevation - a.elevation),
       capList = visits.filter((v) => {
         let c = yc(v.country);
@@ -6870,9 +6886,19 @@ function l5({ pins: e, pickMode: t, onTap: n, onSelect: i, onFail: r, srcIdx: s,
     g = (0, U.useRef)(null),
     v = (0, U.useRef)(0),
     y = !0;
+  let [chKlar, chSetKlar] = (0, U.useState)(!!Ra.default);
   return (
     (0, U.useEffect)(() => {
-      if (!c.current) return;
+      let m = !0;
+      return (
+        ChLoadLeaflet().then(() => m && chSetKlar(!0)),
+        () => {
+          m = !1;
+        }
+      );
+    }, []),
+    (0, U.useEffect)(() => {
+      if (!c.current || !chKlar) return;
       (h.current ||
         ((h.current = Ra.default
           .map(c.current, { scrollWheelZoom: !1, worldCopyJump: !0 })
@@ -6891,9 +6917,9 @@ function l5({ pins: e, pickMode: t, onTap: n, onSelect: i, onFail: r, srcIdx: s,
         v.current === 0 && r();
       }, 4e3);
       return () => clearTimeout(A);
-    }, [y, s]),
+    }, [y, s, chKlar]),
     (0, U.useEffect)(() => {
-      if (!h.current) return;
+      if (!h.current || !chKlar) return;
       let m = h.current;
       f.current.clearLayers();
       let k = Ra.default.divIcon({

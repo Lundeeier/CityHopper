@@ -2010,23 +2010,42 @@ function ChPushState() {
 }
 
 async function ChPushOn(uid) {
-  if (!ChPushSupported()) return "unsupported";
+  if (!ChPushSupported()) return { state: "unsupported" };
   let perm = Notification.permission;
-  if (perm === "default") perm = await Notification.requestPermission();
-  if (perm !== "granted") return perm === "denied" ? "denied" : "default";
-  let reg = await navigator.serviceWorker.ready,
+  if (perm === "default")
+    try {
+      perm = await Notification.requestPermission();
+    } catch (e) {
+      return { state: "error", why: "requestPermission: " + (e && e.message) };
+    }
+  if (perm !== "granted") return { state: perm === "denied" ? "denied" : "default" };
+  let reg;
+  try {
+    // serviceWorker.ready henger for alltid om ingen er registrert, saa vi gir opp etter 8 sekunder
+    reg = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((_, no) => setTimeout(() => no(new Error("service worker svarte ikke")), 8e3)),
+    ]);
+  } catch (e) {
+    return { state: "error", why: (e && e.message) || "service worker" };
+  }
+  let sub;
+  try {
     sub =
       (await reg.pushManager.getSubscription()) ||
-      (await reg.pushManager.subscribe({ userVisibleOnly: !0, applicationServerKey: ChB64(Ch_VAPID) })),
-    j = sub.toJSON();
-  if (!j.keys || !j.keys.p256dh) return "error";
+      (await reg.pushManager.subscribe({ userVisibleOnly: !0, applicationServerKey: ChB64(Ch_VAPID) }));
+  } catch (e) {
+    return { state: "error", why: "subscribe: " + ((e && e.message) || "") };
+  }
+  let j = sub.toJSON();
+  if (!j || !j.keys || !j.keys.p256dh) return { state: "error", why: "mangler noekler" };
   let { error } = await ze
     .from("push_subscriptions")
     .upsert(
       { user_id: uid, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth },
       { onConflict: "endpoint" },
     );
-  return error ? "error" : "granted";
+  return error ? { state: "error", why: "database: " + error.message } : { state: "granted" };
 }
 
 async function ChPushOff(uid) {
@@ -2574,17 +2593,20 @@ function ChSettings({ meId, onClose, onLogout }) {
             (await ChPushOff(meId), setPush(ChPushState()));
             return;
           }
-          let r = await ChPushOn(meId);
-          (setPush(r),
-            setNote(
-              r === "denied"
-                ? P(lang, "push_blocked")
-                : r === "unsupported"
-                  ? P(lang, "push_unsupported")
-                  : r === "error"
-                    ? P(lang, "err_save_profile")
-                    : "",
-            ));
+          (setNote("\u2026"),
+            (async () => {
+              let r = await ChPushOn(meId);
+              (setPush(r.state),
+                setNote(
+                  r.state === "granted"
+                    ? P(lang, "profile_saved")
+                    : r.state === "denied"
+                      ? P(lang, "push_blocked")
+                      : r.state === "unsupported"
+                        ? P(lang, "push_unsupported")
+                        : r.why || P(lang, "err_save_profile"),
+                ));
+            })());
         },
       }),
       push !== "granted" &&

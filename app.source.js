@@ -510,6 +510,21 @@ var O = {
       b_group_countries: "Land",
       b_group_counts: "Milep\xE6ler",
       b_group_special: "Bragder",
+      d_country: "Sjekk inn et sted i {name}.",
+      d_countries: "Sjekk inn i {n} forskjellige land.",
+      d_places: "Sjekk inn p\xE5 {n} steder.",
+      d_capitals: "Sjekk inn i {n} hovedsteder.",
+      d_streak: "Sjekk inn minst ett sted {n} dager p\xE5 rad.",
+      d_three: "Sjekk inn i tre forskjellige land samme dag.",
+      d_nordic: "Bes\xF8k Norge, Sverige, Danmark, Finland og Island.",
+      d_rater: "Gi rating til {n} steder.",
+      d_photo: "Legg bilde p\xE5 {n} steder.",
+      d_writer: "Skriv notat p\xE5 {n} steder.",
+      d_cont: "Bes\xF8k et land i {name}.",
+      d_cont_all: "Bes\xF8k minst ett land p\xE5 alle sju verdensdeler.",
+      d_needs_date: "Krever at stedene har bes\xF8ksdato.",
+      badge_earned: "Oppn\xE5dd",
+      hide_locked: "Skjul l\xE5ste",
       cont_EU: "Europa",
       cont_AS: "Asia",
       cont_AF: "Afrika",
@@ -731,6 +746,21 @@ var O = {
       b_group_countries: "Countries",
       b_group_counts: "Milestones",
       b_group_special: "Feats",
+      d_country: "Check in somewhere in {name}.",
+      d_countries: "Check in across {n} different countries.",
+      d_places: "Check in at {n} places.",
+      d_capitals: "Check in at {n} capitals.",
+      d_streak: "Check in somewhere {n} days in a row.",
+      d_three: "Check in across three countries on the same day.",
+      d_nordic: "Visit Norway, Sweden, Denmark, Finland and Iceland.",
+      d_rater: "Rate {n} places.",
+      d_photo: "Add a photo to {n} places.",
+      d_writer: "Write a note on {n} places.",
+      d_cont: "Visit a country in {name}.",
+      d_cont_all: "Visit at least one country on all seven continents.",
+      d_needs_date: "Requires places to have a visit date.",
+      badge_earned: "Earned",
+      hide_locked: "Hide locked",
       cont_EU: "Europe",
       cont_AS: "Asia",
       cont_AF: "Africa",
@@ -954,6 +984,21 @@ var O = {
       b_group_countries: "Landen",
       b_group_counts: "Mijlpalen",
       b_group_special: "Prestaties",
+      d_country: "Check ergens in {name} in.",
+      d_countries: "Check in {n} verschillende landen in.",
+      d_places: "Check in op {n} plaatsen.",
+      d_capitals: "Check in {n} hoofdsteden in.",
+      d_streak: "Check {n} dagen op rij ergens in.",
+      d_three: "Check op \xE9\xE9n dag in drie landen in.",
+      d_nordic: "Bezoek Noorwegen, Zweden, Denemarken, Finland en IJsland.",
+      d_rater: "Beoordeel {n} plaatsen.",
+      d_photo: "Voeg een foto toe aan {n} plaatsen.",
+      d_writer: "Schrijf een notitie bij {n} plaatsen.",
+      d_cont: "Bezoek een land in {name}.",
+      d_cont_all: "Bezoek minstens \xE9\xE9n land op alle zeven werelddelen.",
+      d_needs_date: "Vereist dat plaatsen een bezoekdatum hebben.",
+      badge_earned: "Behaald",
+      hide_locked: "Vergrendelde verbergen",
       cont_EU: "Europa",
       cont_AS: "Azië",
       cont_AF: "Afrika",
@@ -2340,24 +2385,19 @@ function ChBadges(visits, lang) {
       group: "countries",
       label: c.name,
       flag: l8(c.name),
+      desc: P(lang, "d_country", { name: c.name }),
       earned: codes.has(c.code),
     });
 
-  for (let i = 1; i <= Math.max(nCountries, 1); i++)
+  // Ett merke per antall land som finnes, slik at totalen er lik for alle brukere
+  for (let i = 1; i <= vc.length; i++)
     out.push({
       id: "ant-land-" + i,
       group: "counts",
       label: P(lang, "b_countries", { n: i }),
       num: i,
+      desc: P(lang, "d_countries", { n: i }),
       earned: nCountries >= i,
-    });
-  if (nCountries < 200)
-    out.push({
-      id: "ant-land-" + (nCountries + 1),
-      group: "counts",
-      label: P(lang, "b_countries", { n: nCountries + 1 }),
-      num: nCountries + 1,
-      earned: !1,
     });
 
   for (let n of [1, 10, 25, 50, 100, 150, 200, 250, 500])
@@ -2366,6 +2406,7 @@ function ChBadges(visits, lang) {
       group: "counts",
       label: P(lang, "b_places", { n }),
       num: n,
+      desc: P(lang, "d_places", { n }),
       earned: nPlaces >= n,
     });
   for (let n of [1, 5, 10, 25])
@@ -2375,6 +2416,7 @@ function ChBadges(visits, lang) {
       label: P(lang, "b_capitals", { n }),
       num: n,
       icon: "cup",
+      desc: P(lang, "d_capitals", { n }),
       earned: caps >= n,
     });
 
@@ -2382,7 +2424,7 @@ function ChBadges(visits, lang) {
     id: "uke",
     group: "special",
     label: P(lang, "b_week"),
-    desc: P(lang, "b_week_desc"),
+    desc: P(lang, "b_week_desc") + ". " + P(lang, "d_needs_date"),
     icon: "cal",
     earned: ChPerfectWeek(uniqueDays),
   }),
@@ -2393,6 +2435,7 @@ function ChBadges(visits, lang) {
         label: P(lang, "b_streak", { n }),
         num: n,
         icon: "cal",
+        desc: P(lang, "d_streak", { n }) + " " + P(lang, "d_needs_date"),
         earned: streak >= n,
       }),
     ),
@@ -2401,6 +2444,7 @@ function ChBadges(visits, lang) {
       group: "special",
       label: P(lang, "b_three"),
       icon: "pin",
+      desc: P(lang, "d_three") + " " + P(lang, "d_needs_date"),
       earned: three,
     }),
     out.push({
@@ -2408,6 +2452,7 @@ function ChBadges(visits, lang) {
       group: "special",
       label: P(lang, "b_nordic"),
       icon: "pin",
+      desc: P(lang, "d_nordic"),
       earned: Ch_NORDIC.every((c) => codes.has(c)),
     }),
     (() => {
@@ -2423,6 +2468,7 @@ function ChBadges(visits, lang) {
           label: P(lang, "cont_" + k),
           icon: "globe",
           cont: k,
+          desc: P(lang, "d_cont", { name: P(lang, "cont_" + k) }),
           earned: hit.has(k),
         });
       out.push({
@@ -2430,6 +2476,7 @@ function ChBadges(visits, lang) {
         group: "special",
         label: P(lang, "b_cont_all"),
         icon: "globe",
+        desc: P(lang, "d_cont_all"),
         earned: hit.size >= 7,
       });
     })(),
@@ -2440,6 +2487,7 @@ function ChBadges(visits, lang) {
         label: P(lang, "b_rater", { n }),
         num: n,
         icon: "star",
+        desc: P(lang, "d_rater", { n }),
         earned: rated >= n,
       }),
     ),
@@ -2450,6 +2498,7 @@ function ChBadges(visits, lang) {
         label: P(lang, "b_photo", { n }),
         num: n,
         icon: "cam",
+        desc: P(lang, "d_photo", { n }),
         earned: withPhoto >= n,
       }),
     ),
@@ -2459,13 +2508,14 @@ function ChBadges(visits, lang) {
       label: P(lang, "b_writer", { n: 25 }),
       num: 25,
       icon: "pen",
+      desc: P(lang, "d_writer", { n: 25 }),
       earned: withNote >= 25,
     }),
     out.push({
       id: "natt",
       group: "special",
       label: P(lang, "b_night"),
-      desc: P(lang, "b_night_desc"),
+      desc: P(lang, "b_night_desc") + ".",
       icon: "moon",
       earned: night,
     }));
@@ -3072,7 +3122,9 @@ function ChBadgeFace({ b, size: sz = 56 }) {
 function ChBadgesPanel({ uid, meId, onClose }) {
   let [lang] = Un(),
     [visits, setVisits] = (0, U.useState)(null),
-    [tab, setTab] = (0, U.useState)("counts");
+    [tab, setTab] = (0, U.useState)("counts"),
+    [open, setOpen] = (0, U.useState)(null),
+    [hide, setHide] = (0, U.useState)(!1);
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
@@ -3087,15 +3139,33 @@ function ChBadgesPanel({ uid, meId, onClose }) {
   }, [uid]);
   let all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang) : []), [visits, lang]),
     mine = all.filter((b) => b.group === tab),
-    shown = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
+    sorted = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
+    shown = hide ? sorted.filter((b) => b.earned) : sorted,
     got = all.filter((b) => b.earned).length;
   return (0, T.jsxs)(ChPanel, {
     title: P(lang, "badges_title"),
     onClose,
     children: [
-      (0, T.jsx)("p", {
-        style: { color: O.sub, fontSize: 13, margin: "0 0 14px" },
-        children: P(lang, "badges_earned", { n: got, t: all.length }),
+      (0, T.jsxs)("div", {
+        style: { display: "flex", alignItems: "center", gap: 10, margin: "0 0 14px" },
+        children: [
+          (0, T.jsx)("span", {
+            style: { flex: 1, color: O.sub, fontSize: 13 },
+            children: P(lang, "badges_earned", { n: got, t: all.length }),
+          }),
+          (0, T.jsxs)("label", {
+            style: { display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: O.sub, cursor: "pointer" },
+            children: [
+              (0, T.jsx)("input", {
+                type: "checkbox",
+                checked: hide,
+                onChange: (ev) => setHide(ev.target.checked),
+                style: { width: 17, height: 17, accentColor: O.nav },
+              }),
+              P(lang, "hide_locked"),
+            ],
+          }),
+        ],
       }),
       (0, T.jsx)("div", {
         style: { display: "flex", gap: 8, marginBottom: 16 },
@@ -3132,9 +3202,20 @@ function ChBadgesPanel({ uid, meId, onClose }) {
             style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "18px 8px" },
             children: shown.map((b) =>
               (0, T.jsxs)(
-                "div",
+                "button",
                 {
-                  style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6 },
+                  onClick: () => setOpen(b),
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    fontFamily: "inherit",
+                    cursor: "pointer",
+                  },
                   children: [
                     (0, T.jsx)(ChBadgeFace, { b }),
                     (0, T.jsx)("span", {
@@ -3152,6 +3233,54 @@ function ChBadgesPanel({ uid, meId, onClose }) {
               ),
             ),
           }),
+      open &&
+        (0, T.jsx)("div", {
+          onClick: () => setOpen(null),
+          style: {
+            position: "fixed",
+            inset: 0,
+            zIndex: 1500,
+            background: "rgba(4,9,16,.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+          },
+          children: (0, T.jsxs)("div", {
+            onClick: (ev) => ev.stopPropagation(),
+            style: {
+              width: "100%",
+              maxWidth: 320,
+              background: O.bar,
+              border: `1px solid ${O.line}`,
+              borderRadius: 12,
+              padding: 22,
+              textAlign: "center",
+            },
+            children: [
+              (0, T.jsx)("div", {
+                style: { display: "flex", justifyContent: "center", marginBottom: 14 },
+                children: (0, T.jsx)(ChBadgeFace, { b: open, size: 76 }),
+              }),
+              (0, T.jsx)("div", {
+                style: { fontSize: 17, fontWeight: 700, marginBottom: 8 },
+                children: open.label,
+              }),
+              (0, T.jsx)("p", {
+                style: { color: O.sub, fontSize: 14, lineHeight: 1.5, margin: "0 0 14px" },
+                children: open.desc || "",
+              }),
+              (0, T.jsx)("div", {
+                style: {
+                  color: open.earned ? O.accent : O.border,
+                  fontSize: 13,
+                  fontWeight: 600,
+                },
+                children: open.earned ? P(lang, "badge_earned") : P(lang, "b_locked"),
+              }),
+            ],
+          }),
+        }),
     ],
   });
 }

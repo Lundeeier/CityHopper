@@ -3124,7 +3124,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
     [visits, setVisits] = (0, U.useState)(null),
     [tab, setTab] = (0, U.useState)("counts"),
     [open, setOpen] = (0, U.useState)(null),
-    [hide, setHide] = (0, U.useState)(!1);
+    [hide, setHide] = (0, U.useState)(!0);
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
@@ -3140,7 +3140,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
   let all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang) : []), [visits, lang]),
     mine = all.filter((b) => b.group === tab),
     sorted = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
-    shown = hide ? sorted.filter((b) => b.earned) : sorted,
+    shown = hide && tab !== "special" ? sorted.filter((b) => b.earned) : sorted,
     got = all.filter((b) => b.earned).length;
   return (0, T.jsxs)(ChPanel, {
     title: P(lang, "badges_title"),
@@ -3153,8 +3153,9 @@ function ChBadgesPanel({ uid, meId, onClose }) {
             style: { flex: 1, color: O.sub, fontSize: 13 },
             children: P(lang, "badges_earned", { n: got, t: all.length }),
           }),
-          (0, T.jsxs)("label", {
-            style: { display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: O.sub, cursor: "pointer" },
+          tab !== "special" &&
+            (0, T.jsxs)("label", {
+              style: { display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: O.sub, cursor: "pointer" },
             children: [
               (0, T.jsx)("input", {
                 type: "checkbox",
@@ -3162,9 +3163,9 @@ function ChBadgesPanel({ uid, meId, onClose }) {
                 onChange: (ev) => setHide(ev.target.checked),
                 style: { width: 17, height: 17, accentColor: O.nav },
               }),
-              P(lang, "hide_locked"),
-            ],
-          }),
+                P(lang, "hide_locked"),
+              ],
+            }),
         ],
       }),
       (0, T.jsx)("div", {

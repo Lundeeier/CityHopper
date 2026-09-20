@@ -525,6 +525,14 @@ var O = {
       d_needs_date: "Krever at stedene har bes\xF8ksdato.",
       badge_earned: "Oppn\xE5dd",
       hide_locked: "Skjul l\xE5ste",
+      new_badge: "Nytt merke",
+      no_results: "Ingen treff.",
+      new_badges: "{n} nye merker",
+      empty_places: "Ingen steder enn\xE5. Trykk Sjekk inn for \xE5 legge til det f\xF8rste.",
+      empty_friends: "Ingen venner enn\xE5. S\xF8k opp brukernavnet til noen du kjenner.",
+      empty_boards: "Topplistene fylles n\xE5r du og vennene dine sjekker inn steder.",
+      see_feed: "Se alle innsjekker her",
+      edit_place: "Rediger mitt bes\xF8k",
       cont_EU: "Europa",
       cont_AS: "Asia",
       cont_AF: "Afrika",
@@ -761,6 +769,14 @@ var O = {
       d_needs_date: "Requires places to have a visit date.",
       badge_earned: "Earned",
       hide_locked: "Hide locked",
+      new_badge: "New badge",
+      no_results: "No matches.",
+      new_badges: "{n} new badges",
+      empty_places: "No places yet. Tap Check in to add your first.",
+      empty_friends: "No friends yet. Search for someone's username.",
+      empty_boards: "The leaderboards fill up as you and your friends check in.",
+      see_feed: "See all check-ins here",
+      edit_place: "Edit my visit",
       cont_EU: "Europe",
       cont_AS: "Asia",
       cont_AF: "Africa",
@@ -999,6 +1015,14 @@ var O = {
       d_needs_date: "Vereist dat plaatsen een bezoekdatum hebben.",
       badge_earned: "Behaald",
       hide_locked: "Vergrendelde verbergen",
+      new_badge: "Nieuwe badge",
+      no_results: "Geen resultaten.",
+      new_badges: "{n} nieuwe badges",
+      empty_places: "Nog geen plaatsen. Tik op Inchecken om je eerste toe te voegen.",
+      empty_friends: "Nog geen vrienden. Zoek op iemands gebruikersnaam.",
+      empty_boards: "De ranglijsten vullen zich als jij en je vrienden inchecken.",
+      see_feed: "Bekijk alle check-ins hier",
+      edit_place: "Mijn bezoek bewerken",
       cont_EU: "Europa",
       cont_AS: "Azië",
       cont_AF: "Afrika",
@@ -1928,7 +1952,7 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
   });
 }
 
-function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, onClose: s }) {
+function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, onClose: s, onFeed: chFeed }) {
   let [l] = Un(),
     [c, h] = (0, U.useState)(e.comment || ""),
     [f, g] = (0, U.useState)(e.rating == null ? null : Number(e.rating)),
@@ -2112,6 +2136,21 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
             onClick: D,
             disabled: A,
             children: A ? P(l, "saving") : P(l, "save_changes"),
+          }),
+        chFeed &&
+          (0, T.jsx)("button", {
+            onClick: () => chFeed(e),
+            style: {
+              width: "100%",
+              background: "none",
+              border: "none",
+              color: O.nav,
+              fontFamily: "inherit",
+              fontSize: 14,
+              padding: "14px 0 4px",
+              cursor: "pointer",
+            },
+            children: P(l, "see_feed"),
           }),
         (0, T.jsx)("a", {
           href: N,
@@ -3066,6 +3105,56 @@ function ChSettings({ meId, onClose, onLogout }) {
           },
           children: P(lang, "logout"),
         }),
+    ],
+  });
+}
+
+function ChBadgeToast({ badges, lang, onClose }) {
+  ((0, U.useEffect)(() => {
+    let t = setTimeout(onClose, 6e3);
+    return () => clearTimeout(t);
+  }, [onClose]));
+  return (0, T.jsxs)("div", {
+    onClick: onClose,
+    style: {
+      position: "fixed",
+      left: 12,
+      right: 12,
+      bottom: "calc(92px + env(safe-area-inset-bottom))",
+      zIndex: 1450,
+      maxWidth: 420,
+      margin: "0 auto",
+      background: O.bar,
+      border: `1px solid ${O.accent}`,
+      borderRadius: 10,
+      padding: 12,
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      fontFamily: "'Inter', system-ui, sans-serif",
+      cursor: "pointer",
+    },
+    children: [
+      (0, T.jsx)(ChBadgeFace, { b: badges[0], size: 44 }),
+      (0, T.jsxs)("div", {
+        style: { flex: 1, minWidth: 0 },
+        children: [
+          (0, T.jsx)("div", {
+            style: { color: O.accent, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" },
+            children: badges.length > 1 ? P(lang, "new_badges", { n: badges.length }) : P(lang, "new_badge"),
+          }),
+          (0, T.jsx)("div", {
+            style: {
+              fontSize: 15,
+              fontWeight: 600,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            },
+            children: badges.map((b) => b.label).join(", "),
+          }),
+        ],
+      }),
     ],
   });
 }
@@ -4083,6 +4172,8 @@ function n5({ session: e, onLogout: t }) {
     [chBusy, chSetBusy] = (0, U.useState)(!1),
     [chOsm, chSetOsm] = (0, U.useState)(null),
     [chQ, chSetQ] = (0, U.useState)(""),
+    [chNytt, chSetNytt] = (0, U.useState)(null),
+    chFoer = (0, U.useRef)(null),
     [chAsk, chSetAsk] = (0, U.useState)(!1),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
@@ -4234,6 +4325,20 @@ function n5({ session: e, onLogout: t }) {
     }
     (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
   }
+  // Sammenligner merkene foer og etter hver innsjekk og viser de nye
+  (0, U.useEffect)(() => {
+    if (!chFoer.current) {
+      chFoer.current = new Set(
+        ChBadges(l, n)
+          .filter((F) => F.earned)
+          .map((F) => F.id),
+      );
+      return;
+    }
+    let F = ChBadges(l, n).filter((te) => te.earned),
+      Se = F.filter((te) => !chFoer.current.has(te.id));
+    ((chFoer.current = new Set(F.map((te) => te.id))), Se.length && chSetNytt(Se));
+  }, [l, n]);
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
       (D(P(n, "err_no_geo")), M(!0));
@@ -4603,7 +4708,12 @@ function n5({ session: e, onLogout: t }) {
                         style: { color: O.sub, fontSize: 15, padding: "24px 16px", textAlign: "center" },
                         children: P(n, "empty_log"),
                       })
-                    : chGroups.map((F) =>
+                    : chGroups.length === 0
+                      ? (0, T.jsx)("p", {
+                          style: { color: O.sub, fontSize: 15, padding: 20, lineHeight: 1.5 },
+                          children: P(n, chQ ? "no_results" : "empty_places"),
+                        })
+                      : chGroups.map((F) =>
                         (0, T.jsxs)(
                           "div",
                           {
@@ -4665,6 +4775,10 @@ function n5({ session: e, onLogout: t }) {
                                             size: 15,
                                             compact: !0,
                                             lang: n,
+                                          }),
+                                          (0, T.jsx)("span", {
+                                            style: { color: O.border, fontSize: 17, lineHeight: 1 },
+                                            children: "\u203A",
                                           }),
                                         ],
                                       }),
@@ -4813,6 +4927,8 @@ function n5({ session: e, onLogout: t }) {
                 (chSetView(null), chLoadBell());
               },
             }),
+          chNytt &&
+            (0, T.jsx)(ChBadgeToast, { badges: chNytt, lang: n, onClose: () => chSetNytt(null) }),
           chAsk &&
             (0, T.jsx)(ChPushPrompt, {
               lang: n,
@@ -4868,6 +4984,10 @@ function n5({ session: e, onLogout: t }) {
             (0, T.jsx)(ChSheet, {
               visit: chSheet,
               uid: e.user.id,
+              onFeed: (F) => {
+                (chSetSheet(null),
+                  chSetView({ type: "feed", place: F.place, country: F.country, osm: F.osm_id || null }));
+              },
               onSave: chUpdate,
               onDelete: xe,
               onClose: () => chSetSheet(null),
@@ -5784,9 +5904,6 @@ function s5({ session: e, onOpen: chOpen }) {
               })
             : (0, T.jsxs)(T.Fragment, {
                 children: [
-                  (0, T.jsx)(D, { title: P(t, "board_countries"), board: A }),
-                  (0, T.jsx)(D, { title: P(t, "board_places"), board: R }),
-                  (0, T.jsx)(D, { title: P(t, "board_capitals"), board: b }),
                   (0, T.jsxs)("div", {
                     style: { marginBottom: 10 },
                     children: [
@@ -5814,12 +5931,15 @@ function s5({ session: e, onOpen: chOpen }) {
                       }),
                     ],
                   }),
-                  f && (0, T.jsx)(D, { title: f, board: E }),
                   f &&
                     (0, T.jsx)(chRated, {
                       title: P(t, "board_top_rated", { country: f }),
                       board: chTop,
                     }),
+                  f && (0, T.jsx)(D, { title: f, board: E }),
+                  (0, T.jsx)(D, { title: P(t, "board_countries"), board: A }),
+                  (0, T.jsx)(D, { title: P(t, "board_places"), board: R }),
+                  (0, T.jsx)(D, { title: P(t, "board_capitals"), board: b }),
                 ],
               }),
         ],

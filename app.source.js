@@ -1940,27 +1940,62 @@ function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang:
   });
 }
 
-async function ChShrink(e) {
+async function ChShrink(e, maks = 1400, kvalitet = 0.82) {
   let t = await createImageBitmap(e),
-    n = Math.min(1, 1400 / Math.max(t.width, t.height)),
+    n = Math.min(1, maks / Math.max(t.width, t.height)),
     i = document.createElement("canvas");
   ((i.width = Math.round(t.width * n)), (i.height = Math.round(t.height * n)));
   i.getContext("2d").drawImage(t, 0, 0, i.width, i.height);
-  return await new Promise((r) => i.toBlob(r, "image/jpeg", 0.82));
+  return await new Promise((r) => i.toBlob(r, "image/jpeg", kvalitet));
 }
 
+/* Lagrer bildet i to storrelser: full (1400 px) og miniatyr (240 px, *_t.jpg).
+   Lister og kort bruker miniatyren; full storrelse hentes bare ved trykk. */
 async function ChUpload(e, t) {
-  let n = t;
+  let n = t,
+    tn = null;
   try {
     let s = await ChShrink(t);
     s && (n = s);
   } catch {}
-  let i = `${e}/${Date.now()}-${Math.random().toString(36).slice(2, 9)}.jpg`,
+  try {
+    tn = await ChShrink(t, 240, 0.72);
+  } catch {}
+  let stamme = `${e}/${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    i = stamme + ".jpg",
     { error: r } = await ze.storage
       .from("visit-photos")
       .upload(i, n, { contentType: "image/jpeg", upsert: !1 });
   if (r) throw r;
+  tn &&
+    (await ze.storage
+      .from("visit-photos")
+      .upload(stamme + "_t.jpg", tn, { contentType: "image/jpeg", upsert: !0 })
+      .catch(() => {}));
   return i;
+}
+
+function ChThumbPath(e) {
+  return String(e || "").replace(/\.jpg$/i, "_t.jpg");
+}
+
+function ChThumbUrl(e) {
+  return ze.storage.from("visit-photos").getPublicUrl(ChThumbPath(e)).data.publicUrl;
+}
+
+/* Miniatyr med reserve: finnes ikke miniatyren (eldre bilder), brukes fullt bilde. */
+function ChThumb({ path: e, style: t, alt: n = "" }) {
+  return (0, T.jsx)("img", {
+    src: ChThumbUrl(e),
+    alt: n,
+    loading: "lazy",
+    decoding: "async",
+    onError: (i) => {
+      let r = ChPhotoUrl(e);
+      i.currentTarget.src !== r && (i.currentTarget.src = r);
+    },
+    style: t,
+  });
 }
 
 function ChPhotoUrl(e) {
@@ -1984,10 +2019,8 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
                     href: ChPhotoUrl(l),
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    children: (0, T.jsx)("img", {
-                      src: ChPhotoUrl(l),
-                      alt: "",
-                      loading: "lazy",
+                    children: (0, T.jsx)(ChThumb, {
+                      path: l,
                       style: {
                         width: 96,
                         height: 96,
@@ -2024,6 +2057,7 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
             ),
           ),
           t &&
+            (e || []).length < 1 &&
             (0, T.jsxs)("button", {
               onClick: () => s.current && s.current.click(),
               disabled: i,
@@ -2080,7 +2114,6 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
           ref: s,
           type: "file",
           accept: "image/*",
-          multiple: !0,
           style: { display: "none" },
           onChange: t,
         }),
@@ -2100,16 +2133,16 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
     [chAdded, chSetAdded] = (0, U.useState)([]),
     [chDate, chSetDate] = (0, U.useState)(e.visited_on ? String(e.visited_on).slice(0, 10) : "");
   function chClose() {
-    (chAdded.length && ze.storage.from("visit-photos").remove(chAdded), s());
+    (chAdded.length && ze.storage.from("visit-photos").remove([...chAdded, ...chAdded.map(ChThumbPath)]), s());
   }
   async function w(I) {
-    let Z = [...(I.target.files || [])];
+    let Z = [...(I.target.files || [])].slice(0, 1);
     if (((I.target.value = ""), !Z.length)) return;
     (k(!0), b(""));
     try {
       let q = [];
       for (let we of Z) q.push(await ChUpload(t, we));
-      (y((we) => [...we, ...q]), chSetAdded((we) => [...we, ...q]));
+      (y(q.slice(0, 1)), chSetAdded((we) => [...we, ...q]));
     } catch {
       b(P(l, "err_upload_photo"));
     }
@@ -2131,7 +2164,7 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
     (R(!1),
       I
         ? b(I)
-        : (chGone.length && ze.storage.from("visit-photos").remove(chGone),
+        : (chGone.length && ze.storage.from("visit-photos").remove([...chGone, ...chGone.map(ChThumbPath)]),
           chSetGone([]),
           chSetAdded([]),
           s()));
@@ -3030,9 +3063,8 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                   cursor: "pointer",
                   lineHeight: 0,
                 },
-                children: (0, T.jsx)("img", {
-                  src: ChPhotoUrl(ph),
-                  alt: "",
+                children: (0, T.jsx)(ChThumb, {
+                  path: ph,
                   style: { width: 96, height: 96, objectFit: "cover", borderRadius: 4, display: "block" },
                 }),
               },
@@ -3059,9 +3091,8 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
             },
             children: [
               favPhoto
-                ? (0, T.jsx)("img", {
-                    src: ChPhotoUrl(favPhoto),
-                    alt: "",
+                ? (0, T.jsx)(ChThumb, {
+                    path: favPhoto,
                     style: {
                       width: 76,
                       height: 76,
@@ -4797,20 +4828,20 @@ function n5({ session: e, onLogout: t }) {
     };
   }, [e.user.id]);
   async function chAddPhoto(F) {
-    let te = [...(F.target.files || [])];
+    let te = [...(F.target.files || [])].slice(0, 1);
     if (((F.target.value = ""), !te.length)) return;
     (chSetBusy(!0), D(""));
     try {
       let Se = [];
       for (let at of te) Se.push(await ChUpload(e.user.id, at));
-      chSetPhotos((at) => [...at, ...Se]);
+      chSetPhotos(Se.slice(0, 1));
     } catch {
       D(P(n, "err_upload_photo"));
     }
     chSetBusy(!1);
   }
   function chDropPhoto(F) {
-    (chSetPhotos((te) => te.filter((Se) => Se !== F)), ze.storage.from("visit-photos").remove([F]));
+    (chSetPhotos((te) => te.filter((Se) => Se !== F)), ze.storage.from("visit-photos").remove([F, ChThumbPath(F)]));
   }
   async function chUpdate(F, te) {
     let { data: Se, error: at } = await ze.from("visits").update(te).eq("id", F).select().single();
@@ -4978,7 +5009,7 @@ function n5({ session: e, onLogout: t }) {
     let te = l,
       gt = l.find((dn) => dn.id === F);
     (c(l.filter((at) => at.id !== F)),
-      gt && gt.photos && gt.photos.length && ze.storage.from("visit-photos").remove(gt.photos));
+      gt && gt.photos && gt.photos.length && ze.storage.from("visit-photos").remove([...gt.photos, ...gt.photos.map(ChThumbPath)]));
     let { error: Se } = await ze.from("visits").delete().eq("id", F);
     Se && c(te);
   }

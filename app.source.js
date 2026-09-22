@@ -141,9 +141,10 @@ var vc = [
   { code: "FR", name: "Frankrike", capital: "Paris" },
   { code: "GA", name: "Gabon", capital: "Libreville" },
   { code: "GB", name: "Storbritannia", capital: "London" },
-  { code: "GB-ENG", name: "England", flag: "\u{1F1EC}\u{1F1E7}", apiCode: "gb", capital: "London" },
-  { code: "GB-SCT", name: "Skottland", flag: "\u{1F1EC}\u{1F1E7}", apiCode: "gb", capital: "Edinburgh" },
-  { code: "GB-WLS", name: "Wales", flag: "\u{1F1EC}\u{1F1E7}", apiCode: "gb", capital: "Cardiff" },
+  { code: "GB-ENG", name: "England", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}", apiCode: "gb", capital: "London" },
+  { code: "GB-SCT", name: "Skottland", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}", apiCode: "gb", capital: "Edinburgh" },
+  { code: "GB-WLS", name: "Wales", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0077}\u{E006C}\u{E0073}\u{E007F}", apiCode: "gb", capital: "Cardiff" },
+  /* Nord-Irland har ingen offisiell flagg-emoji i Unicode (ingen enighet om ett flagg) – beholder UK-flagget. */
   { code: "GB-NIR", name: "Nord-Irland", flag: "\u{1F1EC}\u{1F1E7}", apiCode: "gb", capital: "Belfast" },
   { code: "GD", name: "Grenada", capital: "St. George's" },
   { code: "GE", name: "Georgia", capital: "Tbilisi" },
@@ -510,6 +511,7 @@ var O = {
       badges_earned: "{n} av {t}",
       visited_on: "Bes\xF8kt dato",
       visited_on_unset: "Ikke satt",
+      checkin_date_hint: "La st\xE5 tomt for \xE5 bruke dagens dato.",
       b_countries: "{n} land",
       b_places: "{n} steder",
       b_capitals: "{n} hovedsteder",
@@ -800,6 +802,7 @@ var O = {
       badges_earned: "{n} of {t}",
       visited_on: "Date visited",
       visited_on_unset: "Not set",
+      checkin_date_hint: "Leave empty to use today's date.",
       b_countries: "{n} countries",
       b_places: "{n} places",
       b_capitals: "{n} capitals",
@@ -1092,6 +1095,7 @@ var O = {
       badges_earned: "{n} van {t}",
       visited_on: "Datum bezocht",
       visited_on_unset: "Niet ingesteld",
+      checkin_date_hint: "Laat leeg om de datum van vandaag te gebruiken.",
       b_countries: "{n} landen",
       b_places: "{n} plaatsen",
       b_capitals: "{n} hoofdsteden",
@@ -4883,6 +4887,7 @@ function n5({ session: e, onLogout: t }) {
     [$e, xt] = (0, U.useState)("venner"),
     [G, re] = (0, U.useState)(0),
     [chSheet, chSetSheet] = (0, U.useState)(null),
+    [chDate, chSetDate] = (0, U.useState)(""),
     [chNote, chSetNote] = (0, U.useState)(""),
     [chRate, chSetRate] = (0, U.useState)(null),
     [chPhotos, chSetPhotos] = (0, U.useState)([]),
@@ -4998,7 +5003,7 @@ function n5({ session: e, onLogout: t }) {
         (te ? D(P(n, "err_load_list")) : c(F || []), f(!1));
       })();
     }, []));
-  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP, osm: chO }) {
+  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP, osm: chO, date: chDt }) {
     let gt = (F || "").trim(),
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
@@ -5026,7 +5031,7 @@ function n5({ session: e, onLogout: t }) {
         rating: chR ?? null,
         photos: chP ?? [],
         osm_id: chO ?? null,
-        visited_on: new Date().toISOString().slice(0, 10),
+        visited_on: chDt || new Date().toISOString().slice(0, 10),
         elevation: chHoyde,
       })
       .select()
@@ -5043,12 +5048,13 @@ function n5({ session: e, onLogout: t }) {
       rating: chRate,
       photos: chPhotos,
       osm: chOsm,
+      date: chDate || null,
     });
     if (F) {
       D(F);
       return;
     }
-    (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), s("oversikt"));
+    (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), chSetDate(""), s("oversikt"));
   }
   /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
      alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
@@ -5611,6 +5617,28 @@ function n5({ session: e, onLogout: t }) {
                       (v(te.place), chSetOsm(te.osm || F.osm || null));
                   },
                   onEnter: W,
+                }),
+                (0, T.jsx)("p", {
+                  style: {
+                    color: O.sub,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: ".06em",
+                    margin: "12px 0 8px",
+                  },
+                  children: P(n, "visited_on"),
+                }),
+                (0, T.jsx)("input", {
+                  className: "ch-field",
+                  type: "date",
+                  value: chDate,
+                  max: new Date().toISOString().slice(0, 10),
+                  onChange: (F) => chSetDate(F.target.value),
+                  style: { marginBottom: 4 },
+                }),
+                (0, T.jsx)("p", {
+                  style: { color: O.sub, fontSize: 12, margin: "0 0 10px" },
+                  children: P(n, "checkin_date_hint"),
                 }),
                 (0, T.jsx)("textarea", {
                   className: "ch-field",

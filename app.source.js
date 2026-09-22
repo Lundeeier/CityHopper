@@ -5986,7 +5986,7 @@ function L8({ value: e, onChange: t, onPick: n, onEnter: i }) {
                       ((c.current = !0), t(f.name), n && n(f), l(!1));
                     },
                     children: [
-                      (0, T.jsx)("span", { style: { marginRight: 8 }, children: s8(f.code) }),
+                      (0, T.jsx)("span", { style: { marginRight: 8 }, children: ChFlag({ value: f.flag || s8(f.code), size: 15 }) }),
                       f.name,
                     ],
                   },

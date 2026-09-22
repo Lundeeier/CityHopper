@@ -585,6 +585,10 @@ var O = {
       st_no_dates: "Fyll inn bes\xF8ksdato p\xE5 stedene for \xE5 se tall per \xE5r.",
       st_km: "{n} km",
       st_places_n: "{n} steder",
+      st_country_title: "Statistikk for et land",
+      st_country_placeholder: "Skriv landnavn …",
+      st_country_none: "Ingen bes\xF8k registrert i {name} enn\xE5.",
+      st_country_change: "S\xF8k et annet land",
       new_badges: "{n} nye merker",
       empty_places: "Ingen steder enn\xE5. Trykk Sjekk inn for \xE5 legge til det f\xF8rste.",
       empty_friends: "Ingen venner enn\xE5. S\xF8k opp brukernavnet til noen du kjenner.",
@@ -871,6 +875,10 @@ var O = {
       st_no_dates: "Add visit dates to your places to see yearly numbers.",
       st_km: "{n} km",
       st_places_n: "{n} places",
+      st_country_title: "Stats for a country",
+      st_country_placeholder: "Type a country name …",
+      st_country_none: "No visits recorded in {name} yet.",
+      st_country_change: "Search another country",
       new_badges: "{n} new badges",
       empty_places: "No places yet. Tap Check in to add your first.",
       empty_friends: "No friends yet. Search for someone's username.",
@@ -1159,6 +1167,10 @@ var O = {
       st_no_dates: "Vul bezoekdata in om jaarcijfers te zien.",
       st_km: "{n} km",
       st_places_n: "{n} plaatsen",
+      st_country_title: "Statistieken voor een land",
+      st_country_placeholder: "Typ een landnaam …",
+      st_country_none: "Nog geen bezoeken geregistreerd in {name}.",
+      st_country_change: "Zoek een ander land",
       new_badges: "{n} nieuwe badges",
       empty_places: "Nog geen plaatsen. Tik op Inchecken om je eerste toe te voegen.",
       empty_friends: "Nog geen vrienden. Zoek op iemands gebruikersnaam.",
@@ -3465,7 +3477,9 @@ function ChStatRow({ label, value, sub }) {
 
 function ChStatsPanel({ uid, onClose }) {
   let [lang] = Un(),
-    [visits, setVisits] = (0, U.useState)(null);
+    [visits, setVisits] = (0, U.useState)(null),
+    [cq, setCq] = (0, U.useState)(""),
+    [csel, setCsel] = (0, U.useState)(null);
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
@@ -3540,6 +3554,26 @@ function ChStatsPanel({ uid, onClose }) {
     };
   }, [visits]);
 
+  let cstat = (0, U.useMemo)(() => {
+    if (!visits || !csel) return null;
+    let cv = visits.filter((v) => (yc(v.country) || {}).code === csel.code),
+      cPos = cv.filter((v) => v.lat != null && v.lng != null),
+      cByLat = [...cPos].sort((a, b) => b.lat - a.lat),
+      cByLng = [...cPos].sort((a, b) => b.lng - a.lng),
+      cEl = cv.filter((v) => v.elevation != null).sort((a, b) => b.elevation - a.elevation);
+    return {
+      n: cv.length,
+      north: cByLat[0] || null,
+      south: cByLat[cByLat.length - 1] || null,
+      east: cByLng[0] || null,
+      west: cByLng[cByLng.length - 1] || null,
+      high: cEl[0] || null,
+      low: cEl[cEl.length - 1] || null,
+    };
+  }, [visits, csel]);
+
+  let cMatches = !csel && cq.trim() ? vc.filter((c) => c.name.toLowerCase().includes(cq.trim().toLowerCase())).slice(0, 8) : [];
+
   let月 = null;
   return (0, T.jsx)(ChPanel, {
     title: P(lang, "stats_title"),
@@ -3549,6 +3583,94 @@ function ChStatsPanel({ uid, onClose }) {
         ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
         : (0, T.jsxs)(T.Fragment, {
             children: [
+              (0, T.jsxs)("div", {
+                style: { marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${O.line}` },
+                children: [
+                  (0, T.jsx)("p", {
+                    style: { color: O.sub, fontSize: 12, fontWeight: 700, letterSpacing: ".06em", margin: "0 0 8px" },
+                    children: P(lang, "st_country_title").toUpperCase(),
+                  }),
+                  !csel &&
+                    (0, T.jsx)("input", {
+                      className: "ch-search",
+                      type: "search",
+                      value: cq,
+                      placeholder: P(lang, "st_country_placeholder"),
+                      onChange: (e) => setCq(e.target.value),
+                    }),
+                  !csel &&
+                    cMatches.length > 0 &&
+                    (0, T.jsx)("div", {
+                      style: { marginTop: 4 },
+                      children: cMatches.map((c) =>
+                        (0, T.jsx)(
+                          "button",
+                          {
+                            onClick: () => {
+                              (setCsel(c), setCq(""));
+                            },
+                            style: {
+                              display: "block",
+                              width: "100%",
+                              textAlign: "left",
+                              padding: "10px 4px",
+                              background: "none",
+                              border: "none",
+                              borderBottom: `1px solid ${O.line}`,
+                              color: O.text,
+                              fontSize: 14,
+                              cursor: "pointer",
+                              fontFamily: "inherit",
+                            },
+                            children: c.name,
+                          },
+                          c.code
+                        )
+                      ),
+                    }),
+                  csel &&
+                    (0, T.jsxs)(T.Fragment, {
+                      children: [
+                        (0, T.jsxs)("div", {
+                          style: { display: "flex", alignItems: "center", justifyContent: "space-between", margin: "2px 0 8px" },
+                          children: [
+                            (0, T.jsx)("span", { style: { fontSize: 15, fontWeight: 700 }, children: csel.name }),
+                            (0, T.jsx)("button", {
+                              onClick: () => {
+                                (setCsel(null), setCq(""));
+                              },
+                              style: { background: "none", border: "none", color: O.nav, fontSize: 13, cursor: "pointer", fontFamily: "inherit" },
+                              children: P(lang, "st_country_change"),
+                            }),
+                          ],
+                        }),
+                        !cstat || cstat.n === 0
+                          ? (0, T.jsx)("p", {
+                              style: { color: O.sub, fontSize: 14, lineHeight: 1.5 },
+                              children: P(lang, "st_country_none", { name: csel.name }),
+                            })
+                          : (0, T.jsxs)(T.Fragment, {
+                              children: [
+                                ChStatRow({ label: P(lang, "st_north"), value: cstat.north ? cstat.north.place : "\u2013" }),
+                                ChStatRow({ label: P(lang, "st_south"), value: cstat.south ? cstat.south.place : "\u2013" }),
+                                ChStatRow({ label: P(lang, "st_east"), value: cstat.east ? cstat.east.place : "\u2013" }),
+                                ChStatRow({ label: P(lang, "st_west"), value: cstat.west ? cstat.west.place : "\u2013" }),
+                                ChStatRow({
+                                  label: P(lang, "st_high"),
+                                  value: cstat.high ? cstat.high.place : "\u2013",
+                                  sub: cstat.high && P(lang, "st_masl", { n: Math.round(cstat.high.elevation) }),
+                                }),
+                                ChStatRow({
+                                  label: P(lang, "st_low"),
+                                  value: cstat.low ? cstat.low.place : "\u2013",
+                                  sub: cstat.low && P(lang, "st_masl", { n: Math.round(cstat.low.elevation) }),
+                                }),
+                              ],
+                            }),
+                      ],
+                    }),
+                ],
+              }),
               ChStatRow({ label: P(lang, "st_north"), value: st.north ? st.north.place : "\u2013", sub: st.north && st.north.country }),
               ChStatRow({ label: P(lang, "st_south"), value: st.south ? st.south.place : "\u2013", sub: st.south && st.south.country }),
               ChStatRow({ label: P(lang, "st_east"), value: st.east ? st.east.place : "\u2013", sub: st.east && st.east.country }),

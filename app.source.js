@@ -144,6 +144,7 @@ var vc = [
   { code: "GB-ENG", name: "England", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}", apiCode: "gb", capital: "London" },
   { code: "GB-SCT", name: "Skottland", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}", apiCode: "gb", capital: "Edinburgh" },
   { code: "GB-WLS", name: "Wales", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0077}\u{E006C}\u{E0073}\u{E007F}", apiCode: "gb", capital: "Cardiff" },
+  /* Nord-Irland har ingen offisiell flagg-emoji i Unicode (ingen enighet om ett flagg) – beholder UK-flagget. */
   /* Nord-Irland har ingen offisiell flagg-emoji i Unicode. Bruker Ulster-bratten
      (det uoffisielle regionflagget) som eget SVG-bilde i stedet. */
   { code: "GB-NIR", name: "Nord-Irland", flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCAzNiI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjM2IiBmaWxsPSIjZmZmZmZmIi8+CiAgPHJlY3QgeD0iMjQiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIzNiIgZmlsbD0iI2QwMjAyYSIvPgogIDxyZWN0IHg9IjAiIHk9IjEyIiB3aWR0aD0iNjAiIGhlaWdodD0iMTIiIGZpbGw9IiNkMDIwMmEiLz4KICA8cG9seWdvbiBwb2ludHM9IjMwLDkgMzEuOCwxNC44OCAzNy43OSwxMy41IDMzLjYsMTggMzcuNzksMjIuNSAzMS44LDIxLjEyIDMwLDI3IDI4LjIsMjEuMTIgMjIuMjEsMjIuNSAyNi40LDE4IDIyLjIxLDEzLjUgMjguMiwxNC44OCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utd2lkdGg9IjAuNiIvPgogIDxnIGZpbGw9IiNkMDIwMmEiPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoLTI3IDMwIDE3LjkpIi8+CiAgICA8cmVjdCB4PSIyOS41NSIgeT0iMTQuNSIgd2lkdGg9IjAuOSIgaGVpZ2h0PSIzLjQiIHJ4PSIwLjQ1IiB0cmFuc2Zvcm09InJvdGF0ZSgtOSAzMCAxNy45KSIvPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoOSAzMCAxNy45KSIvPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoMjcgMzAgMTcuOSkiLz4KICAgIDxyZWN0IHg9IjI3LjU1IiB5PSIxNi4yIiB3aWR0aD0iMC45IiBoZWlnaHQ9IjIuNCIgcng9IjAuNDUiIHRyYW5zZm9ybT0icm90YXRlKC01OCAyOCAxOC42KSIvPgogICAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMTkuNyIgcng9IjEuOSIgcnk9IjEuNyIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZjJjMTRlIiBzdHJva2U9IiMxMTExMTEiIHN0cm9rZS13aWR0aD0iMC4zIj4KICAgIDxyZWN0IHg9IjI2LjUiIHk9IjQuNiIgd2lkdGg9IjciIGhlaWdodD0iMi40Ii8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI2LjUsNC42IDI4LDEuOSAyOS4zLDQuNiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyOC43LDQuNiAzMCwxLjcgMzEuMyw0LjYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMzEsNC42IDMyLjMsMS45IDMzLjUsNC42Ii8+CiAgPC9nPgo8L3N2Zz4K", apiCode: "gb", capital: "Belfast" },
@@ -525,6 +526,7 @@ var O = {
       visited_on: "Bes\xF8kt dato",
       visited_on_unset: "Ikke satt",
       checkin_date_hint: "La st\xE5 tomt for \xE5 bruke dagens dato.",
+      checkin_no_date: "Ingen dato",
       b_countries: "{n} land",
       b_places: "{n} steder",
       b_capitals: "{n} hovedsteder",
@@ -816,6 +818,7 @@ var O = {
       visited_on: "Date visited",
       visited_on_unset: "Not set",
       checkin_date_hint: "Leave empty to use today's date.",
+      checkin_no_date: "No date",
       b_countries: "{n} countries",
       b_places: "{n} places",
       b_capitals: "{n} capitals",
@@ -1109,6 +1112,7 @@ var O = {
       visited_on: "Datum bezocht",
       visited_on_unset: "Niet ingesteld",
       checkin_date_hint: "Laat leeg om de datum van vandaag te gebruiken.",
+      checkin_no_date: "Geen datum",
       b_countries: "{n} landen",
       b_places: "{n} plaatsen",
       b_capitals: "{n} hoofdsteden",
@@ -1338,6 +1342,11 @@ async function wf() {
   throw new Error("Ikke tilgjengelig utenfor Claude");
 }
 var h8 = (e, t) => e.city || e.town || e.village || e.hamlet || e.suburb || e.locality || t;
+/* Noen steder har tospr\xE5klig navn i OpenStreetMap (f.eks. "Cottbus/Ch\xF3śebuz").
+   Bruker bare f\xF8rste del s\xE5 vi ikke sjekker inn med begge navnene. */
+function ChMonoName(e) {
+  return e ? String(e).split("/")[0].trim() : e;
+}
 function Jy(e) {
   let t = vf(e);
   return t ? (t.apiCode || t.code).toLowerCase() : null;
@@ -1586,7 +1595,7 @@ async function e5(e, t) {
         let h = c.addresstype || c.type;
         if (!Xy.has(h)) return;
         let f = c.address || {},
-          g = ChRollUp(f, h, c.name || h8(f, (c.display_name || "").split(",")[0])),
+          g = ChRollUp(f, h, ChMonoName(c.name) || h8(f, (c.display_name || "").split(",")[0])),
           v = d8(g, e, h === "municipality"),
           y = o8(f);
         if (!v || !y || ChIsAdmin(v)) return;
@@ -1622,7 +1631,7 @@ async function f8(e, t) {
         )
       ).json(),
       r = i.address || {},
-      s = ChRollUp(r, i.addresstype || i.type, i.name || h8(r, null)),
+      s = ChRollUp(r, i.addresstype || i.type, ChMonoName(i.name) || h8(r, null)),
       l = d8(s),
       c = o8(r);
     if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i) };
@@ -4901,6 +4910,7 @@ function n5({ session: e, onLogout: t }) {
     [G, re] = (0, U.useState)(0),
     [chSheet, chSetSheet] = (0, U.useState)(null),
     [chDate, chSetDate] = (0, U.useState)(""),
+    [chNoDate, chSetNoDate] = (0, U.useState)(!1),
     [chNote, chSetNote] = (0, U.useState)(""),
     [chRate, chSetRate] = (0, U.useState)(null),
     [chPhotos, chSetPhotos] = (0, U.useState)([]),
@@ -5016,7 +5026,7 @@ function n5({ session: e, onLogout: t }) {
         (te ? D(P(n, "err_load_list")) : c(F || []), f(!1));
       })();
     }, []));
-  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP, osm: chO, date: chDt }) {
+  async function Ft({ place: F, country: te, lat: Se, lng: at, comment: chC, rating: chR, photos: chP, osm: chO, date: chDt, noDate: chNd }) {
     let gt = (F || "").trim(),
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
@@ -5044,7 +5054,7 @@ function n5({ session: e, onLogout: t }) {
         rating: chR ?? null,
         photos: chP ?? [],
         osm_id: chO ?? null,
-        visited_on: chDt || new Date().toISOString().slice(0, 10),
+        visited_on: chNd ? null : chDt || new Date().toISOString().slice(0, 10),
         elevation: chHoyde,
       })
       .select()
@@ -5062,12 +5072,24 @@ function n5({ session: e, onLogout: t }) {
       photos: chPhotos,
       osm: chOsm,
       date: chDate || null,
+      noDate: chNoDate,
     });
     if (F) {
       D(F);
       return;
     }
-    (D(""), v(""), m(""), A(null), S(""), chSetNote(""), chSetRate(null), chSetPhotos([]), chSetOsm(null), chSetDate(""), s("oversikt"));
+    (D(""),
+      v(""),
+      m(""),
+      A(null),
+      S(""),
+      chSetNote(""),
+      chSetRate(null),
+      chSetPhotos([]),
+      chSetOsm(null),
+      chSetDate(""),
+      chSetNoDate(!1),
+      s("oversikt"));
   }
   /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
      alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
@@ -5646,12 +5668,35 @@ function n5({ session: e, onLogout: t }) {
                   type: "date",
                   value: chDate,
                   max: new Date().toISOString().slice(0, 10),
+                  disabled: chNoDate,
                   onChange: (F) => chSetDate(F.target.value),
-                  style: { marginBottom: 4 },
+                  style: { marginBottom: 4, opacity: chNoDate ? 0.5 : 1 },
                 }),
-                (0, T.jsx)("p", {
-                  style: { color: O.sub, fontSize: 12, margin: "0 0 10px" },
-                  children: P(n, "checkin_date_hint"),
+                !chNoDate &&
+                  (0, T.jsx)("p", {
+                    style: { color: O.sub, fontSize: 12, margin: "0 0 8px" },
+                    children: P(n, "checkin_date_hint"),
+                  }),
+                (0, T.jsxs)("label", {
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontSize: 13,
+                    color: O.sub,
+                    cursor: "pointer",
+                    margin: "0 0 10px",
+                  },
+                  children: [
+                    (0, T.jsx)("input", {
+                      type: "checkbox",
+                      checked: chNoDate,
+                      onChange: (F) => {
+                        (chSetNoDate(F.target.checked), F.target.checked && chSetDate(""));
+                      },
+                    }),
+                    P(n, "checkin_no_date"),
+                  ],
                 }),
                 (0, T.jsx)("textarea", {
                   className: "ch-field",

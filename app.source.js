@@ -144,8 +144,9 @@ var vc = [
   { code: "GB-ENG", name: "England", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}", apiCode: "gb", capital: "London" },
   { code: "GB-SCT", name: "Skottland", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}", apiCode: "gb", capital: "Edinburgh" },
   { code: "GB-WLS", name: "Wales", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0077}\u{E006C}\u{E0073}\u{E007F}", apiCode: "gb", capital: "Cardiff" },
-  /* Nord-Irland har ingen offisiell flagg-emoji i Unicode (ingen enighet om ett flagg) – beholder UK-flagget. */
-  { code: "GB-NIR", name: "Nord-Irland", flag: "\u{1F1EC}\u{1F1E7}", apiCode: "gb", capital: "Belfast" },
+  /* Nord-Irland har ingen offisiell flagg-emoji i Unicode. Bruker Ulster-bratten
+     (det uoffisielle regionflagget) som eget SVG-bilde i stedet. */
+  { code: "GB-NIR", name: "Nord-Irland", flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCAzNiI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjM2IiBmaWxsPSIjZmZmZmZmIi8+CiAgPHJlY3QgeD0iMjQiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIzNiIgZmlsbD0iI2QwMjAyYSIvPgogIDxyZWN0IHg9IjAiIHk9IjEyIiB3aWR0aD0iNjAiIGhlaWdodD0iMTIiIGZpbGw9IiNkMDIwMmEiLz4KICA8cG9seWdvbiBwb2ludHM9IjMwLDkgMzEuOCwxNC44OCAzNy43OSwxMy41IDMzLjYsMTggMzcuNzksMjIuNSAzMS44LDIxLjEyIDMwLDI3IDI4LjIsMjEuMTIgMjIuMjEsMjIuNSAyNi40LDE4IDIyLjIxLDEzLjUgMjguMiwxNC44OCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utd2lkdGg9IjAuNiIvPgogIDxnIGZpbGw9IiNkMDIwMmEiPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoLTI3IDMwIDE3LjkpIi8+CiAgICA8cmVjdCB4PSIyOS41NSIgeT0iMTQuNSIgd2lkdGg9IjAuOSIgaGVpZ2h0PSIzLjQiIHJ4PSIwLjQ1IiB0cmFuc2Zvcm09InJvdGF0ZSgtOSAzMCAxNy45KSIvPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoOSAzMCAxNy45KSIvPgogICAgPHJlY3QgeD0iMjkuNTUiIHk9IjE0LjUiIHdpZHRoPSIwLjkiIGhlaWdodD0iMy40IiByeD0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoMjcgMzAgMTcuOSkiLz4KICAgIDxyZWN0IHg9IjI3LjU1IiB5PSIxNi4yIiB3aWR0aD0iMC45IiBoZWlnaHQ9IjIuNCIgcng9IjAuNDUiIHRyYW5zZm9ybT0icm90YXRlKC01OCAyOCAxOC42KSIvPgogICAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMTkuNyIgcng9IjEuOSIgcnk9IjEuNyIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZjJjMTRlIiBzdHJva2U9IiMxMTExMTEiIHN0cm9rZS13aWR0aD0iMC4zIj4KICAgIDxyZWN0IHg9IjI2LjUiIHk9IjQuNiIgd2lkdGg9IjciIGhlaWdodD0iMi40Ii8+CiAgICA8cG9seWdvbiBwb2ludHM9IjI2LjUsNC42IDI4LDEuOSAyOS4zLDQuNiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIyOC43LDQuNiAzMCwxLjcgMzEuMyw0LjYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMzEsNC42IDMyLjMsMS45IDMzLjUsNC42Ii8+CiAgPC9nPgo8L3N2Zz4K", apiCode: "gb", capital: "Belfast" },
   { code: "GD", name: "Grenada", capital: "St. George's" },
   { code: "GE", name: "Georgia", capital: "Tbilisi" },
   { code: "GF", name: "Fransk Guyana", capital: "Cayenne" },
@@ -361,6 +362,18 @@ function yc(e) {
 function l8(e) {
   let t = yc(e);
   return t ? t.flag || s8(t.code) : "\u{1F30D}";
+}
+/* Noen flagg (Nord-Irland) er ikke Unicode-emoji, men et data:-bilde. ChFlag
+   tegner riktig variant uansett hvilken av delene som kommer inn. */
+function ChFlag({ value: chV, size: chSz }) {
+  let chS = chSz || 17;
+  return (chV || "").slice(0, 5) === "data:"
+    ? (0, T.jsx)("img", {
+        src: chV,
+        alt: "",
+        style: { height: chS * 0.8, width: chS * 1.14, verticalAlign: "-0.15em", borderRadius: 2 },
+      })
+    : (0, T.jsx)("span", { style: { fontSize: chS }, children: chV });
 }
 var O = {
     bg: "#0B1524",
@@ -3045,7 +3058,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                     cursor: "pointer",
                   },
                   children: [
-                    (0, T.jsx)("span", { style: { fontSize: 14 }, children: l8(v.country) }),
+                    ChFlag({ value: l8(v.country), size: 14 }),
                     (0, T.jsx)("span", { style: { flex: 1, minWidth: 0 }, children: v.place }),
                     v.rating != null &&
                       (0, T.jsx)("span", {
@@ -3169,7 +3182,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       }),
                       (0, T.jsxs)("div", {
                         style: { color: O.sub, fontSize: 12, marginTop: 1 },
-                        children: [l8(fav.country), " ", fav.country],
+                        children: [ChFlag({ value: l8(fav.country), size: 12 }), " ", fav.country],
                       }),
                     ],
                   }),
@@ -3397,7 +3410,7 @@ function ChComparePanel({ uid, meId, name, onClose, onOpen }) {
                       cursor: "pointer",
                     },
                     children: [
-                      (0, T.jsx)("span", { style: { fontSize: 12 }, children: l8(v.country) }),
+                      ChFlag({ value: l8(v.country), size: 12 }),
                       v.place,
                     ],
                   },
@@ -3851,7 +3864,7 @@ function ChBadgeFace({ b, size: sz = 56 }) {
     children: [
       b.group === "countries"
         ? on
-          ? (0, T.jsx)("span", { style: { fontSize: Math.round(sz * 0.46) }, children: b.flag })
+          ? ChFlag({ value: b.flag, size: Math.round(sz * 0.46) })
           : (0, T.jsxs)("svg", {
               width: sz * 0.4,
               height: sz * 0.4,
@@ -5458,7 +5471,7 @@ function n5({ session: e, onLogout: t }) {
                               (0, T.jsxs)("div", {
                                 className: "ch-country",
                                 children: [
-                                  (0, T.jsx)("span", { style: { fontSize: 17 }, children: F.flag }),
+                                  ChFlag({ value: F.flag, size: 17 }),
                                   (0, T.jsx)("span", { style: { flex: 1 }, children: F.display }),
                                   (0, T.jsx)("span", {
                                     style: { fontFamily: "'Space Grotesk', monospace" },
@@ -6385,7 +6398,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
                       (0, T.jsxs)("div", {
                         className: "ch-country",
                         children: [
-                          (0, T.jsx)("span", { style: { fontSize: 17 }, children: v.flag }),
+                          ChFlag({ value: v.flag, size: 17 }),
                           (0, T.jsx)("span", { style: { flex: 1 }, children: v.display }),
                           (0, T.jsx)("span", {
                             style: { fontFamily: "'Space Grotesk', monospace" },

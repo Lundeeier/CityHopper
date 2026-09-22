@@ -578,6 +578,8 @@ var O = {
       cmp_only_me: "Bare du",
       cmp_none: "Ingen steder \xE5 sammenligne enn\xE5.",
       stats_open: "Reisetall",
+      places_open: "Steder",
+      places_empty_friend: "Ingen steder \xE5 vise.",
       st_north: "Nordligst",
       st_high: "H\xF8yest over havet",
       st_cap_high: "H\xF8yeste hovedstad",
@@ -870,6 +872,8 @@ var O = {
       cmp_only_me: "Only you",
       cmp_none: "Nothing to compare yet.",
       stats_open: "Travel numbers",
+      places_open: "Places",
+      places_empty_friend: "No places to show.",
       st_north: "Furthest north",
       st_high: "Highest above sea level",
       st_cap_high: "Highest capital",
@@ -1164,6 +1168,8 @@ var O = {
       cmp_only_me: "Alleen jij",
       cmp_none: "Nog niets om te vergelijken.",
       stats_open: "Reiscijfers",
+      places_open: "Plaatsen",
+      places_empty_friend: "Geen plaatsen om te tonen.",
       st_north: "Noordelijkst",
       st_high: "Hoogst boven zeeniveau",
       st_cap_high: "Hoogste hoofdstad",
@@ -3803,6 +3809,167 @@ function ChStatsPanel({ uid, onClose }) {
   });
 }
 
+/* Liste over alle steder til en bruker (venn eller deg selv), gruppert per land.
+   Samme oppsett som Oversikt-fanen, men read-only n\xE5r det ikke er deg selv. */
+function ChPlacesPanel({ uid, mine: chMine, onClose }) {
+  let [lang] = Un(),
+    [chVis, chSetVis] = (0, U.useState)(null),
+    [chSheet, chSetSheet] = (0, U.useState)(null),
+    [chQ, chSetQ] = (0, U.useState)("");
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    return (
+      (async () => {
+        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        alive && chSetVis(data || []);
+      })(),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [uid]);
+  let chGrp = (0, U.useMemo)(() => {
+      if (!chVis) return [];
+      let m = new Map();
+      return (
+        chVis.forEach((v) => {
+          let name = yc(v.country)?.name || v.country;
+          (m.has(name) || m.set(name, []), m.get(name).push(v));
+        }),
+        Array.from(m.entries())
+          .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "nb"))
+          .map(([land, list]) => ({
+            land,
+            flag: l8(land),
+            list: list.sort((a, b) => a.place.localeCompare(b.place, "nb")),
+          }))
+      );
+    }, [chVis]),
+    chFiltered = (0, U.useMemo)(() => {
+      let f = ChFold(chQ);
+      return f
+        ? chGrp
+            .map((g) => ({ ...g, list: g.list.filter((v) => ChFold(v.place).includes(f)) }))
+            .filter((g) => g.list.length > 0 || ChFold(g.land).includes(f))
+        : chGrp;
+    }, [chGrp, chQ]);
+  return (0, T.jsxs)(T.Fragment, {
+    children: [
+      (0, T.jsx)(ChPanel, {
+        title: P(lang, "places_open"),
+        onClose,
+        children:
+          chVis === null
+            ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
+            : chVis.length === 0
+              ? (0, T.jsx)("p", {
+                  style: { color: O.sub, fontSize: 15, padding: "24px 0", textAlign: "center" },
+                  children: P(lang, chMine ? "empty_places" : "places_empty_friend"),
+                })
+              : (0, T.jsxs)(T.Fragment, {
+                  children: [
+                    chVis.length > 12 &&
+                      (0, T.jsx)("input", {
+                        className: "ch-search",
+                        type: "search",
+                        value: chQ,
+                        placeholder: P(lang, "search_places"),
+                        onChange: (e) => chSetQ(e.target.value),
+                        style: { marginBottom: 8 },
+                      }),
+                    chFiltered.length === 0
+                      ? (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15, padding: 20 }, children: P(lang, "no_results") })
+                      : chFiltered.map((g) =>
+                          (0, T.jsxs)(
+                            "div",
+                            {
+                              children: [
+                                (0, T.jsxs)("div", {
+                                  className: "ch-country",
+                                  children: [
+                                    ChFlag({ value: g.flag, size: 17 }),
+                                    (0, T.jsx)("span", { style: { flex: 1 }, children: g.land }),
+                                    (0, T.jsx)("span", {
+                                      style: { fontFamily: "'Space Grotesk', monospace" },
+                                      children: g.list.length,
+                                    }),
+                                  ],
+                                }),
+                                g.list.map((v) =>
+                                  (0, T.jsx)(
+                                    "div",
+                                    {
+                                      className: "ch-item",
+                                      children: (0, T.jsxs)("button", {
+                                        onClick: () => chSetSheet(v),
+                                        style: {
+                                          flex: 1,
+                                          minWidth: 0,
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: 6,
+                                          background: "none",
+                                          border: "none",
+                                          color: O.text,
+                                          fontFamily: "inherit",
+                                          fontSize: 16,
+                                          textAlign: "left",
+                                          padding: 0,
+                                          cursor: "pointer",
+                                        },
+                                        children: [
+                                          (0, T.jsx)("span", {
+                                            style: {
+                                              flex: 1,
+                                              minWidth: 0,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            },
+                                            children: v.place,
+                                          }),
+                                          v.photos &&
+                                            v.photos.length > 0 &&
+                                            (0, T.jsx)("span", {
+                                              style: { color: O.sub, fontSize: 12 },
+                                              children: "\u{1F4F7}" + v.photos.length,
+                                            }),
+                                          (0, T.jsx)(ChRating, {
+                                            value: v.rating == null ? null : Number(v.rating),
+                                            readOnly: !0,
+                                            size: 15,
+                                            compact: !0,
+                                            lang,
+                                          }),
+                                          (0, T.jsx)("span", {
+                                            style: { color: O.border, fontSize: 17, lineHeight: 1 },
+                                            children: "›",
+                                          }),
+                                        ],
+                                      }),
+                                    },
+                                    v.id,
+                                  ),
+                                ),
+                              ],
+                            },
+                            g.land,
+                          ),
+                        ),
+                  ],
+                }),
+      }),
+      chSheet &&
+        (0, T.jsx)(ChSheet, {
+          visit: chSheet,
+          uid,
+          readOnly: !0,
+          onClose: () => chSetSheet(null),
+        }),
+    ],
+  });
+}
+
 function ChBadgeToast({ badges, lang, onClose }) {
   ((0, U.useEffect)(() => {
     let t = setTimeout(onClose, 6e3);
@@ -4452,6 +4619,41 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                           style: { flex: 1, textAlign: "left", fontSize: 15, fontWeight: 600 },
                           children: P(lang, "stats_open"),
                         }),
+                        (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
+                      ],
+                    }),
+                    (0, T.jsxs)("button", {
+                      onClick: () => onOpen({ type: "places", id: uid, mine }),
+                      style: {
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        marginTop: 8,
+                        background: "none",
+                        border: "none",
+                        color: O.text,
+                        fontFamily: "inherit",
+                        cursor: "pointer",
+                        padding: "10px 0",
+                      },
+                      children: [
+                        (0, T.jsxs)("svg", {
+                          width: 22,
+                          height: 22,
+                          viewBox: "0 0 24 24",
+                          fill: "none",
+                          style: { flex: "0 0 auto" },
+                          children: [
+                            (0, T.jsx)("path", { d: "M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z", stroke: O.nav, strokeWidth: "1.8", strokeLinejoin: "round" }),
+                            (0, T.jsx)("circle", { cx: "12", cy: "9.5", r: "2.2", stroke: O.nav, strokeWidth: "1.8" }),
+                          ],
+                        }),
+                        (0, T.jsx)("span", {
+                          style: { flex: 1, textAlign: "left", fontSize: 15, fontWeight: 600 },
+                          children: P(lang, "places_open"),
+                        }),
+                        (0, T.jsx)("span", { style: { color: O.sub, fontSize: 13 }, children: visits.length }),
                         (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
                       ],
                     }),
@@ -5767,6 +5969,13 @@ function n5({ session: e, onLogout: t }) {
             chView.type === "stats" &&
             (0, T.jsx)(ChStatsPanel, {
               uid: chView.id,
+              onClose: () => chSetView({ type: "profile", id: chView.id }),
+            }),
+          chView &&
+            chView.type === "places" &&
+            (0, T.jsx)(ChPlacesPanel, {
+              uid: chView.id,
+              mine: chView.mine,
               onClose: () => chSetView({ type: "profile", id: chView.id }),
             }),
           chView &&

@@ -1413,7 +1413,12 @@ var Ch_ADMIN = [
     "locality",
   ]),
   ChRollUp = (addr, type, fallback) =>
-    (Ch_SUB.has(type) && (addr.city || addr.town)) || fallback,
+    // Mangler stedet by/tettsted over seg OG eget postnummer, er det ikke et
+    // ekte eget sted (f.eks. et fjellanlegg uten egen postadresse) — da
+    // ruller vi opp til kommunen, siden d8() uansett strips "kommune"-endelsen.
+    (Ch_SUB.has(type) && (addr.city || addr.town)) ||
+    (Ch_SUB.has(type) && !addr.postcode && addr.municipality) ||
+    fallback,
   Xy = new Set([
     "city",
     "town",

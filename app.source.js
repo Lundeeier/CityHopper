@@ -376,40 +376,36 @@ function ChFlag({ value: chV, size: chSz }) {
       })
     : (0, T.jsx)("span", { style: { fontSize: chS }, children: chV });
 }
-/* Nytt designsystem (godkjent forslag) — brukes foreløpig kun på Profil-skjermen,
-   bak en "theme"-parameter på de delte komponentene. O forblir uendret for resten
-   av appen til resten rulles ut. */
-var ChTheme2 = {
-  bg: "#1A1714",
-  bar: "#1A1714",
-  surface: "#221E19",
-  surface2: "#2B251E",
-  hair: "rgba(245,241,232,.09)",
-  text: "#F5F1E8",
-  textDim: "#B0A695",
-  accent: "#D9713F",
-  accentInk: "#1A1714",
-  accentPressed: "#C25F30",
-  gold: "#C9A227",
-  fontDisplay: "'Fraunces', Georgia, serif",
-  fontBody: "'Archivo', -apple-system, 'Segoe UI', sans-serif",
-};
+/* Nytt designsystem (godkjent forslag), rullet ut på hele appen.
+   O er selve fargepaletten — alle skjermer leser fra denne, så én endring her
+   endrer fargene overalt. ChTheme2 er samme objekt under et annet navn, brukt
+   av komponenter som ble migrert til de nye feltnavnene (hair/surface/textDim
+   osv.) da Profil-skjermen fikk det nye designet først. */
 var O = {
-    bg: "#0B1524",
-    bar: "#16263C",
-    row: "#132338",
-    gap: "#0B1524",
-    text: "#EDF2F9",
-    sub: "#8CA0BE",
-    accent: "#FFB238",
-    accentInk: "#241505",
-    line: "#1E3048",
-    warn: "#F2665A",
-    land: "#22384F",
-    border: "#4C6D93",
-    brass: "#45C4B0",
-    nav: "#45C4B0",
+    bg: "#1A1714",
+    bar: "#1A1714",
+    row: "#221E19",
+    gap: "#1A1714",
+    text: "#F5F1E8",
+    sub: "#B0A695",
+    accent: "#D9713F",
+    accentInk: "#1A1714",
+    line: "rgba(245,241,232,.09)",
+    warn: "#E2574C",
+    land: "#2B251E",
+    border: "#58503F",
+    brass: "#D9713F",
+    nav: "#D9713F",
+    surface: "#221E19",
+    surface2: "#2B251E",
+    hair: "rgba(245,241,232,.09)",
+    textDim: "#B0A695",
+    accentPressed: "#C25F30",
+    gold: "#C9A227",
+    fontDisplay: "'Fraunces', Georgia, serif",
+    fontBody: "'Archivo', -apple-system, 'Segoe UI', sans-serif",
   },
+  ChTheme2 = O,
   yf = (e) => e && e.charAt(0).toUpperCase() + e.slice(1),
   _c = {
     no: {
@@ -1941,7 +1937,7 @@ function ChStar({ frac: e, size: t, fill: chF, track: chTr }) {
 }
 
 function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang: r = "no", compact: chC = !1, theme: chTh }) {
-  let chT = chTh || null,
+  let chT = chTh || O,
     s = (0, U.useRef)(null),
     l = (0, U.useRef)(!1);
   function c(h) {
@@ -1990,7 +1986,7 @@ function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang:
       }),
       (0, T.jsx)("span", {
         style: {
-          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+          fontFamily: chT ? chT.fontDisplay : "'Fraunces', Georgia, serif",
           fontWeight: chT ? 600 : 400,
           fontSize: n > 24 ? 18 : 14,
           color: e == null ? (chT ? chT.textDim : O.sub) : chT ? chT.text : O.accent,
@@ -2104,7 +2100,7 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
                         width: 96,
                         height: 96,
                         objectFit: "cover",
-                        borderRadius: 4,
+                        borderRadius: 10,
                         display: "block",
                         background: O.row,
                       },
@@ -2144,7 +2140,7 @@ function ChPhotoStrip({ paths: e, onAdd: t, onRemove: n, busy: i, lang: r }) {
                 flex: "0 0 auto",
                 width: 96,
                 height: 96,
-                borderRadius: 4,
+                borderRadius: 10,
                 border: `1px solid ${O.line}`,
                 background: "none",
                 color: O.sub,
@@ -2277,7 +2273,7 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
         borderTop: `2px solid ${O.line}`,
         borderRadius: "12px 12px 0 0",
         padding: 16,
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Archivo', -apple-system, sans-serif",
       },
       children: [
         (0, T.jsxs)("div", {
@@ -2530,7 +2526,7 @@ function ChPushPrompt({ lang, onEnable, onLater }) {
         borderRadius: 12,
         padding: 22,
         textAlign: "center",
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Archivo', -apple-system, sans-serif",
       },
       children: [
         (0, T.jsxs)("svg", {
@@ -2923,7 +2919,7 @@ async function ChUploadAvatar(uid, file) {
 }
 
 function ChAvatar({ url, name, size = 40, onClick, theme: chTh }) {
-  let chT = chTh || null,
+  let chT = chTh || O,
     letter = (name || "?").trim().charAt(0).toUpperCase(),
     base = {
       width: size,
@@ -2947,7 +2943,7 @@ function ChAvatar({ url, name, size = 40, onClick, theme: chTh }) {
           alignItems: "center",
           justifyContent: "center",
           color: chT ? chT.accent : O.accent,
-          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', sans-serif",
+          fontFamily: chT ? chT.fontDisplay : "'Fraunces', Georgia, serif",
           fontWeight: 700,
           fontSize: Math.round(size * 0.44),
         },
@@ -2956,7 +2952,7 @@ function ChAvatar({ url, name, size = 40, onClick, theme: chTh }) {
 }
 
 function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct, theme: chTh }) {
-  let chT = chTh || null;
+  let chT = chTh || O;
   return (0, T.jsxs)("div", {
     className: "ch-sheet",
     style: {
@@ -2972,7 +2968,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct, them
       color: chT ? chT.text : O.text,
       display: "flex",
       flexDirection: "column",
-      fontFamily: chT ? chT.fontBody : "'Inter', system-ui, sans-serif",
+      fontFamily: chT ? chT.fontBody : "'Archivo', -apple-system, sans-serif",
     },
     children: [
       (0, T.jsxs)("div", {
@@ -3045,7 +3041,7 @@ function ChToggle({ label, checked, onChange }) {
 
 function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen, theme: chTh }) {
   if (!mine && !fav) return null;
-  let chT = chTh || null,
+  let chT = chTh || O,
     chDiv = chT ? `1px solid ${chT.hair}` : `1px solid ${O.line}`;
   let head = (0, T.jsxs)("div", {
     style: { display: "flex", alignItems: "center", margin: "22px 0 10px" },
@@ -3127,7 +3123,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       (0, T.jsx)("span", {
                         style: {
                           color: chT ? chT.gold : O.accent,
-                          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+                          fontFamily: chT ? chT.fontDisplay : "'Fraunces', Georgia, serif",
                           fontWeight: chT ? 600 : 400,
                           fontSize: 13,
                         },
@@ -3171,7 +3167,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                 },
                 children: (0, T.jsx)(ChThumb, {
                   path: ph,
-                  style: { width: 96, height: 96, objectFit: "cover", borderRadius: 4, display: "block" },
+                  style: { width: 96, height: 96, objectFit: "cover", borderRadius: 10, display: "block" },
                 }),
               },
               ph,
@@ -3219,7 +3215,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       alignItems: "center",
                       justifyContent: "center",
                       color: chT ? chT.textDim : O.border,
-                      fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', sans-serif",
+                      fontFamily: chT ? chT.fontDisplay : "'Fraunces', Georgia, serif",
                       fontSize: 26,
                     },
                     children: (fav.place || "?").trim().charAt(0).toUpperCase(),
@@ -3394,7 +3390,7 @@ function ChSettings({ meId, onClose, onLogout }) {
                 flex: 1,
                 background: "none",
                 border: `1px solid ${lang === code ? O.nav : O.line}`,
-                borderRadius: 4,
+                borderRadius: 10,
                 color: lang === code ? O.nav : O.sub,
                 fontFamily: "inherit",
                 fontSize: 14,
@@ -3416,7 +3412,7 @@ function ChSettings({ meId, onClose, onLogout }) {
             marginTop: 14,
             background: "none",
             border: `1px solid ${O.line}`,
-            borderRadius: 4,
+            borderRadius: 10,
             color: O.sub,
             fontFamily: "inherit",
             fontSize: 15,
@@ -3845,7 +3841,7 @@ function ChStatsPanel({ uid, onClose }) {
                         children: [
                           (0, T.jsx)("span", {
                             style: {
-                              fontFamily: "'Space Grotesk', monospace",
+                              fontFamily: "'Fraunces', Georgia, serif",
                               fontSize: 18,
                               fontWeight: 700,
                               color: O.accent,
@@ -3859,7 +3855,7 @@ function ChStatsPanel({ uid, onClose }) {
                               y.countries + " " + P(lang, "countries") + ", " + y.places + " " + P(lang, "places"),
                           }),
                           (0, T.jsx)("span", {
-                            style: { color: O.accent, fontFamily: "'Space Grotesk', monospace", fontSize: 14 },
+                            style: { color: O.accent, fontFamily: "'Fraunces', Georgia, serif", fontSize: 14 },
                             children: y.avg == null ? "\u2013" : y.avg.toFixed(2),
                           }),
                         ],
@@ -3953,7 +3949,7 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
                                     ChFlag({ value: g.flag, size: 17 }),
                                     (0, T.jsx)("span", { style: { flex: 1 }, children: g.land }),
                                     (0, T.jsx)("span", {
-                                      style: { fontFamily: "'Space Grotesk', monospace" },
+                                      style: { fontFamily: "'Fraunces', Georgia, serif" },
                                       children: g.list.length,
                                     }),
                                   ],
@@ -4055,7 +4051,7 @@ function ChBadgeToast({ badges, lang, onClose }) {
       display: "flex",
       alignItems: "center",
       gap: 12,
-      fontFamily: "'Inter', system-ui, sans-serif",
+      fontFamily: "'Archivo', -apple-system, sans-serif",
       cursor: "pointer",
     },
     children: [
@@ -4085,7 +4081,7 @@ function ChBadgeToast({ badges, lang, onClose }) {
 
 function ChBadgeFace({ b, size: sz = 56 }) {
   let on = b.earned,
-    ring = on ? (b.group === "countries" ? O.nav : O.accent) : "#22384F",
+    ring = on ? (b.group === "countries" ? O.nav : O.accent) : O.surface2,
     ink = on ? (b.group === "countries" ? O.nav : O.accent) : O.border;
   return (0, T.jsxs)("div", {
     style: {
@@ -4093,7 +4089,7 @@ function ChBadgeFace({ b, size: sz = 56 }) {
       height: sz,
       borderRadius: "50%",
       border: `2px ${on ? "solid" : "dashed"} ${ring}`,
-      background: on ? O.row : "#0F1D2E",
+      background: on ? O.row : O.bg,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -4117,7 +4113,7 @@ function ChBadgeFace({ b, size: sz = 56 }) {
         : b.num != null
           ? (0, T.jsx)("span", {
               style: {
-                fontFamily: "'Space Grotesk', sans-serif",
+                fontFamily: "'Fraunces', Georgia, serif",
                 fontWeight: 700,
                 fontSize: Math.round(sz * (String(b.num).length > 2 ? 0.3 : 0.36)),
                 color: ink,
@@ -4196,7 +4192,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
                 flex: 1,
                 background: "none",
                 border: `1px solid ${tab === k ? O.nav : O.line}`,
-                borderRadius: 4,
+                borderRadius: 10,
                 color: tab === k ? O.nav : O.sub,
                 fontFamily: "inherit",
                 fontSize: 13,
@@ -4920,7 +4916,7 @@ function ChChat({ meId, user, onClose }) {
               background: O.accent,
               color: O.accentInk,
               border: "none",
-              borderRadius: 4,
+              borderRadius: 10,
               fontFamily: "inherit",
               fontSize: 15,
               fontWeight: 600,
@@ -5532,11 +5528,11 @@ function n5({ session: e, onLogout: t }) {
     children: [
       (0, T.jsx)("style", {
         children: `
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Archivo:wght@400;500;600;700&display=swap');
         ${Vy}
-        .leaflet-container { font-family: 'Inter', sans-serif; background: ${O.bg}; }
+        .leaflet-container { font-family: 'Archivo', sans-serif; background: ${O.bg}; }
         .ch * { box-sizing: border-box; }
-        .ch { font-family: 'Inter', system-ui, sans-serif; max-width: 620px; margin: 0 auto;
+        .ch { font-family: 'Archivo', -apple-system, sans-serif; max-width: 620px; margin: 0 auto;
           padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
         .ch-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; display: flex;
           max-width: 620px; margin: 0 auto; background: ${O.bar};
@@ -5553,53 +5549,53 @@ function n5({ session: e, onLogout: t }) {
           border: 3px solid ${O.bar}; }
         .ch-navdot { position: absolute; top: 8px; left: 50%; margin-left: 6px; width: 8px;
           height: 8px; border-radius: 50%; background: ${O.warn}; }
-        .ch-search { width: 100%; border: none; border-bottom: 2px solid ${O.gap};
+        .ch-search { width: 100%; border: none; border-bottom: 1px solid ${O.hair};
           background: ${O.bar}; padding: 13px 16px; font-size: 15px; color: ${O.text}; }
-        .ch-search::placeholder { color: ${O.sub}; }
+        .ch-search::placeholder { color: ${O.textDim}; }
         .ch input, .ch textarea, .ch select { font-family: inherit; }
         .ch-sheet, .ch-sheet * { box-sizing: border-box; }
         .ch-sheet textarea, .ch-sheet input { font-family: inherit; }
         .ch input:focus-visible, .ch button:focus-visible, .ch a:focus-visible {
           outline: 2px solid ${O.accent}; outline-offset: -2px; }
-        .ch-field { width: 100%; border: 1px solid ${O.line}; background: ${O.bg};
-          border-radius: 4px; padding: 12px; font-size: 16px; color: ${O.text}; }
-        .ch-field::placeholder { color: #667C99; }
+        .ch-field { width: 100%; border: none; background: ${O.surface};
+          border-radius: 10px; padding: 12px 14px; font-size: 16px; color: ${O.text}; }
+        .ch-field::placeholder { color: ${O.textDim}; }
         .ch-primary { width: 100%; background: ${O.accent}; color: ${O.accentInk}; border: none;
-          border-radius: 4px; padding: 13px; font-size: 16px; font-weight: 700;
+          border-radius: 10px; padding: 13px; font-size: 16px; font-weight: 600;
           font-family: inherit; cursor: pointer; }
-        .ch-secondary { width: 100%; background: ${O.row}; color: ${O.text};
-          border: 1px solid ${O.line}; border-radius: 4px; padding: 13px; font-size: 16px;
+        .ch-secondary { width: 100%; background: ${O.surface2}; color: ${O.text};
+          border: none; border-radius: 10px; padding: 13px; font-size: 16px;
           font-weight: 500; font-family: inherit; cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 8px; }
         .ch-tab { flex: 1; background: none; border: none; border-bottom: 3px solid transparent;
-          color: ${O.sub}; font-family: inherit; font-size: 15px; font-weight: 500;
+          color: ${O.textDim}; font-family: inherit; font-size: 15px; font-weight: 500;
           padding: 13px 0; cursor: pointer; }
         .ch-tab[data-on="true"] { color: ${O.text}; border-bottom-color: ${O.accent}; }
-        .ch-pill { border: 1px solid ${O.line}; background: none; color: ${O.sub};
+        .ch-pill { border: 1px solid ${O.hair}; background: none; color: ${O.textDim};
           border-radius: 999px; padding: 7px 16px; font-size: 14px; font-weight: 600;
           font-family: inherit; cursor: pointer; }
         .ch-pill[data-on="true"] { border-color: ${O.accent}; color: ${O.accent}; }
         .ch-item { display: flex; align-items: center; gap: 10px; width: 100%;
-          background: ${O.row}; border-bottom: 2px solid ${O.gap}; padding: 15px 16px; }
+          background: ${O.surface}; border-bottom: 1px solid ${O.hair}; padding: 15px 16px; }
         .ch-item a { color: ${O.text}; font-size: 17px; text-decoration: none; flex: 1; }
         .ch-country { display: flex; align-items: center; gap: 10px; background: ${O.bar};
-          padding: 12px 16px; border-bottom: 2px solid ${O.gap};
-          font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; }
-        .ch-x { border: none; background: none; color: #5D7391; font-size: 20px;
+          padding: 12px 16px; border-bottom: 1px solid ${O.hair};
+          font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600; }
+        .ch-x { border: none; background: none; color: ${O.textDim}; font-size: 20px;
           line-height: 1; padding: 4px 2px 4px 12px; cursor: pointer; }
         .ch-x:hover { color: ${O.warn}; }
-        .ch-zoom { width: 38px; height: 38px; background: rgba(12,20,29,.85); color: ${O.text};
-          border: 1px solid ${O.line}; border-radius: 4px; font-size: 19px; line-height: 1;
+        .ch-zoom { width: 38px; height: 38px; background: rgba(26,23,20,.85); color: ${O.text};
+          border: 1px solid ${O.hair}; border-radius: 10px; font-size: 19px; line-height: 1;
           font-family: inherit; cursor: pointer; }
         .ch-sug { position: absolute; left: 0; right: 0; top: 100%; z-index: 900;
-          background: ${O.bar}; border: 1px solid ${O.line}; border-radius: 4px;
+          background: ${O.bar}; border: 1px solid ${O.hair}; border-radius: 10px;
           margin-top: 3px; overflow: hidden; }
         .ch-sug button { display: block; width: 100%; text-align: left; background: none;
-          border: none; border-bottom: 1px solid ${O.line}; color: ${O.text};
+          border: none; border-bottom: 1px solid ${O.hair}; color: ${O.text};
           font-family: inherit; font-size: 15px; padding: 11px 12px; cursor: pointer; }
         .ch-sug button:last-child { border-bottom: none; }
-        .ch-sug button:hover { background: ${O.row}; }
-        .ch-sug span { color: ${O.sub}; font-size: 13px; }
+        .ch-sug button:hover { background: ${O.surface}; }
+        .ch-sug span { color: ${O.textDim}; font-size: 13px; }
       `,
       }),
       (0, T.jsxs)("div", {
@@ -5625,7 +5621,7 @@ function n5({ session: e, onLogout: t }) {
                       fontSize: 22,
                       fontWeight: 700,
                       letterSpacing: "-0.01em",
-                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontFamily: "'Fraunces', Georgia, serif",
                     },
                     children: "CityHopper",
                   }),
@@ -5640,9 +5636,9 @@ function n5({ session: e, onLogout: t }) {
                     style: {
                       position: "relative",
                       background: "none",
-                      border: `1px solid ${O.line}`,
-                      borderRadius: 4,
-                      color: O.sub,
+                      border: "none",
+                      borderRadius: 10,
+                      color: O.textDim,
                       padding: "5px 8px",
                       cursor: "pointer",
                       lineHeight: 0,
@@ -5656,13 +5652,13 @@ function n5({ session: e, onLogout: t }) {
                         children: [
                           (0, T.jsx)("path", {
                             d: "M6 9a6 6 0 0112 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z",
-                            stroke: O.sub,
+                            stroke: O.textDim,
                             strokeWidth: "1.7",
                             strokeLinejoin: "round",
                           }),
                           (0, T.jsx)("path", {
                             d: "M10 18a2 2 0 004 0",
-                            stroke: O.sub,
+                            stroke: O.textDim,
                             strokeWidth: "1.7",
                           }),
                         ],
@@ -5803,7 +5799,7 @@ function n5({ session: e, onLogout: t }) {
                                   ChFlag({ value: F.flag, size: 17 }),
                                   (0, T.jsx)("span", { style: { flex: 1 }, children: F.display }),
                                   (0, T.jsx)("span", {
-                                    style: { fontFamily: "'Space Grotesk', monospace" },
+                                    style: { fontFamily: "'Fraunces', Georgia, serif" },
                                     children: F.list.length,
                                   }),
                                 ],
@@ -5918,7 +5914,7 @@ function n5({ session: e, onLogout: t }) {
                   }),
                 N &&
                   (0, T.jsxs)("div", {
-                    style: { border: `1px solid ${O.line}`, borderRadius: 4, padding: 14, marginBottom: 12 },
+                    style: { border: `1px solid ${O.line}`, borderRadius: 10, padding: 14, marginBottom: 12 },
                     children: [
                       (0, T.jsxs)("p", {
                         style: { margin: "0 0 8px", fontSize: 14, lineHeight: 1.5 },
@@ -6447,7 +6443,7 @@ function a5({ session: e, onOpen: chOpen }) {
                             border: `1px solid ${O.accent}`,
                             background: "none",
                             color: O.accent,
-                            borderRadius: 4,
+                            borderRadius: 10,
                             padding: "7px 12px",
                             fontSize: 14,
                             fontFamily: "inherit",
@@ -6512,7 +6508,7 @@ function a5({ session: e, onOpen: chOpen }) {
                                     border: "none",
                                     background: O.accent,
                                     color: O.accentInk,
-                                    borderRadius: 4,
+                                    borderRadius: 10,
                                     padding: "7px 12px",
                                     fontSize: 14,
                                     fontFamily: "inherit",
@@ -6528,7 +6524,7 @@ function a5({ session: e, onOpen: chOpen }) {
                                     border: `1px solid ${O.line}`,
                                     background: "none",
                                     color: O.sub,
-                                    borderRadius: 4,
+                                    borderRadius: 10,
                                     padding: "7px 12px",
                                     fontSize: 14,
                                     fontFamily: "inherit",
@@ -6573,7 +6569,7 @@ function a5({ session: e, onOpen: chOpen }) {
                                     border: `1px solid ${O.line}`,
                                     background: "none",
                                     color: O.sub,
-                                    borderRadius: 4,
+                                    borderRadius: 10,
                                     padding: "7px 12px",
                                     fontSize: 14,
                                     fontFamily: "inherit",
@@ -6760,7 +6756,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
                           ChFlag({ value: v.flag, size: 17 }),
                           (0, T.jsx)("span", { style: { flex: 1 }, children: v.display }),
                           (0, T.jsx)("span", {
-                            style: { fontFamily: "'Space Grotesk', monospace" },
+                            style: { fontFamily: "'Fraunces', Georgia, serif" },
                             children: v.list.length,
                           }),
                         ],
@@ -6798,7 +6794,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
                                   (0, T.jsxs)("span", {
                                     style: {
                                       color: O.accent,
-                                      fontFamily: "'Space Grotesk', monospace",
+                                      fontFamily: "'Fraunces', Georgia, serif",
                                       fontSize: 14,
                                     },
                                     children: ["\u2605 ", Number(y.rating).toFixed(2)],
@@ -6947,7 +6943,7 @@ function s5({ session: e, onOpen: chOpen }) {
                   children: [
                     (0, T.jsxs)("span", {
                       style: {
-                        fontFamily: "'Space Grotesk', monospace",
+                        fontFamily: "'Fraunces', Georgia, serif",
                         color: O.brass,
                         fontSize: 15,
                         width: 24,
@@ -7011,7 +7007,7 @@ function s5({ session: e, onOpen: chOpen }) {
                   children: [
                     (0, T.jsxs)("span", {
                       style: {
-                        fontFamily: "'Space Grotesk', monospace",
+                        fontFamily: "'Fraunces', Georgia, serif",
                         color: O.brass,
                         fontSize: 15,
                         width: 24,
@@ -7020,7 +7016,7 @@ function s5({ session: e, onOpen: chOpen }) {
                     }),
                     (0, T.jsx)("span", { style: { flex: 1, fontSize: 16 }, children: I.name }),
                     (0, T.jsx)("span", {
-                      style: { fontFamily: "'Space Grotesk', monospace", fontSize: 16 },
+                      style: { fontFamily: "'Fraunces', Georgia, serif", fontSize: 16 },
                       children: I.value,
                     }),
                   ],
@@ -7065,7 +7061,7 @@ function s5({ session: e, onOpen: chOpen }) {
                           border: `1px solid ${O.line}`,
                           background: O.bg,
                           color: O.text,
-                          borderRadius: 4,
+                          borderRadius: 10,
                           padding: 12,
                           fontSize: 16,
                           fontFamily: "inherit",
@@ -7248,7 +7244,7 @@ function o5({
         children: [
           s
             ? (0, T.jsxs)("div", {
-                style: { border: `1px solid ${O.accent}`, borderRadius: 4, padding: 14, marginBottom: 12 },
+                style: { border: `1px solid ${O.accent}`, borderRadius: 10, padding: 14, marginBottom: 12 },
                 children: [
                   (0, T.jsx)("p", {
                     style: { margin: "0 0 2px", fontSize: 16, fontWeight: 700 },
@@ -7335,7 +7331,7 @@ function o5({
             }),
           S &&
             (0, T.jsxs)("div", {
-              style: { border: `1px solid ${O.line}`, borderRadius: 4, padding: 14, marginTop: 12 },
+              style: { border: `1px solid ${O.line}`, borderRadius: 10, padding: 14, marginTop: 12 },
               children: [
                 (0, T.jsx)("input", {
                   className: "ch-field",
@@ -7418,7 +7414,7 @@ function o5({
                             border: `1px solid ${O.line}`,
                             background: O.row,
                             color: O.text,
-                            borderRadius: 4,
+                            borderRadius: 10,
                             padding: "6px 10px",
                             fontSize: 14,
                             fontFamily: "inherit",
@@ -7684,13 +7680,13 @@ function u5({ pins: e, pickMode: t, onTap: n, onSelect: i, centerOn: r }) {
   });
 }
 function a8({ label: e, value: t, theme: chTh }) {
-  let chT = chTh || null;
+  let chT = chTh || O;
   return (0, T.jsxs)("div", {
     style: { flex: 1, padding: "14px 16px" },
     children: [
       (0, T.jsx)("div", {
         style: {
-          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+          fontFamily: chT ? chT.fontDisplay : "'Fraunces', Georgia, serif",
           fontWeight: chT ? 600 : 400,
           fontSize: 30,
           lineHeight: 1,
@@ -7705,7 +7701,7 @@ function a8({ label: e, value: t, theme: chTh }) {
     ],
   });
 }
-function c5({ size: e = 16, color: t = "#FFB238" }) {
+function c5({ size: e = 16, color: t = "#D9713F" }) {
   return (0, T.jsxs)("svg", {
     width: e,
     height: e,
@@ -7714,7 +7710,7 @@ function c5({ size: e = 16, color: t = "#FFB238" }) {
     "aria-hidden": "true",
     children: [
       (0, T.jsx)("path", { d: "M12 22s7-6.2 7-12A7 7 0 0 0 5 10c0 5.8 7 12 7 12Z", fill: t }),
-      (0, T.jsx)("circle", { cx: "12", cy: "10", r: "2.6", fill: "#0A1420" }),
+      (0, T.jsx)("circle", { cx: "12", cy: "10", r: "2.6", fill: "#1A1714" }),
     ],
   });
 }
@@ -7782,7 +7778,7 @@ function h5() {
       width: "100%",
       border: `1px solid ${O.line}`,
       background: O.bg,
-      borderRadius: 4,
+      borderRadius: 10,
       padding: 12,
       fontSize: 16,
       color: O.text,
@@ -7802,10 +7798,10 @@ function h5() {
     children: [
       (0, T.jsx)("style", {
         children:
-          "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');",
+          "@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Archivo:wght@400;500;600;700&display=swap');",
       }),
       (0, T.jsxs)("div", {
-        style: { width: "100%", maxWidth: 360, fontFamily: "'Inter', system-ui, sans-serif" },
+        style: { width: "100%", maxWidth: 360, fontFamily: "'Archivo', -apple-system, sans-serif" },
         children: [
           (0, T.jsxs)("div", {
             style: {
@@ -7825,7 +7821,7 @@ function h5() {
                       fontWeight: 700,
                       letterSpacing: "-0.01em",
                       margin: 0,
-                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontFamily: "'Fraunces', Georgia, serif",
                     },
                     children: "CityHopper",
                   }),
@@ -7839,7 +7835,7 @@ function h5() {
                   background: O.row,
                   border: `1px solid ${O.line}`,
                   color: O.text,
-                  borderRadius: 4,
+                  borderRadius: 10,
                   padding: "5px 5px",
                   fontSize: 12,
                   fontFamily: "inherit",
@@ -7890,7 +7886,7 @@ function h5() {
               background: O.accent,
               color: O.accentInk,
               border: "none",
-              borderRadius: 4,
+              borderRadius: 10,
               padding: 13,
               fontSize: 16,
               fontWeight: 700,
@@ -7962,7 +7958,7 @@ function d5({ onDone: e }) {
     width: "100%",
     border: `1px solid ${O.line}`,
     background: O.bg,
-    borderRadius: 4,
+    borderRadius: 10,
     padding: 12,
     fontSize: 16,
     color: O.text,
@@ -7981,10 +7977,10 @@ function d5({ onDone: e }) {
     children: [
       (0, T.jsx)("style", {
         children:
-          "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');",
+          "@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Archivo:wght@400;500;600;700&display=swap');",
       }),
       (0, T.jsxs)("div", {
-        style: { width: "100%", maxWidth: 360, fontFamily: "'Inter', system-ui, sans-serif" },
+        style: { width: "100%", maxWidth: 360, fontFamily: "'Archivo', -apple-system, sans-serif" },
         children: [
           (0, T.jsx)("h1", {
             style: {
@@ -7992,7 +7988,7 @@ function d5({ onDone: e }) {
               fontWeight: 700,
               letterSpacing: "-0.01em",
               margin: "0 0 4px",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Fraunces', Georgia, serif",
             },
             children: P(t, "new_password_title"),
           }),
@@ -8018,7 +8014,7 @@ function d5({ onDone: e }) {
               background: O.accent,
               color: O.accentInk,
               border: "none",
-              borderRadius: 4,
+              borderRadius: 10,
               padding: 13,
               fontSize: 16,
               fontWeight: 700,
@@ -8060,7 +8056,7 @@ class ChBoundary extends U.Component {
             gap: 14,
             padding: 28,
             textAlign: "center",
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "'Archivo', -apple-system, sans-serif",
           },
           children: [
             (0, T.jsx)("div", {
@@ -8077,7 +8073,7 @@ class ChBoundary extends U.Component {
                 background: O.accent,
                 color: O.accentInk,
                 border: "none",
-                borderRadius: 4,
+                borderRadius: 10,
                 fontFamily: "inherit",
                 fontSize: 16,
                 fontWeight: 600,

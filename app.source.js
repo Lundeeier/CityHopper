@@ -376,6 +376,24 @@ function ChFlag({ value: chV, size: chSz }) {
       })
     : (0, T.jsx)("span", { style: { fontSize: chS }, children: chV });
 }
+/* Nytt designsystem (godkjent forslag) — brukes foreløpig kun på Profil-skjermen,
+   bak en "theme"-parameter på de delte komponentene. O forblir uendret for resten
+   av appen til resten rulles ut. */
+var ChTheme2 = {
+  bg: "#1A1714",
+  bar: "#1A1714",
+  surface: "#221E19",
+  surface2: "#2B251E",
+  hair: "rgba(245,241,232,.09)",
+  text: "#F5F1E8",
+  textDim: "#B0A695",
+  accent: "#D9713F",
+  accentInk: "#1A1714",
+  accentPressed: "#C25F30",
+  gold: "#C9A227",
+  fontDisplay: "'Fraunces', Georgia, serif",
+  fontBody: "'Archivo', -apple-system, 'Segoe UI', sans-serif",
+};
 var O = {
     bg: "#0B1524",
     bar: "#16263C",
@@ -1889,7 +1907,7 @@ function ChKey(e, t) {
 var Ch_STAR =
   "M12 2.4l2.92 5.92 6.53.95-4.72 4.6 1.11 6.51L12 17.32l-5.84 3.06 1.11-6.51-4.72-4.6 6.53-.95L12 2.4z";
 
-function ChStar({ frac: e, size: t }) {
+function ChStar({ frac: e, size: t, fill: chF, track: chTr }) {
   return (0, T.jsxs)("span", {
     style: { position: "relative", display: "block", width: t, height: t, flex: "0 0 auto" },
     children: [
@@ -1898,7 +1916,7 @@ function ChStar({ frac: e, size: t }) {
         height: t,
         viewBox: "0 0 24 24",
         style: { position: "absolute", left: 0, top: 0, display: "block" },
-        children: (0, T.jsx)("path", { d: Ch_STAR, fill: "none", stroke: O.border, strokeWidth: 1.5 }),
+        children: (0, T.jsx)("path", { d: Ch_STAR, fill: "none", stroke: chTr || O.border, strokeWidth: 1.5 }),
       }),
       e > 0 &&
         (0, T.jsx)("span", {
@@ -1915,15 +1933,16 @@ function ChStar({ frac: e, size: t }) {
             height: t,
             viewBox: "0 0 24 24",
             style: { display: "block" },
-            children: (0, T.jsx)("path", { d: Ch_STAR, fill: O.accent }),
+            children: (0, T.jsx)("path", { d: Ch_STAR, fill: chF || O.accent }),
           }),
         }),
     ],
   });
 }
 
-function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang: r = "no", compact: chC = !1 }) {
-  let s = (0, U.useRef)(null),
+function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang: r = "no", compact: chC = !1, theme: chTh }) {
+  let chT = chTh || null,
+    s = (0, U.useRef)(null),
     l = (0, U.useRef)(!1);
   function c(h) {
     if (i || !t || !s.current) return;
@@ -1957,14 +1976,24 @@ function ChRating({ value: e, onChange: t, size: n = 34, readOnly: i = !1, lang:
           flex: "0 0 auto",
         },
         children: [0, 1, 2, 3, 4].map((h) =>
-          (0, T.jsx)(ChStar, { frac: Math.max(0, Math.min(1, (e || 0) - h)), size: n }, h),
+          (0, T.jsx)(
+            ChStar,
+            {
+              frac: Math.max(0, Math.min(1, (e || 0) - h)),
+              size: n,
+              fill: chT ? chT.gold : void 0,
+              track: chT ? chT.hair : void 0,
+            },
+            h,
+          ),
         ),
       }),
       (0, T.jsx)("span", {
         style: {
-          fontFamily: "'Space Grotesk', monospace",
+          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+          fontWeight: chT ? 600 : 400,
           fontSize: n > 24 ? 18 : 14,
-          color: e == null ? O.sub : O.accent,
+          color: e == null ? (chT ? chT.textDim : O.sub) : chT ? chT.text : O.accent,
           minWidth: chC ? 34 : 42,
         },
         children: e == null ? "\u2013" : Number(e).toFixed(2),
@@ -2893,8 +2922,9 @@ async function ChUploadAvatar(uid, file) {
   return path;
 }
 
-function ChAvatar({ url, name, size = 40, onClick }) {
-  let letter = (name || "?").trim().charAt(0).toUpperCase(),
+function ChAvatar({ url, name, size = 40, onClick, theme: chTh }) {
+  let chT = chTh || null,
+    letter = (name || "?").trim().charAt(0).toUpperCase(),
     base = {
       width: size,
       height: size,
@@ -2902,8 +2932,8 @@ function ChAvatar({ url, name, size = 40, onClick }) {
       flex: "0 0 auto",
       objectFit: "cover",
       display: "block",
-      border: `1px solid ${O.line}`,
-      background: O.row,
+      border: chT ? "none" : `1px solid ${O.line}`,
+      background: chT ? chT.surface2 : O.row,
       padding: 0,
       cursor: onClick ? "pointer" : "default",
     };
@@ -2916,8 +2946,8 @@ function ChAvatar({ url, name, size = 40, onClick }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: O.accent,
-          fontFamily: "'Space Grotesk', sans-serif",
+          color: chT ? chT.accent : O.accent,
+          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', sans-serif",
           fontWeight: 700,
           fontSize: Math.round(size * 0.44),
         },
@@ -2925,7 +2955,8 @@ function ChAvatar({ url, name, size = 40, onClick }) {
       });
 }
 
-function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
+function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct, theme: chTh }) {
+  let chT = chTh || null;
   return (0, T.jsxs)("div", {
     className: "ch-sheet",
     style: {
@@ -2937,11 +2968,11 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
       maxWidth: 620,
       margin: "0 auto",
       zIndex: 1100,
-      background: O.bg,
-      color: O.text,
+      background: chT ? chT.bg : O.bg,
+      color: chT ? chT.text : O.text,
       display: "flex",
       flexDirection: "column",
-      fontFamily: "'Inter', system-ui, sans-serif",
+      fontFamily: chT ? chT.fontBody : "'Inter', system-ui, sans-serif",
     },
     children: [
       (0, T.jsxs)("div", {
@@ -2949,10 +2980,10 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
           display: "flex",
           alignItems: "center",
           gap: 10,
-          background: O.bar,
+          background: chT ? chT.bar : O.bar,
           padding: "12px 14px",
           paddingTop: "calc(12px + env(safe-area-inset-top))",
-          borderBottom: `2px solid ${O.gap}`,
+          borderBottom: chT ? `1px solid ${chT.hair}` : `2px solid ${O.gap}`,
           flex: "0 0 auto",
         },
         children: [
@@ -2962,7 +2993,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct }) {
               style: {
                 background: "none",
                 border: "none",
-                color: O.nav,
+                color: chT ? chT.accent : O.nav,
                 fontSize: 24,
                 lineHeight: 1,
                 padding: "2px 6px 2px 0",
@@ -3012,13 +3043,21 @@ function ChToggle({ label, checked, onChange }) {
   });
 }
 
-function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }) {
+function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen, theme: chTh }) {
   if (!mine && !fav) return null;
+  let chT = chTh || null,
+    chDiv = chT ? `1px solid ${chT.hair}` : `1px solid ${O.line}`;
   let head = (0, T.jsxs)("div", {
     style: { display: "flex", alignItems: "center", margin: "22px 0 10px" },
     children: [
       (0, T.jsx)("span", {
-        style: { flex: 1, color: O.sub, fontSize: 12, fontWeight: 700, letterSpacing: ".06em" },
+        style: {
+          flex: 1,
+          color: chT ? chT.textDim : O.sub,
+          fontSize: 12,
+          fontWeight: 700,
+          letterSpacing: ".06em",
+        },
         children: P(lang, mine ? "favorite_city" : "favorite_city_other").toUpperCase(),
       }),
       mine &&
@@ -3027,7 +3066,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
           style: {
             background: "none",
             border: "none",
-            color: O.nav,
+            color: chT ? chT.accent : O.nav,
             fontFamily: "inherit",
             fontSize: 13,
             padding: 0,
@@ -3040,12 +3079,21 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
 
   if (pick === "place")
     return (0, T.jsxs)("div", {
-      style: { borderTop: `1px solid ${O.line}` },
+      style: { borderTop: chDiv },
       children: [
         head,
-        (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "0 0 8px" }, children: P(lang, "choose_place") }),
+        (0, T.jsx)("p", {
+          style: { color: chT ? chT.textDim : O.sub, fontSize: 13, margin: "0 0 8px" },
+          children: P(lang, "choose_place"),
+        }),
         (0, T.jsx)("div", {
-          style: { maxHeight: 260, overflowY: "auto", border: `1px solid ${O.line}`, borderRadius: 6 },
+          style: {
+            maxHeight: 260,
+            overflowY: "auto",
+            background: chT ? chT.surface : "none",
+            border: chT ? "none" : `1px solid ${O.line}`,
+            borderRadius: chT ? 14 : 6,
+          },
           children: visits
             .slice()
             .sort((a, b) => a.place.localeCompare(b.place, "nb"))
@@ -3064,8 +3112,8 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                     alignItems: "center",
                     background: "none",
                     border: "none",
-                    borderBottom: `1px solid ${O.line}`,
-                    color: O.text,
+                    borderBottom: chDiv,
+                    color: chT ? chT.text : O.text,
                     fontFamily: "inherit",
                     fontSize: 15,
                     textAlign: "left",
@@ -3077,7 +3125,12 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                     (0, T.jsx)("span", { style: { flex: 1, minWidth: 0 }, children: v.place }),
                     v.rating != null &&
                       (0, T.jsx)("span", {
-                        style: { color: O.accent, fontFamily: "'Space Grotesk', monospace", fontSize: 13 },
+                        style: {
+                          color: chT ? chT.gold : O.accent,
+                          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+                          fontWeight: chT ? 600 : 400,
+                          fontSize: 13,
+                        },
                         children: Number(v.rating).toFixed(2),
                       }),
                   ],
@@ -3091,10 +3144,13 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
 
   if (pick === "photo" && fav)
     return (0, T.jsxs)("div", {
-      style: { borderTop: `1px solid ${O.line}` },
+      style: { borderTop: chDiv },
       children: [
         head,
-        (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "0 0 8px" }, children: P(lang, "choose_photo") }),
+        (0, T.jsx)("p", {
+          style: { color: chT ? chT.textDim : O.sub, fontSize: 13, margin: "0 0 8px" },
+          children: P(lang, "choose_photo"),
+        }),
         (0, T.jsx)("div", {
           style: { display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 },
           children: (fav.photos || []).map((ph) =>
@@ -3107,8 +3163,8 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                 style: {
                   flex: "0 0 auto",
                   padding: 0,
-                  border: `2px solid ${favPhoto === ph ? O.accent : "transparent"}`,
-                  borderRadius: 6,
+                  border: `2px solid ${favPhoto === ph ? (chT ? chT.accent : O.accent) : "transparent"}`,
+                  borderRadius: chT ? 10 : 6,
                   background: "none",
                   cursor: "pointer",
                   lineHeight: 0,
@@ -3126,15 +3182,15 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
     });
 
   return (0, T.jsxs)("div", {
-    style: { borderTop: `1px solid ${O.line}` },
+    style: { borderTop: chDiv },
     children: [
       head,
       fav
         ? (0, T.jsxs)("div", {
             style: {
-              background: O.row,
-              borderRadius: 8,
-              padding: 12,
+              background: chT ? chT.surface : O.row,
+              borderRadius: chT ? 14 : 8,
+              padding: chT ? 14 : 12,
               display: "flex",
               gap: 12,
               alignItems: "flex-start",
@@ -3147,7 +3203,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       width: 76,
                       height: 76,
                       objectFit: "cover",
-                      borderRadius: 6,
+                      borderRadius: chT ? 10 : 6,
                       display: "block",
                       flex: "0 0 auto",
                     },
@@ -3156,14 +3212,14 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                     style: {
                       width: 76,
                       height: 76,
-                      borderRadius: 6,
+                      borderRadius: chT ? 10 : 6,
                       flex: "0 0 auto",
-                      background: O.land,
+                      background: chT ? chT.surface2 : O.land,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: O.border,
-                      fontFamily: "'Space Grotesk', sans-serif",
+                      color: chT ? chT.textDim : O.border,
+                      fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', sans-serif",
                       fontSize: 26,
                     },
                     children: (fav.place || "?").trim().charAt(0).toUpperCase(),
@@ -3186,9 +3242,10 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                     children: [
                       (0, T.jsx)("div", {
                         style: {
+                          fontFamily: chT ? chT.fontDisplay : "inherit",
                           fontSize: 17,
                           fontWeight: 600,
-                          color: O.text,
+                          color: chT ? chT.text : O.text,
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -3196,7 +3253,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                         children: fav.place,
                       }),
                       (0, T.jsxs)("div", {
-                        style: { color: O.sub, fontSize: 12, marginTop: 1 },
+                        style: { color: chT ? chT.textDim : O.sub, fontSize: 12, marginTop: 1 },
                         children: [ChFlag({ value: l8(fav.country), size: 12 }), " ", fav.country],
                       }),
                     ],
@@ -3204,12 +3261,18 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                   fav.rating != null &&
                     (0, T.jsx)("div", {
                       style: { marginTop: 6 },
-                      children: (0, T.jsx)(ChRating, { value: Number(fav.rating), readOnly: !0, size: 14, lang }),
+                      children: (0, T.jsx)(ChRating, {
+                        value: Number(fav.rating),
+                        readOnly: !0,
+                        size: 14,
+                        lang,
+                        theme: chT,
+                      }),
                     }),
                   fav.comment &&
                     (0, T.jsx)("p", {
                       style: {
-                        color: O.sub,
+                        color: chT ? chT.textDim : O.sub,
                         fontSize: 13,
                         lineHeight: 1.45,
                         margin: "6px 0 0",
@@ -3228,10 +3291,10 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
             onClick: () => setPick("place"),
             style: {
               width: "100%",
-              background: O.row,
-              border: `1px dashed ${O.line}`,
-              borderRadius: 8,
-              color: O.sub,
+              background: chT ? chT.surface : O.row,
+              border: chT ? `1px dashed ${chT.hair}` : `1px dashed ${O.line}`,
+              borderRadius: chT ? 14 : 8,
+              color: chT ? chT.textDim : O.sub,
               fontFamily: "inherit",
               fontSize: 15,
               padding: "26px 0",
@@ -4237,7 +4300,8 @@ function ChBadgesPanel({ uid, meId, onClose }) {
 }
 
 function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
-  let [lang, setLang] = Un(),
+  let chT = ChTheme2,
+    [lang, setLang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
     [rel, setRel] = (0, U.useState)(null),
     [visits, setVisits] = (0, U.useState)([]),
@@ -4348,6 +4412,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
   }
   let name = prof ? prof.username : "";
   return (0, T.jsx)(ChPanel, {
+    theme: chT,
     title: mine ? P(lang, "my_profile") : name || P(lang, "nav_profile"),
     hideBack: mine,
     action: mine
@@ -4374,11 +4439,11 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                   children: [
                     (0, T.jsx)("path", {
                       d: "M6 9a6 6 0 0112 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z",
-                      stroke: O.sub,
+                      stroke: chT.textDim,
                       strokeWidth: "1.7",
                       strokeLinejoin: "round",
                     }),
-                    (0, T.jsx)("path", { d: "M10 18a2 2 0 004 0", stroke: O.sub, strokeWidth: "1.7" }),
+                    (0, T.jsx)("path", { d: "M10 18a2 2 0 004 0", stroke: chT.textDim, strokeWidth: "1.7" }),
                   ],
                 }),
                 chBell > 0 &&
@@ -4419,10 +4484,10 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
             viewBox: "0 0 24 24",
             fill: "none",
             children: [
-              (0, T.jsx)("circle", { cx: "12", cy: "12", r: "3.1", stroke: O.sub, strokeWidth: "1.6" }),
+              (0, T.jsx)("circle", { cx: "12", cy: "12", r: "3.1", stroke: chT.textDim, strokeWidth: "1.6" }),
               (0, T.jsx)("path", {
                 d: "M19.1 13.6a7.6 7.6 0 000-3.2l1.8-1.3-1.8-3.1-2.1.8a7.6 7.6 0 00-2.8-1.6L13.9 2h-3.8l-.3 2.2a7.6 7.6 0 00-2.8 1.6l-2.1-.8-1.8 3.1 1.8 1.3a7.6 7.6 0 000 3.2l-1.8 1.3 1.8 3.1 2.1-.8a7.6 7.6 0 002.8 1.6l.3 2.2h3.8l.3-2.2a7.6 7.6 0 002.8-1.6l2.1.8 1.8-3.1z",
-                stroke: O.sub,
+                stroke: chT.textDim,
                 strokeWidth: "1.5",
                 strokeLinejoin: "round",
               }),
@@ -4434,7 +4499,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
       : null,
     onClose,
     children: loading
-      ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
+      ? (0, T.jsx)("p", { style: { color: chT.textDim }, children: P(lang, "loading_profile") })
       : (0, T.jsxs)(T.Fragment, {
           children: [
             (0, T.jsxs)("div", {
@@ -4445,11 +4510,15 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                   name,
                   size: 72,
                   onClick: mine ? () => fileRef.current && fileRef.current.click() : void 0,
+                  theme: chT,
                 }),
                 (0, T.jsxs)("div", {
                   style: { flex: 1, minWidth: 0 },
                   children: [
-                    (0, T.jsx)("div", { style: { fontSize: 21, fontWeight: 700 }, children: name }),
+                    (0, T.jsx)("div", {
+                      style: { fontFamily: chT.fontDisplay, fontSize: 22, fontWeight: 600, color: chT.text },
+                      children: name,
+                    }),
                     mine &&
                       (0, T.jsx)("button", {
                         onClick: () => fileRef.current && fileRef.current.click(),
@@ -4458,7 +4527,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                           border: "none",
                           padding: 0,
                           marginTop: 4,
-                          color: O.accent,
+                          color: chT.accent,
                           fontFamily: "inherit",
                           fontSize: 13,
                           cursor: "pointer",
@@ -4478,7 +4547,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                 onChange: pickAvatar,
               }),
             !canSee
-              ? (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15 }, children: P(lang, "profile_is_private") })
+              ? (0, T.jsx)("p", { style: { color: chT.textDim, fontSize: 15 }, children: P(lang, "profile_is_private") })
               : (0, T.jsxs)(T.Fragment, {
                   children: [
                     mine
@@ -4486,7 +4555,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                           children: [
                             (0, T.jsx)("p", {
                               style: {
-                                color: O.sub,
+                                color: chT.textDim,
                                 fontSize: 12,
                                 fontWeight: 700,
                                 letterSpacing: ".06em",
@@ -4495,23 +4564,45 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                               children: P(lang, "profile_bio"),
                             }),
                             (0, T.jsx)("textarea", {
-                              className: "ch-field",
                               rows: 3,
                               maxLength: 180,
                               placeholder: P(lang, "bio_placeholder"),
                               value: bio,
                               onChange: (e) => setBio(e.target.value.slice(0, 180)),
-                              style: { resize: "vertical", lineHeight: 1.45 },
+                              style: {
+                                width: "100%",
+                                boxSizing: "border-box",
+                                border: "none",
+                                background: chT.surface,
+                                color: chT.text,
+                                fontFamily: chT.fontBody,
+                                fontSize: 14,
+                                borderRadius: 10,
+                                padding: "12px 14px",
+                                resize: "vertical",
+                                lineHeight: 1.45,
+                              },
                             }),
                             (0, T.jsx)("p", {
-                              style: { color: O.sub, fontSize: 12, margin: "4px 0 10px", textAlign: "right" },
+                              style: { color: chT.textDim, fontSize: 12, margin: "4px 0 10px", textAlign: "right" },
                               children: P(lang, "chars_left", { n: 180 - bio.length }),
                             }),
                             (0, T.jsx)("div", { style: { height: 10 } }),
                             (0, T.jsx)("button", {
-                              className: "ch-primary",
                               onClick: saveProfile,
                               disabled: busy,
+                              style: {
+                                width: "100%",
+                                background: chT.accent,
+                                color: chT.accentInk,
+                                border: "none",
+                                borderRadius: 10,
+                                fontFamily: chT.fontBody,
+                                fontWeight: 600,
+                                fontSize: 15,
+                                padding: "13px 0",
+                                cursor: "pointer",
+                              },
                               children: busy ? P(lang, "saving") : P(lang, "save_changes"),
                             }),
 
@@ -4522,12 +4613,23 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                             prof &&
                               prof.bio &&
                               (0, T.jsx)("p", {
-                                style: { fontSize: 15, lineHeight: 1.5, margin: "0 0 14px" },
+                                style: { fontSize: 15, lineHeight: 1.5, margin: "0 0 14px", color: chT.text },
                                 children: prof.bio,
                               }),
                             (0, T.jsx)("button", {
-                              className: "ch-primary",
                               onClick: () => onOpen({ type: "chat", user: prof }),
+                              style: {
+                                width: "100%",
+                                background: chT.accent,
+                                color: chT.accentInk,
+                                border: "none",
+                                borderRadius: 10,
+                                fontFamily: chT.fontBody,
+                                fontWeight: 600,
+                                fontSize: 15,
+                                padding: "13px 0",
+                                cursor: "pointer",
+                              },
                               children: P(lang, "send_message"),
                             }),
                             (0, T.jsx)("div", { style: { height: 10 } }),
@@ -4535,11 +4637,12 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                               onClick: () => onOpen({ type: "compare", id: uid, name }),
                               style: {
                                 width: "100%",
-                                background: "none",
-                                border: `1px solid ${O.nav}`,
-                                borderRadius: 4,
-                                color: O.nav,
-                                fontFamily: "inherit",
+                                background: chT.surface2,
+                                border: "none",
+                                borderRadius: 10,
+                                color: chT.text,
+                                fontFamily: chT.fontBody,
+                                fontWeight: 500,
                                 fontSize: 15,
                                 padding: "12px 0",
                                 cursor: "pointer",
@@ -4552,11 +4655,12 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                               disabled: !!rel || busy,
                               style: {
                                 width: "100%",
-                                background: "none",
-                                border: `1px solid ${O.line}`,
-                                borderRadius: 4,
-                                color: rel ? O.sub : O.text,
-                                fontFamily: "inherit",
+                                background: chT.surface2,
+                                border: "none",
+                                borderRadius: 10,
+                                color: rel ? chT.textDim : chT.text,
+                                fontFamily: chT.fontBody,
+                                fontWeight: 500,
                                 fontSize: 15,
                                 padding: "12px 0",
                                 cursor: rel ? "default" : "pointer",
@@ -4570,25 +4674,26 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                           ],
                         }),
                     note &&
-                      (0, T.jsx)("p", { style: { color: O.sub, fontSize: 14, marginTop: 12 }, children: note }),
+                      (0, T.jsx)("p", { style: { color: chT.textDim, fontSize: 14, marginTop: 12 }, children: note }),
                     (0, T.jsxs)("div", {
                       style: {
                         display: "flex",
                         gap: 10,
                         margin: "22px 0 6px",
-                        borderTop: `1px solid ${O.line}`,
+                        borderTop: `1px solid ${chT.hair}`,
                         paddingTop: 16,
                       },
                       children: [
-                        (0, T.jsx)(a8, { label: P(lang, "countries"), value: countries }),
-                        (0, T.jsx)(a8, { label: P(lang, "places"), value: visits.length }),
+                        (0, T.jsx)(a8, { label: P(lang, "countries"), value: countries, theme: chT }),
+                        (0, T.jsx)(a8, { label: P(lang, "places"), value: visits.length, theme: chT }),
                         (0, T.jsx)(a8, {
                           label: P(lang, "avg_rating"),
                           value: avg == null ? "\u2013" : avg.toFixed(2),
+                          theme: chT,
                         }),
                       ],
                     }),
-                    ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen }),
+                    ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, onOpen, theme: chT }),
                     (0, T.jsxs)("button", {
                       onClick: () => onOpen({ type: "stats", id: uid }),
                       style: {
@@ -4599,8 +4704,8 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                         marginTop: 14,
                         background: "none",
                         border: "none",
-                        color: O.text,
-                        fontFamily: "inherit",
+                        color: chT.text,
+                        fontFamily: chT.fontBody,
                         cursor: "pointer",
                         padding: "10px 0",
                       },
@@ -4612,14 +4717,14 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                           fill: "none",
                           style: { flex: "0 0 auto" },
                           children: [
-                            (0, T.jsx)("path", { d: "M4 20V10M10 20V4M16 20v-7M22 20H2", stroke: O.nav, strokeWidth: "1.8", strokeLinecap: "round" }),
+                            (0, T.jsx)("path", { d: "M4 20V10M10 20V4M16 20v-7M22 20H2", stroke: chT.accent, strokeWidth: "1.8", strokeLinecap: "round" }),
                           ],
                         }),
                         (0, T.jsx)("span", {
                           style: { flex: 1, textAlign: "left", fontSize: 15, fontWeight: 600 },
                           children: P(lang, "stats_open"),
                         }),
-                        (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
+                        (0, T.jsx)("span", { style: { color: chT.textDim, fontSize: 18 }, children: "\u203A" }),
                       ],
                     }),
                     (0, T.jsxs)("button", {
@@ -4632,8 +4737,8 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                         marginTop: 8,
                         background: "none",
                         border: "none",
-                        color: O.text,
-                        fontFamily: "inherit",
+                        color: chT.text,
+                        fontFamily: chT.fontBody,
                         cursor: "pointer",
                         padding: "10px 0",
                       },
@@ -7578,15 +7683,25 @@ function u5({ pins: e, pickMode: t, onTap: n, onSelect: i, centerOn: r }) {
     ],
   });
 }
-function a8({ label: e, value: t }) {
+function a8({ label: e, value: t, theme: chTh }) {
+  let chT = chTh || null;
   return (0, T.jsxs)("div", {
     style: { flex: 1, padding: "14px 16px" },
     children: [
       (0, T.jsx)("div", {
-        style: { fontFamily: "'Space Grotesk', monospace", fontSize: 30, lineHeight: 1, color: O.text },
+        style: {
+          fontFamily: chT ? chT.fontDisplay : "'Space Grotesk', monospace",
+          fontWeight: chT ? 600 : 400,
+          fontSize: 30,
+          lineHeight: 1,
+          color: chT ? chT.text : O.text,
+        },
         children: t,
       }),
-      (0, T.jsx)("div", { style: { color: O.sub, fontSize: 13, marginTop: 5 }, children: e }),
+      (0, T.jsx)("div", {
+        style: { color: chT ? chT.textDim : O.sub, fontSize: 13, marginTop: 5 },
+        children: e,
+      }),
     ],
   });
 }

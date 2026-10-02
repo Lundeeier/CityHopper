@@ -1565,12 +1565,15 @@ async function ChPostTown(postcode, country) {
       let a = hit.address || {},
         raw = a.city || a.town || a.village || null,
         name = raw ? d8(raw) : null;
-      // Aldri bytt et stedsnavn mot navnet paa kommunen eller fylket det ligger i.
+      // Aldri bytt et stedsnavn mot navnet paa fylket/delstaten det ligger i.
       (name &&
-        (ChFold(name) === ChFold(a.municipality || "\u0000") ||
-          ChFold(name) === ChFold(a.county || "\u0000") ||
+        (ChFold(name) === ChFold(a.county || "\u0000") ||
           ChFold(name) === ChFold(a.state || "\u0000")) &&
         (name = null),
+        // Har postnummeret ikke noe eget by/tettsted registrert (vanlig for
+        // mindre kommuner, f.eks. "2636" -> bare "Øyer" kommune), er
+        // kommunen selv poststedet. Da skal vi ikke blokkere det.
+        !name && a.municipality && (name = d8(a.municipality)),
         name && (out = { place: name, lat: +hit.lat, lng: +hit.lon, osm: ChOsm(hit) }));
     }
   } catch {}

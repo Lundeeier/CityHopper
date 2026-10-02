@@ -2198,6 +2198,14 @@ function P(e, t, n) {
     r
   );
 }
+function ChMonthLabel(ym, lang) {
+  if (!ym) return ym;
+  let [y, m] = ym.split("-").map(Number);
+  if (!y || !m) return ym;
+  let loc = { no: "nb-NO", en: "en-GB", nl: "nl-NL", de: "de-DE", sv: "sv-SE", da: "da-DK" }[lang] || "en-GB",
+    s = new Date(y, m - 1, 1).toLocaleDateString(loc, { month: "long", year: "numeric" });
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 function c8({ size: e = 30 }) {
   let t = e / 30;
   return (0, T.jsxs)("svg", {
@@ -4697,7 +4705,7 @@ function ChStatsPanel({ uid, onClose }) {
               ChStatRow({ label: P(lang, "st_last"), value: st.last ? st.last.place : "\u2013", sub: st.last && st.last.visited_on }),
               ChStatRow({
                 label: P(lang, "st_month"),
-                value: st.topMonth ? st.topMonth[0] : "\u2013",
+                value: st.topMonth ? ChMonthLabel(st.topMonth[0], lang) : "\u2013",
                 sub: st.topMonth && P(lang, "st_places_n", { n: st.topMonth[1] }),
               }),
               (0, T.jsx)("p", {

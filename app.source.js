@@ -703,6 +703,10 @@ var O = {
       rating_votes: "{n} vurderinger",
       rating_vote: "1 vurdering",
       not_rated: "Ikke vurdert",
+      invite_share: "Inviter en venn",
+      invite_copied: "Lenke kopiert",
+      invite_banner: "{name} har invitert deg til CityHopper",
+      invite_share_text: "Bli med meg på CityHopper og se hvor vi har vært.",
     },
     en: {
       tab_checkin: "Check in",
@@ -997,6 +1001,10 @@ var O = {
       rating_votes: "{n} ratings",
       rating_vote: "1 rating",
       not_rated: "Not rated",
+      invite_share: "Invite a friend",
+      invite_copied: "Link copied",
+      invite_banner: "{name} has invited you to CityHopper",
+      invite_share_text: "Join me on CityHopper and see where we've been.",
     },
     nl: {
       tab_checkin: "Inchecken",
@@ -1293,6 +1301,10 @@ var O = {
       rating_votes: "{n} beoordelingen",
       rating_vote: "1 beoordeling",
       not_rated: "Niet beoordeeld",
+      invite_share: "Nodig een vriend uit",
+      invite_copied: "Link gekopieerd",
+      invite_banner: "{name} heeft je uitgenodigd voor CityHopper",
+      invite_share_text: "Doe mee op CityHopper en zie waar we zijn geweest.",
     },
     de: {
       tab_checkin: "Einchecken",
@@ -1584,6 +1596,10 @@ var O = {
       rating_votes: "{n} Bewertungen",
       rating_vote: "1 Bewertung",
       not_rated: "Nicht bewertet",
+      invite_share: "Freund einladen",
+      invite_copied: "Link kopiert",
+      invite_banner: "{name} hat dich zu CityHopper eingeladen",
+      invite_share_text: "Komm zu CityHopper und sieh, wo wir überall waren.",
     },
     sv: {
       tab_checkin: "Checka in",
@@ -1875,6 +1891,10 @@ var O = {
       rating_votes: "{n} betyg",
       rating_vote: "1 betyg",
       not_rated: "Inte betygsatt",
+      invite_share: "Bjud in en vän",
+      invite_copied: "Länk kopierad",
+      invite_banner: "{name} har bjudit in dig till CityHopper",
+      invite_share_text: "Häng med på CityHopper och se var vi har varit.",
     },
     da: {
       tab_checkin: "Tjek ind",
@@ -2166,6 +2186,10 @@ var O = {
       rating_votes: "{n} vurderinger",
       rating_vote: "1 vurdering",
       not_rated: "Ikke vurderet",
+      invite_share: "Inviter en ven",
+      invite_copied: "Link kopieret",
+      invite_banner: "{name} har inviteret dig til CityHopper",
+      invite_share_text: "Vær med på CityHopper og se, hvor vi har været.",
     },
   },
   u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || "no",
@@ -2197,6 +2221,31 @@ function P(e, t, n) {
       }),
     r
   );
+}
+/* Invitasjonslenke: ?invite=brukernavn lagres til etter innlogging, saa
+   venneforespørselen sendes selv om personen maa lage konto foerst. */
+function ChInviteStore() {
+  try {
+    let p = new URLSearchParams(location.search),
+      u = (p.get("invite") || "").trim();
+    if (u) {
+      /^[A-Za-z0-9_]{3,20}$/.test(u) && localStorage.setItem("ch_invite", u);
+      p.delete("invite");
+      let q = p.toString();
+      history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash);
+    }
+  } catch {}
+}
+ChInviteStore();
+function ChInviteGet() {
+  try {
+    return localStorage.getItem("ch_invite") || "";
+  } catch {
+    return "";
+  }
+}
+function ChInviteLink(name) {
+  return location.origin + "/?invite=" + encodeURIComponent(name);
 }
 function ChMonthLabel(ym, lang) {
   if (!ym) return ym;
@@ -6290,6 +6339,40 @@ function n5({ session: e, onLogout: t }) {
       chSetNoDate(!1),
       s("oversikt"));
   }
+  /* Invitasjon: send venneforespørsel til den som delte lenken. */
+  (0, U.useEffect)(() => {
+    let inv = ChInviteGet();
+    if (!inv) return;
+    let alive = !0;
+    (async () => {
+      try {
+        let { data: pr } = await ze
+            .from("profiles")
+            .select("id, username")
+            .ilike("username", inv.replace(/[%_\\]/g, "\\$&"))
+            .limit(1),
+          who = pr && pr[0];
+        if (who && who.id !== e.user.id) {
+          let { data: ex } = await ze
+            .from("friends")
+            .select("id")
+            .or(
+              `and(requester_id.eq.${e.user.id},addressee_id.eq.${who.id}),and(requester_id.eq.${who.id},addressee_id.eq.${e.user.id})`,
+            );
+          if (!ex || ex.length === 0) {
+            await ze.from("friends").insert({ requester_id: e.user.id, addressee_id: who.id, status: "pending" });
+            alive && s("venner");
+          }
+        }
+      } catch {}
+      try {
+        localStorage.removeItem("ch_invite");
+      } catch {}
+    })();
+    return () => {
+      alive = !1;
+    };
+  }, [e.user.id]);
   /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
      alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
   (0, U.useEffect)(() => {
@@ -6785,7 +6868,7 @@ function n5({ session: e, onLogout: t }) {
               onSetLocateTarget: we,
               onConfirmLocate: et,
             }),
-          r === "venner" && (0, T.jsx)(a5, { session: e, onOpen: chSetView }),
+          r === "venner" && (0, T.jsx)(a5, { session: e, onOpen: chSetView, meName: chMe ? chMe.username : "" }),
           r === "topplister" && (0, T.jsx)(s5, { session: e, onOpen: chSetView }),
           r === "innsjekk" &&
             (0, T.jsxs)("div", {
@@ -7205,7 +7288,7 @@ function L8({ value: e, onChange: t, onPick: n, onEnter: i }) {
     })
   );
 }
-function a5({ session: e, onOpen: chOpen }) {
+function a5({ session: e, onOpen: chOpen, meName }) {
   let [t] = Un(),
     n = e.user.id,
     [i, r] = (0, U.useState)(""),
@@ -7216,7 +7299,25 @@ function a5({ session: e, onOpen: chOpen }) {
     [m, k] = (0, U.useState)(!0),
     [A, R] = (0, U.useState)(""),
     [S, b] = (0, U.useState)(""),
-    [w, E] = (0, U.useState)(null);
+    [w, E] = (0, U.useState)(null),
+    [chCopied, chSetCopied] = (0, U.useState)(!1);
+  async function chShare() {
+    if (!meName) return;
+    let url = ChInviteLink(meName);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "CityHopper", text: P(t, "invite_share_text"), url });
+        return;
+      }
+    } catch (er) {
+      if (er && er.name === "AbortError") return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      chSetCopied(!0);
+      setTimeout(() => chSetCopied(!1), 2500);
+    } catch {}
+  }
   async function D() {
     let { data: G, error: re } = await ze
       .from("friends")
@@ -7296,6 +7397,13 @@ function a5({ session: e, onOpen: chOpen }) {
     : (0, T.jsxs)("div", {
         style: { padding: 16 },
         children: [
+          meName &&
+            (0, T.jsx)("button", {
+              className: "ch-secondary",
+              onClick: chShare,
+              style: { width: "100%", marginBottom: 12 },
+              children: chCopied ? P(t, "invite_copied") : P(t, "invite_share"),
+            }),
           (0, T.jsxs)("div", {
             style: { position: "relative", marginBottom: 8 },
             children: [
@@ -8749,6 +8857,11 @@ function h5() {
             ],
           }),
           (0, T.jsx)("p", { style: { color: O.sub, fontSize: 14, margin: "0 0 24px" }, children: w }),
+          ChInviteGet() &&
+            (0, T.jsx)("p", {
+              style: { color: O.accent, fontSize: 14, fontWeight: 600, margin: "-12px 0 20px" },
+              children: P(e, "invite_banner", { name: ChInviteGet() }),
+            }),
           n === "signup" &&
             (0, T.jsx)("input", {
               style: { ...b, marginBottom: 8 },

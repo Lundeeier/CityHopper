@@ -711,6 +711,7 @@ var O = {
       trophy_title: "Reisekart",
       trophy_sub: "{n} av {t} land · {p} %",
       trophy_share: "Del kartet",
+      trophy_zoom: "Trykk på kartet for å zoome",
     },
     en: {
       tab_checkin: "Check in",
@@ -1012,6 +1013,7 @@ var O = {
       trophy_title: "Travel map",
       trophy_sub: "{n} of {t} countries · {p}%",
       trophy_share: "Share map",
+      trophy_zoom: "Tap the map to zoom",
     },
     nl: {
       tab_checkin: "Inchecken",
@@ -1315,6 +1317,7 @@ var O = {
       trophy_title: "Reiskaart",
       trophy_sub: "{n} van {t} landen · {p}%",
       trophy_share: "Deel kaart",
+      trophy_zoom: "Tik op de kaart om in te zoomen",
     },
     de: {
       tab_checkin: "Einchecken",
@@ -1613,6 +1616,7 @@ var O = {
       trophy_title: "Reisekarte",
       trophy_sub: "{n} von {t} Ländern · {p} %",
       trophy_share: "Karte teilen",
+      trophy_zoom: "Tippe auf die Karte zum Zoomen",
     },
     sv: {
       tab_checkin: "Checka in",
@@ -1911,6 +1915,7 @@ var O = {
       trophy_title: "Resekarta",
       trophy_sub: "{n} av {t} länder · {p} %",
       trophy_share: "Dela kartan",
+      trophy_zoom: "Tryck på kartan för att zooma",
     },
     da: {
       tab_checkin: "Tjek ind",
@@ -2209,6 +2214,7 @@ var O = {
       trophy_title: "Rejsekort",
       trophy_sub: "{n} af {t} lande · {p} %",
       trophy_share: "Del kortet",
+      trophy_zoom: "Tryk på kortet for at zoome",
     },
   },
   u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || "no",
@@ -4547,14 +4553,175 @@ function ChEqEarth(lon, lat) {
 
 function ChMapSvg(codes, dots, c) {
   let paths = Object.keys(CH_WORLD)
-      .map((k) => `<path d="${CH_WORLD[k]}" fill="${codes.has(k) ? c.on : c.off}"/>`)
+      .map((k) => `<path data-c="${k}" d="${CH_WORLD[k]}" fill="${codes.has(k) ? c.on : c.off}"/>`)
       .join(""),
     pts = dots.map((d) => `<circle cx="${d[0].toFixed(1)}" cy="${d[1].toFixed(1)}" r="5" fill="${c.on}"/>`).join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 ${CH_WORLD_H}" width="1000" height="${CH_WORLD_H}"><g stroke="${c.bg}" stroke-width=".6" stroke-linejoin="round">${paths}</g><g stroke="${c.bg}" stroke-width="1">${pts}</g></svg>`;
 }
 
+/* Fullskjerm-kart: knip med to fingre / hjul for aa zoome, dra for aa flytte, trykk paa et land for navnet. */
+function ChMapZoom({ codes, dots, cols, onClose }) {
+  let box = (0, U.useRef)(null),
+    [sel, setSel] = (0, U.useState)(null),
+    html = (0, U.useMemo)(
+      () => ChMapSvg(codes, dots, cols).replace(/width="1000" height="[0-9]+"/, 'width="100%" height="100%"'),
+      [codes, dots],
+    );
+  (0, U.useEffect)(() => {
+    let el = box.current,
+      svg = el && el.querySelector("svg");
+    if (!svg) return;
+    svg.style.touchAction = "none";
+    svg.style.display = "block";
+    let W = 1000,
+      H = CH_WORLD_H,
+      r0 = el.getBoundingClientRect(),
+      a = r0.width / r0.height,
+      full = a > W / H ? { w: H * a, h: H } : { w: W, h: W / a },
+      vb = { x: (W - full.w) / 2, y: (H - full.h) / 2, w: full.w, h: full.h },
+      ptrs = new Map(),
+      tap = null;
+    function apply() {
+      vb.w = Math.min(full.w, Math.max(40, vb.w));
+      vb.h = vb.w / a;
+      let cx = vb.x + vb.w / 2,
+        cy = vb.y + vb.h / 2;
+      (cx < 0 && (vb.x -= cx), cx > W && (vb.x -= cx - W), cy < 0 && (vb.y -= cy), cy > H && (vb.y -= cy - H));
+      svg.setAttribute("viewBox", `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+    }
+    function zoomAt(px, py, f) {
+      let r = el.getBoundingClientRect(),
+        sx = vb.x + (px / r.width) * vb.w,
+        sy = vb.y + (py / r.height) * vb.h,
+        nw = Math.min(full.w, Math.max(40, vb.w / f));
+      ((vb.x = sx - (px / r.width) * nw), (vb.w = nw), (vb.h = nw / a), (vb.y = sy - (py / r.height) * vb.h), apply());
+    }
+    function pt(e) {
+      let r = el.getBoundingClientRect();
+      return [e.clientX - r.left, e.clientY - r.top];
+    }
+    function dist() {
+      let p = [...ptrs.values()];
+      return Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]);
+    }
+    function mid() {
+      let p = [...ptrs.values()];
+      return [(p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2];
+    }
+    let lastD = 0,
+      lastM = null;
+    function down(e) {
+      ptrs.set(e.pointerId, pt(e));
+      if (ptrs.size === 1) tap = { t: Date.now(), x: e.clientX, y: e.clientY, target: e.target, ok: !0 };
+      else {
+        tap && (tap.ok = !1);
+        ((lastD = dist()), (lastM = mid()));
+      }
+    }
+    function move(e) {
+      if (!ptrs.has(e.pointerId)) return;
+      let prev = ptrs.get(e.pointerId),
+        cur = pt(e);
+      ptrs.set(e.pointerId, cur);
+      let r = el.getBoundingClientRect();
+      if (ptrs.size === 1) {
+        if (tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6) tap.ok = !1;
+        ((vb.x -= ((cur[0] - prev[0]) / r.width) * vb.w), (vb.y -= ((cur[1] - prev[1]) / r.height) * vb.h), apply());
+      } else if (ptrs.size === 2) {
+        let d = dist(),
+          m = mid();
+        (lastD > 0 && zoomAt(m[0], m[1], d / lastD),
+          lastM && ((vb.x -= ((m[0] - lastM[0]) / r.width) * vb.w), (vb.y -= ((m[1] - lastM[1]) / r.height) * vb.h), apply()),
+          (lastD = d),
+          (lastM = m));
+      }
+    }
+    function up(e) {
+      let had = ptrs.delete(e.pointerId);
+      if (had && ptrs.size === 0 && tap && tap.ok && Date.now() - tap.t < 500) {
+        let p = tap.target && tap.target.closest && tap.target.closest("path[data-c]");
+        setSel(p ? p.getAttribute("data-c") : null);
+      }
+      ptrs.size < 2 && ((lastD = 0), (lastM = null));
+      ptrs.size === 0 && (tap = null);
+    }
+    function wheel(e) {
+      e.preventDefault();
+      let p = pt(e);
+      zoomAt(p[0], p[1], e.deltaY < 0 ? 1.25 : 0.8);
+    }
+    (svg.addEventListener("pointerdown", down),
+      svg.addEventListener("pointermove", move),
+      svg.addEventListener("pointerup", up),
+      svg.addEventListener("pointercancel", up),
+      svg.addEventListener("wheel", wheel, { passive: !1 }));
+    el.__zoom = (f) => {
+      let r = el.getBoundingClientRect();
+      zoomAt(r.width / 2, r.height / 2, f);
+    };
+    el.__reset = () => ((vb = { x: (W - full.w) / 2, y: (H - full.h) / 2, w: full.w, h: full.h }), apply());
+    apply();
+    return () => {
+      (svg.removeEventListener("pointerdown", down),
+        svg.removeEventListener("pointermove", move),
+        svg.removeEventListener("pointerup", up),
+        svg.removeEventListener("pointercancel", up),
+        svg.removeEventListener("wheel", wheel));
+    };
+  }, [html]);
+  let info = sel ? vc.find((n) => n.code === sel) : null,
+    btn = {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      border: `1px solid ${O.line}`,
+      background: O.card || O.bg,
+      color: O.text,
+      fontSize: 22,
+      lineHeight: 1,
+      cursor: "pointer",
+    };
+  return (0, T.jsxs)("div", {
+    style: { position: "fixed", inset: 0, zIndex: 2000, background: O.bg, display: "flex", flexDirection: "column" },
+    children: [
+      (0, T.jsxs)("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "calc(env(safe-area-inset-top, 0px) + 10px) 14px 10px",
+        },
+        children: [
+          (0, T.jsx)("span", {
+            style: { minHeight: 24, fontSize: 16, fontWeight: 600 },
+            children: info
+              ? `${info.flag ? info.flag + " " : ""}${info.name}${codes.has(sel) ? " \u2713" : ""}`
+              : "",
+          }),
+          (0, T.jsx)("button", { style: btn, onClick: onClose, "aria-label": "Close", children: "\u00D7" }),
+        ],
+      }),
+      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: { __html: html } }),
+      (0, T.jsxs)("div", {
+        style: {
+          display: "flex",
+          gap: 10,
+          justifyContent: "center",
+          padding: "10px 14px calc(env(safe-area-inset-bottom, 0px) + 14px)",
+        },
+        children: [
+          (0, T.jsx)("button", { style: btn, onClick: () => box.current && box.current.__zoom(1.6), "aria-label": "Zoom in", children: "+" }),
+          (0, T.jsx)("button", { style: btn, onClick: () => box.current && box.current.__zoom(1 / 1.6), "aria-label": "Zoom out", children: "\u2212" }),
+          (0, T.jsx)("button", { style: { ...btn, fontSize: 16 }, onClick: () => box.current && box.current.__reset(), "aria-label": "Reset", children: "\u2922" }),
+        ],
+      }),
+    ],
+  });
+}
+
 function ChTrophyMap({ codes, dots, lang, n, total, own }) {
   let [busy, setBusy] = (0, U.useState)(!1),
+    [zoom, setZoom] = (0, U.useState)(!1),
     cols = { on: O.accent, off: "#3A322A", bg: O.bg },
     svg = (0, U.useMemo)(() => ChMapSvg(codes, dots, cols), [codes, dots]),
     pct = total ? ((n / total) * 100).toFixed(1).replace(".", ",") : "0",
@@ -4605,11 +4772,14 @@ function ChTrophyMap({ codes, dots, lang, n, total, own }) {
       }),
       (0, T.jsx)("p", { style: { fontSize: 15, fontWeight: 600, margin: "0 0 10px" }, children: sub }),
       (0, T.jsx)("div", {
-        role: "img",
-        "aria-label": sub,
-        style: { width: "100%", lineHeight: 0 },
+        role: "button",
+        "aria-label": P(lang, "trophy_zoom"),
+        onClick: () => setZoom(!0),
+        style: { width: "100%", lineHeight: 0, cursor: "pointer" },
         dangerouslySetInnerHTML: { __html: svg.replace(/width="1000" height="[0-9]+"/, 'width="100%"') },
       }),
+      (0, T.jsx)("p", { style: { color: O.sub, fontSize: 12, margin: "8px 0 0" }, children: P(lang, "trophy_zoom") }),
+      zoom && (0, T.jsx)(ChMapZoom, { codes, dots, cols, onClose: () => setZoom(!1) }),
       own &&
         (0, T.jsx)("button", {
           className: "ch-secondary",

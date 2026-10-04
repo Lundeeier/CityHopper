@@ -712,6 +712,29 @@ var O = {
       trophy_sub: "{n} av {t} land · {p} %",
       trophy_share: "Del kartet",
       trophy_zoom: "Trykk på kartet for å zoome",
+      privacy_link: "Personvernerkl\u00e6ring",
+      delete_account: "Slett konto",
+      delete_title: "Slette kontoen?",
+      delete_warn: "Alle innsjekker, bilder, venner og meldinger slettes for godt. Dette kan ikke angres.",
+      delete_confirm: "Ja, slett alt",
+      delete_cancel: "Avbryt",
+      delete_busy: "Sletter \u2026",
+      delete_failed: "Kunne ikke slette kontoen. Pr\u00f8v igjen, eller skriv til {email}.",
+      report_user: "Rapporter bruker",
+      report_title: "Hvorfor rapporterer du?",
+      report_r1: "Upassende innhold",
+      report_r2: "Trakassering eller spam",
+      report_r3: "Falsk profil",
+      report_r4: "Annet",
+      report_sent: "Takk. Rapporten er sendt.",
+      report_failed: "Kunne ikke sende rapporten.",
+      block_user: "Blokker bruker",
+      block_confirm: "Blokkere {name}? Dere blir ikke lenger venner, og vedkommende kan ikke sende deg meldinger eller venneforesp\u00f8rsler.",
+      block_done: "Brukeren er blokkert.",
+      blocked_title: "Blokkerte brukere",
+      blocked_none: "Ingen blokkerte brukere.",
+      unblock: "Opphev",
+      privacy_note: "Ved \u00e5 bruke CityHopper godtar du personvernerkl\u00e6ringen.",
     },
     en: {
       tab_checkin: "Check in",
@@ -1014,6 +1037,29 @@ var O = {
       trophy_sub: "{n} of {t} countries · {p}%",
       trophy_share: "Share map",
       trophy_zoom: "Tap the map to zoom",
+      privacy_link: "Privacy policy",
+      delete_account: "Delete account",
+      delete_title: "Delete your account?",
+      delete_warn: "All your check-ins, photos, friends and messages will be permanently deleted. This cannot be undone.",
+      delete_confirm: "Yes, delete everything",
+      delete_cancel: "Cancel",
+      delete_busy: "Deleting \u2026",
+      delete_failed: "Could not delete the account. Try again, or write to {email}.",
+      report_user: "Report user",
+      report_title: "Why are you reporting?",
+      report_r1: "Inappropriate content",
+      report_r2: "Harassment or spam",
+      report_r3: "Fake profile",
+      report_r4: "Other",
+      report_sent: "Thanks. The report has been sent.",
+      report_failed: "Could not send the report.",
+      block_user: "Block user",
+      block_confirm: "Block {name}? You will no longer be friends, and they cannot send you messages or friend requests.",
+      block_done: "The user is blocked.",
+      blocked_title: "Blocked users",
+      blocked_none: "No blocked users.",
+      unblock: "Unblock",
+      privacy_note: "By using CityHopper you accept the privacy policy.",
     },
     nl: {
       tab_checkin: "Inchecken",
@@ -1318,6 +1364,29 @@ var O = {
       trophy_sub: "{n} van {t} landen · {p}%",
       trophy_share: "Deel kaart",
       trophy_zoom: "Tik op de kaart om in te zoomen",
+      privacy_link: "Privacybeleid",
+      delete_account: "Account verwijderen",
+      delete_title: "Account verwijderen?",
+      delete_warn: "Al je check-ins, foto's, vrienden en berichten worden definitief verwijderd. Dit kan niet ongedaan worden gemaakt.",
+      delete_confirm: "Ja, verwijder alles",
+      delete_cancel: "Annuleren",
+      delete_busy: "Verwijderen \u2026",
+      delete_failed: "Het account kon niet worden verwijderd. Probeer opnieuw, of schrijf naar {email}.",
+      report_user: "Gebruiker melden",
+      report_title: "Waarom meld je dit?",
+      report_r1: "Ongepaste inhoud",
+      report_r2: "Intimidatie of spam",
+      report_r3: "Nepprofiel",
+      report_r4: "Anders",
+      report_sent: "Bedankt. De melding is verstuurd.",
+      report_failed: "De melding kon niet worden verstuurd.",
+      block_user: "Gebruiker blokkeren",
+      block_confirm: "{name} blokkeren? Jullie zijn geen vrienden meer en deze persoon kan je geen berichten of vriendschapsverzoeken sturen.",
+      block_done: "De gebruiker is geblokkeerd.",
+      blocked_title: "Geblokkeerde gebruikers",
+      blocked_none: "Geen geblokkeerde gebruikers.",
+      unblock: "Deblokkeren",
+      privacy_note: "Door CityHopper te gebruiken ga je akkoord met het privacybeleid.",
     },
     de: {
       tab_checkin: "Einchecken",
@@ -1617,6 +1686,29 @@ var O = {
       trophy_sub: "{n} von {t} Ländern · {p} %",
       trophy_share: "Karte teilen",
       trophy_zoom: "Tippe auf die Karte zum Zoomen",
+      privacy_link: "Datenschutzerkl\u00e4rung",
+      delete_account: "Konto l\u00f6schen",
+      delete_title: "Konto l\u00f6schen?",
+      delete_warn: "Alle Check-ins, Fotos, Freunde und Nachrichten werden endg\u00fcltig gel\u00f6scht. Das kann nicht r\u00fcckg\u00e4ngig gemacht werden.",
+      delete_confirm: "Ja, alles l\u00f6schen",
+      delete_cancel: "Abbrechen",
+      delete_busy: "L\u00f6sche \u2026",
+      delete_failed: "Das Konto konnte nicht gel\u00f6scht werden. Versuche es erneut oder schreibe an {email}.",
+      report_user: "Nutzer melden",
+      report_title: "Warum meldest du?",
+      report_r1: "Unangemessener Inhalt",
+      report_r2: "Bel\u00e4stigung oder Spam",
+      report_r3: "Falsches Profil",
+      report_r4: "Sonstiges",
+      report_sent: "Danke. Die Meldung wurde gesendet.",
+      report_failed: "Die Meldung konnte nicht gesendet werden.",
+      block_user: "Nutzer blockieren",
+      block_confirm: "{name} blockieren? Ihr seid dann keine Freunde mehr, und die Person kann dir keine Nachrichten oder Freundschaftsanfragen senden.",
+      block_done: "Der Nutzer ist blockiert.",
+      blocked_title: "Blockierte Nutzer",
+      blocked_none: "Keine blockierten Nutzer.",
+      unblock: "Aufheben",
+      privacy_note: "Durch die Nutzung von CityHopper akzeptierst du die Datenschutzerkl\u00e4rung.",
     },
     sv: {
       tab_checkin: "Checka in",
@@ -1916,6 +2008,29 @@ var O = {
       trophy_sub: "{n} av {t} länder · {p} %",
       trophy_share: "Dela kartan",
       trophy_zoom: "Tryck på kartan för att zooma",
+      privacy_link: "Integritetspolicy",
+      delete_account: "Radera konto",
+      delete_title: "Radera kontot?",
+      delete_warn: "Alla incheckningar, bilder, v\u00e4nner och meddelanden raderas permanent. Det g\u00e5r inte att \u00e5ngra.",
+      delete_confirm: "Ja, radera allt",
+      delete_cancel: "Avbryt",
+      delete_busy: "Raderar \u2026",
+      delete_failed: "Kontot kunde inte raderas. F\u00f6rs\u00f6k igen eller skriv till {email}.",
+      report_user: "Rapportera anv\u00e4ndare",
+      report_title: "Varf\u00f6r rapporterar du?",
+      report_r1: "Ol\u00e4mpligt inneh\u00e5ll",
+      report_r2: "Trakasserier eller spam",
+      report_r3: "Falsk profil",
+      report_r4: "Annat",
+      report_sent: "Tack. Rapporten har skickats.",
+      report_failed: "Rapporten kunde inte skickas.",
+      block_user: "Blockera anv\u00e4ndare",
+      block_confirm: "Blockera {name}? Ni \u00e4r inte l\u00e4ngre v\u00e4nner, och personen kan inte skicka meddelanden eller v\u00e4nf\u00f6rfr\u00e5gningar till dig.",
+      block_done: "Anv\u00e4ndaren \u00e4r blockerad.",
+      blocked_title: "Blockerade anv\u00e4ndare",
+      blocked_none: "Inga blockerade anv\u00e4ndare.",
+      unblock: "Avblockera",
+      privacy_note: "Genom att anv\u00e4nda CityHopper godk\u00e4nner du integritetspolicyn.",
     },
     da: {
       tab_checkin: "Tjek ind",
@@ -2215,6 +2330,29 @@ var O = {
       trophy_sub: "{n} af {t} lande · {p} %",
       trophy_share: "Del kortet",
       trophy_zoom: "Tryk på kortet for at zoome",
+      privacy_link: "Privatlivspolitik",
+      delete_account: "Slet konto",
+      delete_title: "Slette kontoen?",
+      delete_warn: "Alle check-ins, billeder, venner og beskeder slettes for altid. Det kan ikke fortrydes.",
+      delete_confirm: "Ja, slet alt",
+      delete_cancel: "Annuller",
+      delete_busy: "Sletter \u2026",
+      delete_failed: "Kontoen kunne ikke slettes. Pr\u00f8v igen, eller skriv til {email}.",
+      report_user: "Rapporter bruger",
+      report_title: "Hvorfor rapporterer du?",
+      report_r1: "Upassende indhold",
+      report_r2: "Chikane eller spam",
+      report_r3: "Falsk profil",
+      report_r4: "Andet",
+      report_sent: "Tak. Rapporten er sendt.",
+      report_failed: "Rapporten kunne ikke sendes.",
+      block_user: "Bloker bruger",
+      block_confirm: "Blokere {name}? I er ikke l\u00e6ngere venner, og vedkommende kan ikke sende dig beskeder eller venneanmodninger.",
+      block_done: "Brugeren er blokeret.",
+      blocked_title: "Blokerede brugere",
+      blocked_none: "Ingen blokerede brugere.",
+      unblock: "Ophæv",
+      privacy_note: "Ved at bruge CityHopper accepterer du privatlivspolitikken.",
     },
   },
   u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || "no",
@@ -4265,6 +4403,204 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
   });
 }
 
+/* ---- Personvern, rapportering, blokkering og sletting av konto (krav fra Google Play) ---- */
+var CH_CONTACT = "kristian.lundberg@live.no";
+
+function ChPrivacyLink({ lang, style }) {
+  return (0, T.jsx)("a", {
+    href: "personvern.html?lang=" + lang,
+    target: "_blank",
+    rel: "noopener",
+    style: { color: O.sub, fontSize: 13, textDecoration: "underline", ...style },
+    children: P(lang, "privacy_link"),
+  });
+}
+
+function ChSmallBtn({ onClick, children, danger, disabled, style }) {
+  return (0, T.jsx)("button", {
+    onClick,
+    disabled,
+    style: {
+      background: "none",
+      border: `1px solid ${danger ? O.warn : O.line}`,
+      borderRadius: 10,
+      color: danger ? O.warn : O.sub,
+      fontFamily: "inherit",
+      fontSize: 14,
+      padding: "11px 14px",
+      cursor: "pointer",
+      ...style,
+    },
+    children,
+  });
+}
+
+function ChDeleteAccount({ lang, meId }) {
+  let [step, setStep] = (0, U.useState)(0),
+    [busy, setBusy] = (0, U.useState)(!1),
+    [err, setErr] = (0, U.useState)("");
+  async function run() {
+    setBusy(!0);
+    setErr("");
+    try {
+      let { data, error } = await ze.functions.invoke("delete-account", { body: {} });
+      if (error || !data || !data.ok) throw error || new Error("delete");
+      try {
+        await ze.auth.signOut({ scope: "local" });
+      } catch {}
+      try {
+        Object.keys(localStorage)
+          .filter((k) => k.indexOf("ch_") === 0)
+          .forEach((k) => localStorage.removeItem(k));
+      } catch {}
+      location.reload();
+    } catch {
+      setBusy(!1);
+      setErr(P(lang, "delete_failed", { email: CH_CONTACT }));
+    }
+  }
+  if (step === 0)
+    return (0, T.jsx)(ChSmallBtn, {
+      danger: !0,
+      onClick: () => setStep(1),
+      style: { width: "100%", marginTop: 14 },
+      children: P(lang, "delete_account"),
+    });
+  return (0, T.jsxs)("div", {
+    style: { marginTop: 14, border: `1px solid ${O.warn}`, borderRadius: 12, padding: 14 },
+    children: [
+      (0, T.jsx)("p", { style: { margin: "0 0 6px", fontWeight: 600, fontSize: 15 }, children: P(lang, "delete_title") }),
+      (0, T.jsx)("p", { style: { margin: "0 0 12px", color: O.sub, fontSize: 13, lineHeight: 1.45 }, children: P(lang, "delete_warn") }),
+      err && (0, T.jsx)("p", { style: { margin: "0 0 12px", color: O.warn, fontSize: 13 }, children: err }),
+      (0, T.jsxs)("div", {
+        style: { display: "flex", gap: 8 },
+        children: [
+          (0, T.jsx)(ChSmallBtn, { onClick: () => setStep(0), disabled: busy, style: { flex: 1 }, children: P(lang, "delete_cancel") }),
+          (0, T.jsx)(ChSmallBtn, {
+            danger: !0,
+            onClick: run,
+            disabled: busy,
+            style: { flex: 1.4 },
+            children: busy ? P(lang, "delete_busy") : P(lang, "delete_confirm"),
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+function ChBlockedList({ lang, meId }) {
+  let [rows, setRows] = (0, U.useState)(null);
+  async function load() {
+    let { data: b } = await ze.from("blocks").select("blocked_id").eq("blocker_id", meId);
+    let ids = (b || []).map((x) => x.blocked_id);
+    if (!ids.length) return setRows([]);
+    let { data: p } = await ze.from("profiles").select("id, username").in("id", ids);
+    setRows(ids.map((id) => ({ id, name: ((p || []).find((x) => x.id === id) || {}).username || "?" })));
+  }
+  (0, U.useEffect)(() => {
+    load();
+  }, [meId]);
+  if (rows === null) return null;
+  return (0, T.jsxs)("div", {
+    style: { marginTop: 22, borderTop: `1px solid ${O.line}`, paddingTop: 16 },
+    children: [
+      (0, T.jsx)("p", { style: { margin: "0 0 8px", fontSize: 12, fontWeight: 700, letterSpacing: ".06em", color: O.sub }, children: P(lang, "blocked_title").toUpperCase() }),
+      rows.length === 0 &&
+        (0, T.jsx)("p", { style: { margin: 0, color: O.sub, fontSize: 13 }, children: P(lang, "blocked_none") }),
+      rows.map((r) =>
+        (0, T.jsxs)(
+          "div",
+          {
+            style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" },
+            children: [
+              (0, T.jsx)("span", { style: { fontSize: 15 }, children: r.name }),
+              (0, T.jsx)(ChSmallBtn, {
+                onClick: async () => {
+                  await ze.from("blocks").delete().eq("blocker_id", meId).eq("blocked_id", r.id);
+                  load();
+                },
+                style: { padding: "7px 12px", fontSize: 13 },
+                children: P(lang, "unblock"),
+              }),
+            ],
+          },
+          r.id,
+        ),
+      ),
+    ],
+  });
+}
+
+function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
+  let [mode, setMode] = (0, U.useState)(null),
+    [note, setNote] = (0, U.useState)(""),
+    [busy, setBusy] = (0, U.useState)(!1);
+  async function report(reason) {
+    setBusy(!0);
+    let { error } = await ze.from("reports").insert({ reporter_id: meId, target_user_id: uid, reason });
+    setBusy(!1);
+    setMode(null);
+    setNote(error ? P(lang, "report_failed") : P(lang, "report_sent"));
+  }
+  async function block() {
+    setBusy(!0);
+    let { error } = await ze.from("blocks").insert({ blocker_id: meId, blocked_id: uid });
+    if (!error) {
+      await ze
+        .from("friends")
+        .delete()
+        .or(`and(requester_id.eq.${meId},addressee_id.eq.${uid}),and(requester_id.eq.${uid},addressee_id.eq.${meId})`);
+      onBlocked && onBlocked();
+    }
+    setBusy(!1);
+    setMode(null);
+    setNote(error && error.code !== "23505" ? P(lang, "report_failed") : P(lang, "block_done"));
+  }
+  return (0, T.jsxs)("div", {
+    style: { marginTop: 26, borderTop: `1px solid ${O.line}`, paddingTop: 14 },
+    children: [
+      mode === null &&
+        (0, T.jsxs)("div", {
+          style: { display: "flex", gap: 8 },
+          children: [
+            (0, T.jsx)(ChSmallBtn, { onClick: () => (setNote(""), setMode("report")), style: { flex: 1, fontSize: 13 }, children: P(lang, "report_user") }),
+            (0, T.jsx)(ChSmallBtn, { onClick: () => (setNote(""), setMode("block")), style: { flex: 1, fontSize: 13 }, children: P(lang, "block_user") }),
+          ],
+        }),
+      mode === "report" &&
+        (0, T.jsxs)("div", {
+          children: [
+            (0, T.jsx)("p", { style: { margin: "0 0 8px", fontSize: 14, fontWeight: 600 }, children: P(lang, "report_title") }),
+            [1, 2, 3, 4].map((i) =>
+              (0, T.jsx)(
+                ChSmallBtn,
+                { onClick: () => report(P("en", "report_r" + i)), disabled: busy, style: { display: "block", width: "100%", marginBottom: 8, textAlign: "left" }, children: P(lang, "report_r" + i) },
+                i,
+              ),
+            ),
+            (0, T.jsx)(ChSmallBtn, { onClick: () => setMode(null), style: { width: "100%" }, children: P(lang, "delete_cancel") }),
+          ],
+        }),
+      mode === "block" &&
+        (0, T.jsxs)("div", {
+          children: [
+            (0, T.jsx)("p", { style: { margin: "0 0 10px", fontSize: 14, lineHeight: 1.45 }, children: P(lang, "block_confirm", { name }) }),
+            (0, T.jsxs)("div", {
+              style: { display: "flex", gap: 8 },
+              children: [
+                (0, T.jsx)(ChSmallBtn, { onClick: () => setMode(null), disabled: busy, style: { flex: 1 }, children: P(lang, "delete_cancel") }),
+                (0, T.jsx)(ChSmallBtn, { danger: !0, onClick: block, disabled: busy, style: { flex: 1.4 }, children: P(lang, "block_user") }),
+              ],
+            }),
+          ],
+        }),
+      note && (0, T.jsx)("p", { style: { margin: "10px 0 0", color: O.sub, fontSize: 13 }, children: note }),
+    ],
+  });
+}
+
+
 function ChSettings({ meId, onClose, onLogout }) {
   let [lang, setLang] = Un(),
     [priv, setPriv] = (0, U.useState)(!1),
@@ -4374,6 +4710,8 @@ function ChSettings({ meId, onClose, onLogout }) {
           ),
         ),
       }),
+      (0, T.jsx)(ChBlockedList, { lang, meId }),
+      (0, T.jsx)("div", { style: { marginTop: 18, textAlign: "center" }, children: (0, T.jsx)(ChPrivacyLink, { lang }) }),
       onLogout &&
         (0, T.jsx)("button", {
           onClick: onLogout,
@@ -4391,6 +4729,7 @@ function ChSettings({ meId, onClose, onLogout }) {
           },
           children: P(lang, "logout"),
         }),
+      (0, T.jsx)(ChDeleteAccount, { lang, meId }),
     ],
   });
 }
@@ -6096,6 +6435,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
                         (0, T.jsx)("span", { style: { color: O.nav, fontSize: 18 }, children: "\u203A" }),
                       ],
                     }),
+                    !mine && prof && (0, T.jsx)(ChReportBlock, { lang, meId, uid, name, onBlocked: () => setRel(null) }),
                   ],
                 }),
           ],
@@ -9305,6 +9645,10 @@ function h5() {
                 : n === "forgot"
                   ? P(e, "back_to_login")
                   : P(e, "no_account"),
+          }),
+          (0, T.jsxs)("p", {
+            style: { color: O.sub, fontSize: 12, textAlign: "center", margin: "18px 0 0", lineHeight: 1.5 },
+            children: [P(e, "privacy_note"), " ", (0, T.jsx)(ChPrivacyLink, { lang: e, style: { fontSize: 12 } })],
           }),
         ],
       }),

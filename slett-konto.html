@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="no" data-l="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1A1714">
+<title>Slett konto – CityHopper</title>
+<link rel="icon" href="icon-192.png">
+<style>
+  :root{--bg:#1A1714;--text:#F5F1E8;--sub:#B0A695;--accent:#D9713F;--line:rgba(245,241,232,.14)}
+  html{background:var(--bg)}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
+  h1{font:600 30px/1.2 Georgia,"Times New Roman",serif;margin:0 0 6px}
+  h2{font-size:18px;margin:30px 0 6px;color:var(--text)}
+  p,li{color:var(--text)} .sub{color:var(--sub);font-size:14px}
+  ul{padding-left:20px} li{margin:4px 0}
+  a{color:var(--accent)}
+  .lang{display:flex;gap:8px;margin:0 0 22px}
+  .lang a{border:1px solid var(--line);border-radius:10px;padding:6px 12px;color:var(--sub);text-decoration:none;font-size:14px}
+  html[data-l=no] .lang a[data-set=no], html[data-l=en] .lang a[data-set=en]{border-color:var(--accent);color:var(--accent)}
+  html[data-l=no] [lang=en], html[data-l=en] [lang=no]{display:none}
+  .box{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:16px 0}
+</style>
+</head>
+<body>
+<main>
+<div class="lang"><a href="#" data-set="no">Norsk</a><a href="#" data-set="en">English</a></div>
+
+<section lang="no">
+<h1>Slett CityHopper-kontoen din</h1>
+<p class="sub">CityHopper – Kristian Lundberg</p>
+
+<h2>Slik gjør du det i appen</h2>
+<ol>
+<li>Åpne CityHopper og logg inn.</li>
+<li>Gå til profilen din og åpne <b>Innstillinger</b> (tannhjulet).</li>
+<li>Trykk <b>Slett konto</b>, og bekreft med <b>Ja, slett alt</b>.</li>
+</ol>
+
+<h2>Kommer du deg ikke inn i appen?</h2>
+<p>Send en e-post fra adressen du registrerte kontoen med til <a href="mailto:kristian.lundberg@live.no?subject=Slett%20CityHopper-konto">kristian.lundberg@live.no</a>, med emnet «Slett CityHopper-konto». Vi sletter kontoen din så fort vi kan, senest innen 30 dager.</p>
+
+<div class="box">
+<b>Dette slettes:</b> profil og profilbilde, alle innsjekker med bilder og notater, venneforhold, meldinger, varselinnstillinger, rapporter og blokkeringer knyttet til deg, og selve innloggingen. Sletting kan ikke angres.
+</div>
+<p>Les mer i <a href="personvern.html?lang=no">personvernerklæringen</a>.</p>
+</section>
+
+<section lang="en">
+<h1>Delete your CityHopper account</h1>
+<p class="sub">CityHopper – Kristian Lundberg</p>
+
+<h2>How to do it in the app</h2>
+<ol>
+<li>Open CityHopper and sign in.</li>
+<li>Go to your profile and open <b>Settings</b> (the gear icon).</li>
+<li>Tap <b>Delete account</b> and confirm with <b>Yes, delete everything</b>.</li>
+</ol>
+
+<h2>Can’t get into the app?</h2>
+<p>Send an email from the address you registered with to <a href="mailto:kristian.lundberg@live.no?subject=Delete%20CityHopper%20account">kristian.lundberg@live.no</a> with the subject “Delete CityHopper account”. We will delete your account as soon as we can, and no later than 30 days.</p>
+
+<div class="box">
+<b>What is deleted:</b> your profile and profile picture, all check-ins with photos and notes, friendships, messages, notification settings, reports and blocks linked to you, and the sign-in itself. Deletion cannot be undone.
+</div>
+<p>Read more in the <a href="personvern.html?lang=en">privacy policy</a>.</p>
+</section>
+</main>
+<script>
+(function(){
+  var q=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
+  var l=q?(q==="no"?"no":"en"):((navigator.language||"no").slice(0,2)==="nb"||(navigator.language||"").slice(0,2)==="no"?"no":"en");
+  function set(x){document.documentElement.setAttribute("data-l",x);document.documentElement.lang=x;}
+  set(l);
+  [].forEach.call(document.querySelectorAll(".lang a"),function(a){a.addEventListener("click",function(e){e.preventDefault();set(a.getAttribute("data-set"));});});
+})();
+</script>
+</body>
+</html>

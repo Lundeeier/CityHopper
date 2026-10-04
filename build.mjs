@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, copyFile, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 
-const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
+const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "personvern.html", "slett-konto.html"];
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
@@ -58,5 +58,9 @@ if (patched === html && !html.includes("app.js")) {
 await writeFile("dist/index.html", patched);
 
 for (const f of STATIC) await copyFile(f, `dist/${f}`);
+
+// Digital Asset Links: beviser overfor Android at appen og nettsiden hører sammen.
+await mkdir("dist/.well-known", { recursive: true });
+await copyFile("assetlinks.json", "dist/.well-known/assetlinks.json");
 
 console.log(`Bygget ferdig. Versjon ${version}, app ${(bundle.length / 1024).toFixed(0)} kB + kart ${(leafletBundle.length / 1024).toFixed(0)} kB.`);

@@ -8,7 +8,7 @@ En webapp (PWA) for å logge byer og tettsteder man har besøkt. Brukerne sjekke
 
 - Nettadresse: https://cityhoppers.netlify.app
 - Repo: github.com/Lundeeier/CityHopper
-- Språk i appen: norsk, engelsk, nederlandsk
+- Språk i appen: norsk, engelsk, nederlandsk, tysk, svensk, dansk
 
 ## Om eieren
 
@@ -33,6 +33,9 @@ Kristian kan ikke kode. Han bygger appen med AI og jobber mest fra mobil.
 | `index.html` | Skall. Versjonslappen på `app.js` settes automatisk ved bygging. |
 | `sw.js` | Service worker: mellomlagring og mottak av push-varsler. |
 | `manifest.webmanifest`, `icon-192.png`, `icon-512.png` | Appinstallasjon og ikon. |
+| `worldmap.js` | Landegrenser til trofékartet (Natural Earth 1:50m, Equal Earth, nøkkel = landkode; Storbritannia er delt i GB-ENG/SCT/WLS/NIR). Må følge med `app.source.js` ved opplasting. |
+| `personvern.html`, `slett-konto.html` | Personvernerklæring og slett-konto-side (norsk/engelsk). Kreves av Google Play. |
+| `assetlinks.json` | Kobler Android-appen til nettsiden. Bygges til `/.well-known/assetlinks.json`. Fingeravtrykkene legges inn etter første opplasting til Google Play. |
 
 **Arbeidsflyt:** endre `app.source.js` → last opp til GitHub → Netlify bygger og publiserer selv. Ingen versjonsnumre å holde styr på.
 
@@ -56,7 +59,7 @@ Kildekoden ble på et tidspunkt gjenskapt fra en minifisert bygg, derfor heter m
 Nyttige holdepunkter:
 - `ze` — Supabase-klienten
 - `O` — fargepaletten
-- `P(lang, key, vars)` — oversettelse; tekstene ligger i `_c` med `no`, `en`, `nl` (272 nøkler hver)
+- `P(lang, key, vars)` — oversettelse; tekstene ligger i `_c` med `no`, `en`, `nl`, `de`, `sv`, `da` (ca. 320 nøkler hver)
 - `Un()` — gir `[lang, setLang]`
 - `yc(landnavn)` — slår opp et land i `vc` (254 land med kode, navn, hovedstad)
 - `l8(land)` — flagg-emoji
@@ -103,6 +106,8 @@ Prosjekt: `nmrevqsxjqtrobxqklfj` (eu-central-1)
 | `messages` | `sender_id`, `recipient_id`, `body`, `read_at` |
 | `push_subscriptions` | Én rad per enhet med varsler slått på |
 | `push_queue` | Varsler som skal sendes |
+| `reports` | Rapporter om brukere (`reporter_id`, `target_user_id`, `reason`). Kun insert fra appen; leses i Supabase-dashbordet. |
+| `blocks` | Blokkeringer (`blocker_id`, `blocked_id`). Hindrer meldinger og venneforespørsler fra den blokkerte (`ch_has_blocked`). |
 
 ### Lagring
 
@@ -116,6 +121,7 @@ Prosjekt: `nmrevqsxjqtrobxqklfj` (eu-central-1)
 | `push` | Sender push-varsler fra `push_queue`. Utløses av en database-webhook ved ny rad. |
 | `elevation` | Fyller inn meter over havet fra Open-Meteo for steder som mangler det. Kalles automatisk etter hver innsjekk. |
 | `thumbs` | Lager miniatyrer for bilder som mangler det. Engangsjobb, kan kjøres igjen. |
+| `delete-account` | Sletter innlogget brukers bilder (begge bøttene), innsjekker, venner og selve innloggingen. Kalles fra Innstillinger → Slett konto. |
 
 VAPID-nøklene for varsler ligger som hemmeligheter i Supabase (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`). Den private nøkkelen skal aldri inn i repoet.
 
@@ -136,7 +142,15 @@ VAPID-nøklene for varsler ligger som hemmeligheter i Supabase (`VAPID_PUBLIC_KE
 - Appen kan lese andres innsjekker, men bare skrive til egne. Alt som skal fylles inn for alle brukere, må gjøres på serveren.
 - Postnummer mangler ofte i OpenStreetMap for Storbritannia og Irland; da faller appen tilbake på opprullingsregelen.
 
+## Google Play
+
+Se `GOOGLE_PLAY.md` i prosjektet: pakkenavn `no.cityhopper.app`, PWABuilder-verdier, butikktekster, Play Console-svar og fremdrift.
+
+## Sikkerhet
+
+- RLS på alle tabeller. Triggerfunksjoner (`ch_push_*`, `ch_elevation_ping`) er låst fra `anon`/`authenticated`.
+- Via Supabase-verktøyet i Claude hang `DROP POLICY` og `CREATE FUNCTION … DELETE` uten svar; `ALTER POLICY`, `CREATE TABLE` og Edge Functions fungerte. Foretrekk disse.
+
 ## Ideer som ikke er gjort
 
-- Kartet som trofé — besøkte land fylt inn
 - Delbar profil som lenke (`/u/brukernavn`), lesbar uten innlogging

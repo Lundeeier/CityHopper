@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="no" data-l="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1A1714">
+<title>Personvern – CityHopper</title>
+<link rel="icon" href="icon-192.png">
+<style>
+  :root{--bg:#1A1714;--text:#F5F1E8;--sub:#B0A695;--accent:#D9713F;--line:rgba(245,241,232,.14)}
+  html{background:var(--bg)}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
+  h1{font:600 30px/1.2 Georgia,"Times New Roman",serif;margin:0 0 6px}
+  h2{font-size:18px;margin:30px 0 6px;color:var(--text)}
+  p,li{color:var(--text)} .sub{color:var(--sub);font-size:14px}
+  ul{padding-left:20px} li{margin:4px 0}
+  a{color:var(--accent)}
+  .lang{display:flex;gap:8px;margin:0 0 22px}
+  .lang a{border:1px solid var(--line);border-radius:10px;padding:6px 12px;color:var(--sub);text-decoration:none;font-size:14px}
+  html[data-l=no] .lang a[data-set=no], html[data-l=en] .lang a[data-set=en]{border-color:var(--accent);color:var(--accent)}
+  html[data-l=no] [lang=en], html[data-l=en] [lang=no]{display:none}
+  .box{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:16px 0}
+</style>
+</head>
+<body>
+<main>
+<div class="lang"><a href="#" data-set="no">Norsk</a><a href="#" data-set="en">English</a></div>
+
+<section lang="no">
+<h1>Personvernerklæring for CityHopper</h1>
+<p class="sub">Sist oppdatert 4. oktober 2026</p>
+
+<h2>Hvem er ansvarlig?</h2>
+<p>CityHopper drives av Kristian Lundberg (privatperson), Norge. Spørsmål om personvern: <a href="mailto:kristian.lundberg@live.no">kristian.lundberg@live.no</a>.</p>
+
+<h2>Hva vi lagrer om deg</h2>
+<ul>
+<li><b>Konto:</b> e-postadresse, passord (lagres kun kryptert av innloggingstjenesten) og brukernavn.</li>
+<li><b>Profil:</b> profilbilde og kort beskrivelse (valgfritt), samt innstillingene dine, for eksempel privat profil.</li>
+<li><b>Innsjekker:</b> sted, land, koordinater, dato, vurdering, notat, ett bilde per innsjekk og høyde over havet.</li>
+<li><b>Venner og meldinger:</b> hvem du er venn med, og meldingene du sender og mottar i appen.</li>
+<li><b>Varsler:</b> hvis du slår på varsler, lagres en teknisk adresse for enheten din slik at varsler kan leveres.</li>
+<li><b>Rapporter og blokkeringer:</b> hvis du rapporterer eller blokkerer en bruker, lagres det.</li>
+<li><b>På enheten din:</b> innstillinger som språk og hvilke merker du har sett lagres lokalt i nettleseren/appen.</li>
+</ul>
+<p><b>Posisjon:</b> Appen spør om enhetens posisjon bare når du selv trykker på «bruk min posisjon» for å finne stedet du er på. Posisjonen brukes til å slå opp stedsnavnet og lagres bare som koordinatene til innsjekken du oppretter. Vi følger ikke posisjonen din i bakgrunnen.</p>
+
+<h2>Hvorfor vi bruker dataene</h2>
+<p>For å levere tjenesten du har bedt om: logge steder, vise statistikk og kart, topplister og merker, og la deg være sammen med venner (avtale, GDPR art. 6 nr. 1 b). Varsler bygger på samtykke ditt, som du kan trekke tilbake i Innstillinger (art. 6 nr. 1 a). Rapporter og blokkeringer behandles for å hindre misbruk (berettiget interesse, art. 6 nr. 1 f). Vi bruker ikke dataene til reklame, profilering eller analyse, og vi selger dem aldri.</p>
+
+<h2>Hvem kan se hva</h2>
+<ul>
+<li>Innsjekkene dine er bare synlige for deg og vennene dine.</li>
+<li>Brukernavn, profilbilde og beskrivelse kan være synlige for andre brukere av appen.</li>
+<li>Meldinger er bare synlige for avsender og mottaker.</li>
+<li>Bilder lagres med en lang, tilfeldig adresse. Den som kjenner adressen, kan åpne bildet.</li>
+</ul>
+
+<h2>Tjenester vi bruker</h2>
+<ul>
+<li><b>Supabase</b> – database, innlogging og bildelagring. Dataene ligger i et datasenter i EU (Frankfurt).</li>
+<li><b>Netlify</b> – hosting av selve appen/nettsiden (selskap i USA).</li>
+<li><b>OpenStreetMap Nominatim</b> – søk etter steder og finne stedsnavn fra koordinater. Søketekst og koordinater sendes dit.</li>
+<li><b>Kartfliser fra OpenStreetMap, CARTO og Esri</b> – kartutsnittet du ser, hentes fra disse. IP-adressen din sendes når kartet vises.</li>
+<li><b>Open-Meteo</b> – henter høyde over havet for koordinater.</li>
+<li><b>Google Fonts</b> – skrifttypene i appen hentes fra Google.</li>
+<li><b>Push-tjenesten til nettleseren/telefonen</b> (Google, Apple eller Mozilla) – leverer varsler hvis du har slått dem på.</li>
+</ul>
+<p>Noen av disse selskapene har servere utenfor EØS. Overføringer skjer på grunnlag av EUs standard personvernbestemmelser eller tilsvarende ordninger.</p>
+
+<h2>Hvor lenge vi lagrer dataene</h2>
+<p>Til du sletter kontoen. Du kan slette kontoen når som helst i appen under <b>Innstillinger → Slett konto</b>. Da slettes profil, innsjekker, bilder, venneforhold, meldinger, varsler, rapporter og blokkeringer med en gang. Du kan også be om sletting på e-post, se <a href="slett-konto.html">slett-konto</a>.</p>
+
+<h2>Rettighetene dine</h2>
+<p>Du har rett til innsyn, retting, sletting, å få en kopi av dataene dine, å protestere mot behandling og å trekke tilbake samtykke. Skriv til <a href="mailto:kristian.lundberg@live.no">kristian.lundberg@live.no</a>. Du kan klage til Datatilsynet (<a href="https://www.datatilsynet.no">datatilsynet.no</a>) hvis du mener vi behandler personopplysninger i strid med reglene.</p>
+
+<h2>Barn</h2>
+<p>CityHopper er ikke rettet mot barn under 13 år, og vi samler ikke bevisst inn data fra dem.</p>
+
+<h2>Sikkerhet</h2>
+<p>All kommunikasjon går over kryptert forbindelse, og databasen har tilgangsregler som hindrer at brukere leser andres private data.</p>
+
+<h2>Endringer</h2>
+<p>Hvis vi endrer erklæringen vesentlig, oppdaterer vi datoen øverst og varsler i appen.</p>
+</section>
+
+<section lang="en">
+<h1>CityHopper Privacy Policy</h1>
+<p class="sub">Last updated October 4, 2026</p>
+
+<h2>Who is responsible?</h2>
+<p>CityHopper is operated by Kristian Lundberg (private individual), Norway. Privacy questions: <a href="mailto:kristian.lundberg@live.no">kristian.lundberg@live.no</a>.</p>
+
+<h2>What we store about you</h2>
+<ul>
+<li><b>Account:</b> email address, password (stored only in encrypted form by the sign-in service) and username.</li>
+<li><b>Profile:</b> optional profile picture and short bio, plus your settings such as private profile.</li>
+<li><b>Check-ins:</b> place, country, coordinates, date, rating, note, one photo per check-in and elevation.</li>
+<li><b>Friends and messages:</b> who you are friends with, and the messages you send and receive in the app.</li>
+<li><b>Notifications:</b> if you turn on notifications, a technical address for your device is stored so notifications can be delivered.</li>
+<li><b>Reports and blocks:</b> if you report or block a user, this is stored.</li>
+<li><b>On your device:</b> settings such as language and which badges you have seen are stored locally in the browser/app.</li>
+</ul>
+<p><b>Location:</b> The app asks for your device location only when you tap “use my location” to find the place you are at. The location is used to look up the place name and is stored only as the coordinates of the check-in you create. We do not track your location in the background.</p>
+
+<h2>Why we use the data</h2>
+<p>To provide the service you asked for: logging places, showing statistics and maps, leaderboards and badges, and letting you connect with friends (contract, GDPR Art. 6(1)(b)). Notifications rely on your consent, which you can withdraw in Settings (Art. 6(1)(a)). Reports and blocks are processed to prevent abuse (legitimate interest, Art. 6(1)(f)). We do not use the data for advertising, profiling or analytics, and we never sell it.</p>
+
+<h2>Who can see what</h2>
+<ul>
+<li>Your check-ins are visible only to you and your friends.</li>
+<li>Your username, profile picture and bio may be visible to other users of the app.</li>
+<li>Messages are visible only to the sender and recipient.</li>
+<li>Photos are stored at a long, random address. Anyone who knows the address can open the photo.</li>
+</ul>
+
+<h2>Services we use</h2>
+<ul>
+<li><b>Supabase</b> – database, sign-in and photo storage. Data is located in an EU data centre (Frankfurt).</li>
+<li><b>Netlify</b> – hosting of the app/website (US company).</li>
+<li><b>OpenStreetMap Nominatim</b> – searching for places and finding place names from coordinates. Search text and coordinates are sent there.</li>
+<li><b>Map tiles from OpenStreetMap, CARTO and Esri</b> – the map you see is loaded from these. Your IP address is sent when the map is shown.</li>
+<li><b>Open-Meteo</b> – looks up elevation for coordinates.</li>
+<li><b>Google Fonts</b> – the app’s fonts are loaded from Google.</li>
+<li><b>Your browser’s/phone’s push service</b> (Google, Apple or Mozilla) – delivers notifications if you turned them on.</li>
+</ul>
+<p>Some of these companies have servers outside the EEA. Transfers rely on the EU standard contractual clauses or equivalent safeguards.</p>
+
+<h2>How long we keep the data</h2>
+<p>Until you delete your account. You can delete it at any time in the app under <b>Settings → Delete account</b>. Your profile, check-ins, photos, friendships, messages, notification settings, reports and blocks are then deleted immediately. You can also request deletion by email, see <a href="slett-konto.html">delete account</a>.</p>
+
+<h2>Your rights</h2>
+<p>You have the right to access, rectification, erasure, a copy of your data, to object to processing and to withdraw consent. Write to <a href="mailto:kristian.lundberg@live.no">kristian.lundberg@live.no</a>. You can complain to the Norwegian Data Protection Authority (<a href="https://www.datatilsynet.no">datatilsynet.no</a>) if you believe we process personal data in breach of the rules.</p>
+
+<h2>Children</h2>
+<p>CityHopper is not directed at children under 13, and we do not knowingly collect data from them.</p>
+
+<h2>Security</h2>
+<p>All communication uses encrypted connections, and the database has access rules that prevent users from reading others’ private data.</p>
+
+<h2>Changes</h2>
+<p>If we make significant changes to this policy, we update the date above and notify in the app.</p>
+</section>
+</main>
+<script>
+(function(){
+  var q=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
+  var l=q?(q==="no"?"no":"en"):((navigator.language||"no").slice(0,2)==="nb"||(navigator.language||"").slice(0,2)==="no"?"no":"en");
+  function set(x){document.documentElement.setAttribute("data-l",x);document.documentElement.lang=x;}
+  set(l);
+  [].forEach.call(document.querySelectorAll(".lang a"),function(a){a.addEventListener("click",function(e){e.preventDefault();set(a.getAttribute("data-set"));});});
+})();
+</script>
+</body>
+</html>

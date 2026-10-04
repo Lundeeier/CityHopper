@@ -568,12 +568,11 @@ var O = {
       b_group_special: "Bragder",
       b_reg_all: "Alle {units} i {country}",
       d_reg_all: "Besøk alle {n} {units} i {country}.",
-      b_reg_half: "Halvparten av {units} i {country}",
-      d_reg_half: "Besøk minst {n} av {t} {units} i {country}.",
       b_reg_n: "{n} {units} i {country}",
       d_reg_n: "Besøk {n} forskjellige {units} i {country}.",
       d_group: "Besøk alle {n} landene: {list}.",
       reg_progress: "({k} av {n})",
+      prog_of: "{k} av {n}",
       reg_fi_note: "(Åland regnes som eget land.)",
       board_badges: "Toppliste — antall bragder",
       d_country: "Bes\xF8kt {name}.",
@@ -903,12 +902,11 @@ var O = {
       b_group_special: "Feats",
       b_reg_all: "All {units} of {country}",
       d_reg_all: "Visit all {n} {units} of {country}.",
-      b_reg_half: "Half of {country}'s {units}",
-      d_reg_half: "Visit at least {n} of {t} {units} in {country}.",
       b_reg_n: "{n} {units} in {country}",
       d_reg_n: "Visit {n} different {units} in {country}.",
       d_group: "Visit all {n} countries: {list}.",
       reg_progress: "({k} of {n})",
+      prog_of: "{k} of {n}",
       reg_fi_note: "(Åland counts as its own country.)",
       board_badges: "Leaderboard — feats earned",
       d_country: "Check in somewhere in {name}.",
@@ -1240,12 +1238,11 @@ var O = {
       b_group_special: "Prestaties",
       b_reg_all: "Alle {units} van {country}",
       d_reg_all: "Bezoek alle {n} {units} van {country}.",
-      b_reg_half: "De helft van {units} in {country}",
-      d_reg_half: "Bezoek minstens {n} van de {t} {units} in {country}.",
       b_reg_n: "{n} {units} in {country}",
       d_reg_n: "Bezoek {n} verschillende {units} in {country}.",
       d_group: "Bezoek alle {n} landen: {list}.",
       reg_progress: "({k} van {n})",
+      prog_of: "{k} van {n}",
       reg_fi_note: "(Åland telt als eigen land.)",
       board_badges: "Ranglijst — behaalde prestaties",
       d_country: "Check ergens in {name} in.",
@@ -1572,12 +1569,11 @@ var O = {
       b_group_special: "Besondere Leistungen",
       b_reg_all: "Alle {units} in {country}",
       d_reg_all: "Besuche alle {n} {units} in {country}.",
-      b_reg_half: "Hälfte der {units} in {country}",
-      d_reg_half: "Besuche mindestens {n} von {t} {units} in {country}.",
       b_reg_n: "{n} {units} in {country}",
       d_reg_n: "Besuche {n} verschiedene {units} in {country}.",
       d_group: "Besuche alle {n} Länder: {list}.",
       reg_progress: "({k} von {n})",
+      prog_of: "{k} von {n}",
       reg_fi_note: "(Åland zählt als eigenes Land.)",
       board_badges: "Bestenliste — errungene Besondere Leistungen",
       d_country: "Checke irgendwo in {name} ein.",
@@ -1904,12 +1900,11 @@ var O = {
       b_group_special: "Bedrifter",
       b_reg_all: "Alla {units} i {country}",
       d_reg_all: "Besök alla {n} {units} i {country}.",
-      b_reg_half: "Hälften av {units} i {country}",
-      d_reg_half: "Besök minst {n} av {t} {units} i {country}.",
       b_reg_n: "{n} {units} i {country}",
       d_reg_n: "Besök {n} olika {units} i {country}.",
       d_group: "Besök alla {n} länder: {list}.",
       reg_progress: "({k} av {n})",
+      prog_of: "{k} av {n}",
       reg_fi_note: "(Åland räknas som eget land.)",
       board_badges: "Topplista — antal bedrifter",
       d_country: "Checka in någonstans i {name}.",
@@ -2236,12 +2231,11 @@ var O = {
       b_group_special: "Bedrifter",
       b_reg_all: "Alle {units} i {country}",
       d_reg_all: "Besøg alle {n} {units} i {country}.",
-      b_reg_half: "Halvdelen af {units} i {country}",
-      d_reg_half: "Besøg mindst {n} af {t} {units} i {country}.",
       b_reg_n: "{n} {units} i {country}",
       d_reg_n: "Besøg {n} forskellige {units} i {country}.",
       d_group: "Besøg alle {n} lande: {list}.",
       reg_progress: "({k} af {n})",
+      prog_of: "{k} af {n}",
       reg_fi_note: "(Åland tæller som eget land.)",
       board_badges: "Rangliste — antal bedrifter",
       d_country: "Tjek ind et sted i {name}.",
@@ -4223,7 +4217,7 @@ function ChBadges(visits, lang, reg) {
   {
     let li = Math.max(0, CH_LANGS.indexOf(lang)),
       prog = (k, n) => " " + P(lang, "reg_progress", { k, n }),
-      add = (o, k, n) => out.push({ ...o, earned: k >= n, desc: o.desc + (k >= n ? "" : prog(k, n)) });
+      add = (o, k, n) => out.push({ ...o, earned: k >= n, prog: { k: Math.min(k, n), n }, desc: o.desc + (k >= n ? "" : prog(k, n)) });
     for (let cc of Object.keys(CH_REG_META)) {
       let [u, mu, np, nk] = CH_REG_META[cc],
         c = vc.find((x) => x.code === cc);
@@ -4269,14 +4263,6 @@ function ChBadges(visits, lang, reg) {
           k,
           nk,
         );
-        if (nk >= 10) {
-          let half = Math.ceil(nk / 2);
-          add(
-            { id: "reg-" + cc + "-half", group: "special", label: P(lang, "b_reg_half", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_half", { n: half, t: nk, units: unit, country: c.name }) },
-            k,
-            half,
-          );
-        }
       }
     }
     // Landgrupper
@@ -6239,6 +6225,16 @@ function ChBadgesPanel({ uid, meId, onClose }) {
                       },
                       children: b.label,
                     }),
+                    b.prog &&
+                      (0, T.jsx)("span", {
+                        style: {
+                          fontSize: 11,
+                          fontWeight: 600,
+                          lineHeight: 1.2,
+                          color: b.earned ? O.accent : b.prog.k > 0 ? O.nav : O.border,
+                        },
+                        children: P(lang, "prog_of", b.prog),
+                      }),
                   ],
                 },
                 b.id,

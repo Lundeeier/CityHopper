@@ -87,12 +87,12 @@ Regelen eieren vil ha: **eget postnummer gir eget sted.**
 
 ### Merker
 
-Regnes ut i appen fra innsjekkene (`ChBadges`), ingenting lagres. ca. 670 totalt, likt for alle:
+Regnes ut i appen fra innsjekkene (`ChBadges`), ingenting lagres. ca. 640 totalt, likt for alle:
 - ett per land (254)
 - antall land på hvert tall 1–254
 - steder, hovedsteder, bragder (perfect week, serier, kontinenter, Norden, verdens høyeste/laveste/nordligste/sørligste hovedstad m.m.)
 
-**Regionmerker og landgrupper** (alle i «Bragder»): fylker/kommuner (Norge, også ett merke per fylke og 50/100/200 kommuner), län/kommuner (Sverige), regioner/kommuner (Danmark), og «alle»/«halvparten» for første nivå i ca. 35 land. Et sted teller når posisjonen (`lat`/`lng`) ligger i regionen, eller helt inntil den (`ChRegionOf`, punkt-i-polygon). Dessuten ca. 35 landgrupper (`CH_GROUPS`: Norden komplett, Skandinavia, Benelux, Balkan, Baltikum, Britiske øyer, Sørøst-Asia m.fl.). Merkene regnes ut av `ChBadges(visits, lang, reg)`; `reg` kommer fra `ChRegionHits`/`useChRegHits` og er `null` mens `regions.js` lastes. Topplisten «Antall bragder» ligger i `s5`.
+**Regionmerker og landgrupper** (alle i «Bragder»): fylker/kommuner (Norge, også ett merke per fylke og 50/100/200 kommuner), län/kommuner (Sverige), regioner/kommuner (Danmark), og «alle» for første nivå i ca. 35 land. Merker med fremdrift (regioner, landgrupper) viser «8 av 16» under navnet i merkeoversikten (`prog`). Et sted teller når posisjonen (`lat`/`lng`) ligger i regionen, eller helt inntil den (`ChRegionOf`, punkt-i-polygon). Dessuten ca. 35 landgrupper (`CH_GROUPS`: Norden komplett, Skandinavia, Benelux, Balkan, Baltikum, Britiske øyer, Sørøst-Asia m.fl.). Merkene regnes ut av `ChBadges(visits, lang, reg)`; `reg` kommer fra `ChRegionHits`/`useChRegHits` og er `null` mens `regions.js` lastes. Topplisten «Antall bragder» ligger i `s5`.
 
 Hvilke merker brukeren har sett, lagres i `localStorage` (`ch_badges_<uid>`), så varselet bare vises for nye.
 

@@ -4551,16 +4551,54 @@ function ChEqEarth(lon, lat) {
   return [(x + 2.7066299836960743) * 184.7315676733982, (1.3067131388872926 - y) * 184.7315676733982];
 }
 
-function ChMapSvg(codes, dots, c) {
-  let paths = Object.keys(CH_WORLD)
+function ChFitView(codes, dots) {
+  let x0 = 1e9,
+    y0 = 1e9,
+    x1 = -1e9,
+    y1 = -1e9,
+    add = (x, y) => (x < x0 && (x0 = x), x > x1 && (x1 = x), y < y0 && (y0 = y), y > y1 && (y1 = y));
+  for (let k of codes) {
+    let d = CH_WORLD[k];
+    if (!d) continue;
+    for (let sp of d.split("Z")) {
+      let n = sp.replace("M", "").trim().split(/\s+/).map(Number);
+      if (n.length < 4) continue;
+      let xs = n.filter((_, i) => i % 2 === 0);
+      if (Math.min(...xs) < 15 || Math.max(...xs) > 985) continue;
+      for (let i = 0; i + 1 < n.length; i += 2) add(n[i], n[i + 1]);
+    }
+  }
+  for (let p of dots) add(p[0], p[1]);
+  let W = 1000,
+    H = CH_WORLD_H;
+  if (x1 < x0) return [0, 0, W, H];
+  let pad = Math.max(12, 0.12 * Math.max(x1 - x0, y1 - y0)),
+    w = Math.max(x1 - x0 + 2 * pad, 150),
+    h = Math.max(y1 - y0 + 2 * pad, 90),
+    cx = (x0 + x1) / 2,
+    cy = (y0 + y1) / 2,
+    ar = Math.min(2.29, Math.max(1.3, w / h));
+  w / h < ar ? (w = h * ar) : (h = w / ar);
+  if (w > 780) return [0, 0, W, H];
+  let x = Math.min(W - w, Math.max(0, cx - w / 2)),
+    y = Math.min(H - h, Math.max(0, cy - h / 2));
+  return [x, y, w, h];
+}
+
+function ChMapSvg(codes, dots, c, vb, px) {
+  vb = vb || [0, 0, 1000, CH_WORLD_H];
+  px = px || 1000;
+  let sw = Math.max(0.12, (vb[2] / 1000) * 0.6),
+    r = Math.max(2, 4 * Math.sqrt(vb[2] / 1000)),
+    paths = Object.keys(CH_WORLD)
       .map((k) => `<path data-c="${k}" d="${CH_WORLD[k]}" fill="${codes.has(k) ? c.on : c.off}"/>`)
       .join(""),
-    pts = dots.map((d) => `<circle cx="${d[0].toFixed(1)}" cy="${d[1].toFixed(1)}" r="5" fill="${c.on}"/>`).join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 ${CH_WORLD_H}" width="1000" height="${CH_WORLD_H}"><g stroke="${c.bg}" stroke-width=".6" stroke-linejoin="round">${paths}</g><g stroke="${c.bg}" stroke-width="1">${pts}</g></svg>`;
+    pts = dots.map((d) => `<circle cx="${d[0].toFixed(1)}" cy="${d[1].toFixed(1)}" r="${r.toFixed(1)}" fill="${c.on}"/>`).join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.map((n) => +n.toFixed(2)).join(" ")}" width="${px}" height="${Math.round((px * vb[3]) / vb[2])}"><g stroke="${c.bg}" stroke-width="${sw}" stroke-linejoin="round">${paths}</g><g stroke="${c.bg}" stroke-width="${sw * 1.5}">${pts}</g></svg>`;
 }
 
 /* Fullskjerm-kart: knip med to fingre / hjul for aa zoome, dra for aa flytte, trykk paa et land for navnet. */
-function ChMapZoom({ codes, dots, cols, onClose }) {
+function ChMapZoom({ codes, dots, cols, fit, onClose }) {
   let box = (0, U.useRef)(null),
     [sel, setSel] = (0, U.useState)(null),
     html = (0, U.useMemo)(
@@ -4578,7 +4616,12 @@ function ChMapZoom({ codes, dots, cols, onClose }) {
       r0 = el.getBoundingClientRect(),
       a = r0.width / r0.height,
       full = a > W / H ? { w: H * a, h: H } : { w: W, h: W / a },
-      vb = { x: (W - full.w) / 2, y: (H - full.h) / 2, w: full.w, h: full.h },
+      start = () => {
+        let f = fit || [0, 0, W, H],
+          w = f[2] / f[3] > a ? f[2] : f[3] * a;
+        return { x: f[0] + f[2] / 2 - w / 2, y: f[1] + f[3] / 2 - w / a / 2, w, h: w / a };
+      },
+      vb = start(),
       ptrs = new Map(),
       tap = null;
     function apply() {
@@ -4659,7 +4702,7 @@ function ChMapZoom({ codes, dots, cols, onClose }) {
       let r = el.getBoundingClientRect();
       zoomAt(r.width / 2, r.height / 2, f);
     };
-    el.__reset = () => ((vb = { x: (W - full.w) / 2, y: (H - full.h) / 2, w: full.w, h: full.h }), apply());
+    el.__reset = () => ((vb = start()), apply());
     apply();
     return () => {
       (svg.removeEventListener("pointerdown", down),
@@ -4723,33 +4766,35 @@ function ChTrophyMap({ codes, dots, lang, n, total, own }) {
   let [busy, setBusy] = (0, U.useState)(!1),
     [zoom, setZoom] = (0, U.useState)(!1),
     cols = { on: O.accent, off: "#3A322A", bg: O.bg },
-    svg = (0, U.useMemo)(() => ChMapSvg(codes, dots, cols), [codes, dots]),
+    fit = (0, U.useMemo)(() => ChFitView(codes, dots), [codes, dots]),
+    svg = (0, U.useMemo)(() => ChMapSvg(codes, dots, cols, fit), [codes, dots, fit]),
     pct = total ? ((n / total) * 100).toFixed(1).replace(".", ",") : "0",
     sub = P(lang, "trophy_sub", { n, t: total, p: pct });
   async function share() {
     if (busy) return;
     setBusy(!0);
     try {
-      let w = 1080,
-        mh = Math.round((w - 80) * (CH_WORLD_H / 1000)),
-        h = mh + 330,
+      let w = 2160,
+        mw = w - 160,
+        mh = Math.round((mw * fit[3]) / fit[2]),
+        h = mh + 660,
         cv = document.createElement("canvas");
       ((cv.width = w), (cv.height = h));
       let g = cv.getContext("2d");
       try {
-        await document.fonts.load("600 64px Fraunces");
+        await document.fonts.load("600 128px Fraunces");
       } catch {}
       ((g.fillStyle = O.bg), g.fillRect(0, 0, w, h));
-      ((g.fillStyle = O.text), (g.font = "600 66px Fraunces, Georgia, serif"), g.fillText(P(lang, "trophy_title"), 40, 100));
-      ((g.fillStyle = O.textDim), (g.font = "400 32px Archivo, -apple-system, sans-serif"), g.fillText(sub, 40, 156));
+      ((g.fillStyle = O.text), (g.font = "600 132px Fraunces, Georgia, serif"), g.fillText(P(lang, "trophy_title"), 80, 200));
+      ((g.fillStyle = O.textDim), (g.font = "400 64px Archivo, -apple-system, sans-serif"), g.fillText(sub, 80, 312));
       let img = new Image();
       await new Promise((ok, no) => {
         ((img.onload = ok), (img.onerror = no));
-        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(ChMapSvg(codes, dots, cols));
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(ChMapSvg(codes, dots, cols, fit, mw));
       });
-      g.drawImage(img, 40, 200, w - 80, mh);
-      ((g.fillStyle = O.accent), (g.font = "600 36px Fraunces, Georgia, serif"), (g.textAlign = "right"));
-      g.fillText("CityHopper", w - 40, h - 44);
+      g.drawImage(img, 80, 400, mw, mh);
+      ((g.fillStyle = O.accent), (g.font = "600 72px Fraunces, Georgia, serif"), (g.textAlign = "right"));
+      g.fillText("CityHopper", w - 80, h - 88);
       let blob = await new Promise((ok) => cv.toBlob(ok, "image/png")),
         file = new File([blob], "cityhopper-reisekart.png", { type: "image/png" });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -4779,7 +4824,7 @@ function ChTrophyMap({ codes, dots, lang, n, total, own }) {
         dangerouslySetInnerHTML: { __html: svg.replace(/width="1000" height="[0-9]+"/, 'width="100%"') },
       }),
       (0, T.jsx)("p", { style: { color: O.sub, fontSize: 12, margin: "8px 0 0" }, children: P(lang, "trophy_zoom") }),
-      zoom && (0, T.jsx)(ChMapZoom, { codes, dots, cols, onClose: () => setZoom(!1) }),
+      zoom && (0, T.jsx)(ChMapZoom, { codes, dots, cols, fit, onClose: () => setZoom(!1) }),
       own &&
         (0, T.jsx)("button", {
           className: "ch-secondary",

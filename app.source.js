@@ -4551,6 +4551,14 @@ function ChEqEarth(lon, lat) {
   return [(x + 2.7066299836960743) * 184.7315676733982, (1.3067131388872926 - y) * 184.7315676733982];
 }
 
+/* Storbritannia ("GB") fyller alle fire landsdelene; hver landsdel (GB-ENG osv.) fyller bare seg selv. */
+function ChExpandCodes(codes) {
+  if (!codes.has("GB")) return codes;
+  let o = new Set(codes);
+  for (let k of ["GB-ENG", "GB-SCT", "GB-WLS", "GB-NIR"]) o.add(k);
+  return o;
+}
+
 function ChFitView(codes, dots) {
   let x0 = 1e9,
     y0 = 1e9,
@@ -4764,7 +4772,9 @@ function ChMapZoom({ codes, dots, cols, fit, onClose }) {
 
 function ChTrophyMap({ codes, dots, lang, n, total, own }) {
   let [busy, setBusy] = (0, U.useState)(!1),
-    [zoom, setZoom] = (0, U.useState)(!1),
+    [zoom, setZoom] = (0, U.useState)(!1);
+  codes = (0, U.useMemo)(() => ChExpandCodes(codes), [codes]);
+  let
     cols = { on: O.accent, off: "#3A322A", bg: O.bg },
     fit = (0, U.useMemo)(() => ChFitView(codes, dots), [codes, dots]),
     svg = (0, U.useMemo)(() => ChMapSvg(codes, dots, cols, fit), [codes, dots, fit]),

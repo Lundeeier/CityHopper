@@ -2,6 +2,7 @@ import * as U from "react";
 import * as r8 from "react-dom/client";
 import * as T from "react/jsx-runtime";
 import { createClient } from "@supabase/supabase-js";
+import { CH_WORLD, CH_WORLD_H } from "./worldmap.js";
 /* Kartbiblioteket er stort og brukes bare i Kart-fanen, saa det lastes ned
    forst naar kartet faktisk aapnes. */
 var Ra = { default: null },
@@ -707,6 +708,9 @@ var O = {
       invite_copied: "Lenke kopiert",
       invite_banner: "{name} har invitert deg til CityHopper",
       invite_share_text: "Bli med meg på CityHopper og se hvor vi har vært.",
+      trophy_title: "Reisekart",
+      trophy_sub: "{n} av {t} land · {p} %",
+      trophy_share: "Del kartet",
     },
     en: {
       tab_checkin: "Check in",
@@ -1005,6 +1009,9 @@ var O = {
       invite_copied: "Link copied",
       invite_banner: "{name} has invited you to CityHopper",
       invite_share_text: "Join me on CityHopper and see where we've been.",
+      trophy_title: "Travel map",
+      trophy_sub: "{n} of {t} countries · {p}%",
+      trophy_share: "Share map",
     },
     nl: {
       tab_checkin: "Inchecken",
@@ -1305,6 +1312,9 @@ var O = {
       invite_copied: "Link gekopieerd",
       invite_banner: "{name} heeft je uitgenodigd voor CityHopper",
       invite_share_text: "Doe mee op CityHopper en zie waar we zijn geweest.",
+      trophy_title: "Reiskaart",
+      trophy_sub: "{n} van {t} landen · {p}%",
+      trophy_share: "Deel kaart",
     },
     de: {
       tab_checkin: "Einchecken",
@@ -1600,6 +1610,9 @@ var O = {
       invite_copied: "Link kopiert",
       invite_banner: "{name} hat dich zu CityHopper eingeladen",
       invite_share_text: "Komm zu CityHopper und sieh, wo wir überall waren.",
+      trophy_title: "Reisekarte",
+      trophy_sub: "{n} von {t} Ländern · {p} %",
+      trophy_share: "Karte teilen",
     },
     sv: {
       tab_checkin: "Checka in",
@@ -1895,6 +1908,9 @@ var O = {
       invite_copied: "Länk kopierad",
       invite_banner: "{name} har bjudit in dig till CityHopper",
       invite_share_text: "Häng med på CityHopper och se var vi har varit.",
+      trophy_title: "Resekarta",
+      trophy_sub: "{n} av {t} länder · {p} %",
+      trophy_share: "Dela kartan",
     },
     da: {
       tab_checkin: "Tjek ind",
@@ -2190,6 +2206,9 @@ var O = {
       invite_copied: "Link kopieret",
       invite_banner: "{name} har inviteret dig til CityHopper",
       invite_share_text: "Vær med på CityHopper og se, hvor vi har været.",
+      trophy_title: "Rejsekort",
+      trophy_sub: "{n} af {t} lande · {p} %",
+      trophy_share: "Del kortet",
     },
   },
   u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || "no",
@@ -4511,7 +4530,99 @@ function ChStatRow({ label, value, sub }) {
   });
 }
 
-function ChStatsPanel({ uid, onClose }) {
+/* Trofekart: besokte land fylt inn paa et verdenskart (Equal Earth). Land som er for
+   smaa til aa vaere med i kartdataene vises som prikker der innsjekkene ligger. */
+function ChEqEarth(lon, lat) {
+  let l = (lon * Math.PI) / 180,
+    p = (lat * Math.PI) / 180,
+    t = Math.asin((Math.sqrt(3) / 2) * Math.sin(p)),
+    t2 = t * t,
+    t6 = t2 * t2 * t2,
+    x =
+      (2 * Math.sqrt(3) * l * Math.cos(t)) /
+      (3 * (9 * 0.003796 * t6 * t2 + 7 * 0.000893 * t6 + 3 * -0.081106 * t2 + 1.340264)),
+    y = t * (1.340264 + -0.081106 * t2 + 0.000893 * t6 + 0.003796 * t6 * t2);
+  return [(x + 2.7066299836960743) * 184.7315676733982, (1.3067131388872926 - y) * 184.7315676733982];
+}
+
+function ChMapSvg(codes, dots, c) {
+  let paths = Object.keys(CH_WORLD)
+      .map((k) => `<path d="${CH_WORLD[k]}" fill="${codes.has(k) ? c.on : c.off}"/>`)
+      .join(""),
+    pts = dots.map((d) => `<circle cx="${d[0].toFixed(1)}" cy="${d[1].toFixed(1)}" r="5" fill="${c.on}"/>`).join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 ${CH_WORLD_H}" width="1000" height="${CH_WORLD_H}"><g stroke="${c.bg}" stroke-width=".6" stroke-linejoin="round">${paths}</g><g stroke="${c.bg}" stroke-width="1">${pts}</g></svg>`;
+}
+
+function ChTrophyMap({ codes, dots, lang, n, total, own }) {
+  let [busy, setBusy] = (0, U.useState)(!1),
+    cols = { on: O.accent, off: "#3A322A", bg: O.bg },
+    svg = (0, U.useMemo)(() => ChMapSvg(codes, dots, cols), [codes, dots]),
+    pct = total ? ((n / total) * 100).toFixed(1).replace(".", ",") : "0",
+    sub = P(lang, "trophy_sub", { n, t: total, p: pct });
+  async function share() {
+    if (busy) return;
+    setBusy(!0);
+    try {
+      let w = 1080,
+        mh = Math.round((w - 80) * (CH_WORLD_H / 1000)),
+        h = mh + 330,
+        cv = document.createElement("canvas");
+      ((cv.width = w), (cv.height = h));
+      let g = cv.getContext("2d");
+      try {
+        await document.fonts.load("600 64px Fraunces");
+      } catch {}
+      ((g.fillStyle = O.bg), g.fillRect(0, 0, w, h));
+      ((g.fillStyle = O.text), (g.font = "600 66px Fraunces, Georgia, serif"), g.fillText(P(lang, "trophy_title"), 40, 100));
+      ((g.fillStyle = O.textDim), (g.font = "400 32px Archivo, -apple-system, sans-serif"), g.fillText(sub, 40, 156));
+      let img = new Image();
+      await new Promise((ok, no) => {
+        ((img.onload = ok), (img.onerror = no));
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(ChMapSvg(codes, dots, cols));
+      });
+      g.drawImage(img, 40, 200, w - 80, mh);
+      ((g.fillStyle = O.accent), (g.font = "600 36px Fraunces, Georgia, serif"), (g.textAlign = "right"));
+      g.fillText("CityHopper", w - 40, h - 44);
+      let blob = await new Promise((ok) => cv.toBlob(ok, "image/png")),
+        file = new File([blob], "cityhopper-reisekart.png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "CityHopper", text: "cityhoppers.netlify.app" });
+        } catch {}
+      } else {
+        let a = document.createElement("a");
+        ((a.href = URL.createObjectURL(blob)), (a.download = file.name), document.body.appendChild(a), a.click(), a.remove());
+      }
+    } catch {}
+    setBusy(!1);
+  }
+  return (0, T.jsxs)("div", {
+    style: { marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${O.line}` },
+    children: [
+      (0, T.jsx)("p", {
+        style: { color: O.sub, fontSize: 12, fontWeight: 700, letterSpacing: ".06em", margin: "0 0 4px" },
+        children: P(lang, "trophy_title").toUpperCase(),
+      }),
+      (0, T.jsx)("p", { style: { fontSize: 15, fontWeight: 600, margin: "0 0 10px" }, children: sub }),
+      (0, T.jsx)("div", {
+        role: "img",
+        "aria-label": sub,
+        style: { width: "100%", lineHeight: 0 },
+        dangerouslySetInnerHTML: { __html: svg.replace(/width="1000" height="[0-9]+"/, 'width="100%"') },
+      }),
+      own &&
+        (0, T.jsx)("button", {
+          className: "ch-secondary",
+          onClick: share,
+          disabled: busy,
+          style: { width: "100%", marginTop: 12 },
+          children: P(lang, "trophy_share"),
+        }),
+    ],
+  });
+}
+
+function ChStatsPanel({ uid, meId, onClose }) {
   let [lang] = Un(),
     [visits, setVisits] = (0, U.useState)(null),
     [cq, setCq] = (0, U.useState)(""),
@@ -4560,6 +4671,20 @@ function ChStatsPanel({ uid, onClose }) {
       low: withEl[withEl.length - 1] || null,
       worldPct: landKoder.size ? (landKoder.size / vc.length) * 100 : 0,
       worldN: landKoder.size,
+      landSet: landKoder,
+      mapDots: (() => {
+        let seen = new Set(),
+          out = [];
+        for (let v of visits) {
+          if (v.lat == null || v.lng == null) continue;
+          let c = (yc(v.country) || {}).code;
+          if (!c || CH_WORLD[c]) continue;
+          let k = Math.round(v.lat * 5) + "," + Math.round(v.lng * 5);
+          if (seen.has(k)) continue;
+          (seen.add(k), out.push(ChEqEarth(+v.lng, +v.lat)));
+        }
+        return out;
+      })(),
       caps: capList.length,
       capsPct: landKoder.size ? Math.round((capList.length / landKoder.size) * 100) : 0,
       capNorth: capLat[0] || null,
@@ -4619,6 +4744,14 @@ function ChStatsPanel({ uid, onClose }) {
         ? (0, T.jsx)("p", { style: { color: O.sub }, children: P(lang, "loading_profile") })
         : (0, T.jsxs)(T.Fragment, {
             children: [
+              (0, T.jsx)(ChTrophyMap, {
+                codes: st.landSet,
+                dots: st.mapDots,
+                lang,
+                n: st.worldN,
+                total: vc.length,
+                own: !!meId && uid === meId,
+              }),
               (0, T.jsxs)("div", {
                 style: { marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${O.line}` },
                 children: [
@@ -7049,6 +7182,7 @@ function n5({ session: e, onLogout: t }) {
             chView.type === "stats" &&
             (0, T.jsx)(ChStatsPanel, {
               uid: chView.id,
+              meId: e.user.id,
               onClose: () => chSetView({ type: "profile", id: chView.id }),
             }),
           chView &&

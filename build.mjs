@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, copyFile, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 
-const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "personvern.html", "slett-konto.html"];
+const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "personvern.html", "slett-konto.html", "regions.js"];
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
@@ -43,6 +43,9 @@ await build({
 const leafletBundle = await readFile("dist/leaflet.js");
 const leafletVersion = createHash("sha256").update(leafletBundle).digest("hex").slice(0, 10);
 
+// Regiongrenser (fylker, kommuner ...) lastes forst naar de trengs, med eget versjonsnummer
+const regionsVersion = createHash("sha256").update(await readFile("regions.js")).digest("hex").slice(0, 10);
+
 const bundle = await readFile("dist/app.js");
 const version = createHash("sha256").update(bundle).digest("hex").slice(0, 10);
 
@@ -50,7 +53,7 @@ const html = await readFile("index.html", "utf8");
 let patched = html.replace(/app\.js(\?v=[^"']*)?/g, `app.js?v=${version}`);
 patched = patched.replace(
   "<script src=",
-  `<script>window.__CH_LEAFLET_V="${leafletVersion}";</script>\n<script src=`,
+  `<script>window.__CH_LEAFLET_V="${leafletVersion}";window.__CH_REGIONS_V="${regionsVersion}";</script>\n<script src=`,
 );
 if (patched === html && !html.includes("app.js")) {
   throw new Error("Fant ikke app.js-referansen i index.html");

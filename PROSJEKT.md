@@ -34,6 +34,7 @@ Kristian kan ikke kode. Han bygger appen med AI og jobber mest fra mobil.
 | `sw.js` | Service worker: mellomlagring og mottak av push-varsler. |
 | `manifest.webmanifest`, `icon-192.png`, `icon-512.png` | Appinstallasjon og ikon. |
 | `worldmap.js` | Landegrenser til trofékartet (Natural Earth 1:50m, Equal Earth, nøkkel = landkode; Storbritannia er delt i GB-ENG/SCT/WLS/NIR). Må følge med `app.source.js` ved opplasting. |
+| `regions.js` | Grenser for fylker og kommuner i Norge (357), Sverige (290), Danmark (98) og første nivå (delstater/provinser/regioner) i ca. 35 andre land. Lastes først når brukeren har steder med posisjon i disse landene, og følger med `app.source.js` ved opplasting. Lages av et eget skript (kilder: Kartverket/Geonorge, Natural Earth admin-1, svenske og danske åpne data); koordinatene er ×1000 og deltakodet. |
 | `personvern.html`, `slett-konto.html` | Personvernerklæring og slett-konto-side (norsk/engelsk). Kreves av Google Play. |
 | `assetlinks.json` | Kobler Android-appen til nettsiden. Bygges til `/.well-known/assetlinks.json`. Fingeravtrykkene legges inn etter første opplasting til Google Play. |
 
@@ -44,6 +45,7 @@ Kristian kan ikke kode. Han bygger appen med AI og jobber mest fra mobil.
 `npm run build` lager `dist/` med:
 - `app.js` — appen (ca. 660 kB), IIFE-format
 - `leaflet.js` — kartbiblioteket (ca. 147 kB), lastes først når Kart-fanen åpnes
+- `regions.js` — regiongrenser (ca. 1 MB, komprimeres godt), lastes først når de trengs
 - statiske filer og `index.html` med innholdshash
 
 Røyktesten kjører automatisk. Feiler den, publiseres ingenting og forrige versjon blir stående.
@@ -85,10 +87,12 @@ Regelen eieren vil ha: **eget postnummer gir eget sted.**
 
 ### Merker
 
-Regnes ut i appen fra innsjekkene (`ChBadges`), ingenting lagres. 544 totalt, likt for alle:
+Regnes ut i appen fra innsjekkene (`ChBadges`), ingenting lagres. ca. 670 totalt, likt for alle:
 - ett per land (254)
 - antall land på hvert tall 1–254
 - steder, hovedsteder, bragder (perfect week, serier, kontinenter, Norden, verdens høyeste/laveste/nordligste/sørligste hovedstad m.m.)
+
+**Regionmerker og landgrupper** (alle i «Bragder»): fylker/kommuner (Norge, også ett merke per fylke og 50/100/200 kommuner), län/kommuner (Sverige), regioner/kommuner (Danmark), og «alle»/«halvparten» for første nivå i ca. 35 land. Et sted teller når posisjonen (`lat`/`lng`) ligger i regionen, eller helt inntil den (`ChRegionOf`, punkt-i-polygon). Dessuten ca. 35 landgrupper (`CH_GROUPS`: Norden komplett, Skandinavia, Benelux, Balkan, Baltikum, Britiske øyer, Sørøst-Asia m.fl.). Merkene regnes ut av `ChBadges(visits, lang, reg)`; `reg` kommer fra `ChRegionHits`/`useChRegHits` og er `null` mens `regions.js` lastes. Topplisten «Antall bragder» ligger i `s5`.
 
 Hvilke merker brukeren har sett, lagres i `localStorage` (`ch_badges_<uid>`), så varselet bare vises for nye.
 

@@ -27,7 +27,7 @@ self.addEventListener("activate", function (e) {
 });
 
 function isAsset(url) {
-  return /\/(app\.js|leaflet\.js|icon-192\.png|icon-512\.png|manifest\.webmanifest)$/.test(url.pathname);
+  return /\/(app\.js|leaflet\.js|regions\.js|icon-192\.png|icon-512\.png|manifest\.webmanifest)$/.test(url.pathname);
 }
 
 /* Rydder bort tidligere versjoner av samme fil, slik at mellomlageret

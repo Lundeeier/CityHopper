@@ -549,7 +549,7 @@ var O = {
       b_week_desc: "Innsjekk hver dag mandag til s\xF8ndag",
       b_streak: "{n} dager p\xE5 rad",
       b_three: "Tre land p\xE5 \xE9n dag",
-      b_nordic: "Norden komplett",
+      b_nordic: "De nordiske landene",
       b_rater: "Vurdert {n} steder",
       b_photo: "Bilder p\xE5 {n} steder",
       b_writer: "Notat p\xE5 {n} steder",
@@ -566,6 +566,16 @@ var O = {
       b_group_countries: "Land",
       b_group_counts: "Milep\xE6ler",
       b_group_special: "Bragder",
+      b_reg_all: "Alle {units} i {country}",
+      d_reg_all: "Besøk alle {n} {units} i {country}.",
+      b_reg_half: "Halvparten av {units} i {country}",
+      d_reg_half: "Besøk minst {n} av {t} {units} i {country}.",
+      b_reg_n: "{n} {units} i {country}",
+      d_reg_n: "Besøk {n} forskjellige {units} i {country}.",
+      d_group: "Besøk alle {n} landene: {list}.",
+      reg_progress: "({k} av {n})",
+      reg_fi_note: "(Åland regnes som eget land.)",
+      board_badges: "Toppliste — antall bragder",
       d_country: "Bes\xF8kt {name}.",
       d_countries: "Bes\xF8kt {n} land.",
       d_countries_one: "Bes\xF8k 1 land.",
@@ -874,7 +884,7 @@ var O = {
       b_week_desc: "A check-in every day from Monday to Sunday",
       b_streak: "{n} days in a row",
       b_three: "Three countries in one day",
-      b_nordic: "All of the Nordics",
+      b_nordic: "The five Nordic countries",
       b_rater: "Rated {n} places",
       b_photo: "Photos on {n} places",
       b_writer: "Notes on {n} places",
@@ -891,6 +901,16 @@ var O = {
       b_group_countries: "Countries",
       b_group_counts: "Milestones",
       b_group_special: "Feats",
+      b_reg_all: "All {units} of {country}",
+      d_reg_all: "Visit all {n} {units} of {country}.",
+      b_reg_half: "Half of {country}'s {units}",
+      d_reg_half: "Visit at least {n} of {t} {units} in {country}.",
+      b_reg_n: "{n} {units} in {country}",
+      d_reg_n: "Visit {n} different {units} in {country}.",
+      d_group: "Visit all {n} countries: {list}.",
+      reg_progress: "({k} of {n})",
+      reg_fi_note: "(Åland counts as its own country.)",
+      board_badges: "Leaderboard — feats earned",
       d_country: "Check in somewhere in {name}.",
       d_countries: "Check in across {n} different countries.",
       d_countries_one: "Check in across 1 country.",
@@ -1201,7 +1221,7 @@ var O = {
       b_week_desc: "Elke dag inchecken van maandag tot zondag",
       b_streak: "{n} dagen op rij",
       b_three: "Drie landen op \xE9\xE9n dag",
-      b_nordic: "Heel Scandinavi\xEB",
+      b_nordic: "De vijf Noordse landen",
       b_rater: "{n} plaatsen beoordeeld",
       b_photo: "Foto's bij {n} plaatsen",
       b_writer: "Notities bij {n} plaatsen",
@@ -1218,6 +1238,16 @@ var O = {
       b_group_countries: "Landen",
       b_group_counts: "Mijlpalen",
       b_group_special: "Prestaties",
+      b_reg_all: "Alle {units} van {country}",
+      d_reg_all: "Bezoek alle {n} {units} van {country}.",
+      b_reg_half: "De helft van {units} in {country}",
+      d_reg_half: "Bezoek minstens {n} van de {t} {units} in {country}.",
+      b_reg_n: "{n} {units} in {country}",
+      d_reg_n: "Bezoek {n} verschillende {units} in {country}.",
+      d_group: "Bezoek alle {n} landen: {list}.",
+      reg_progress: "({k} van {n})",
+      reg_fi_note: "(Åland telt als eigen land.)",
+      board_badges: "Ranglijst — behaalde prestaties",
       d_country: "Check ergens in {name} in.",
       d_countries: "Check in {n} verschillende landen in.",
       d_countries_one: "Check in 1 land in.",
@@ -1523,7 +1553,7 @@ var O = {
       b_week_desc: "Ein Check-in jeden Tag von Montag bis Sonntag",
       b_streak: "{n} Tage in Folge",
       b_three: "Drei Länder an einem Tag",
-      b_nordic: "Alle nordischen Länder",
+      b_nordic: "Die fünf nordischen Länder",
       b_rater: "{n} Orte bewertet",
       b_photo: "Fotos bei {n} Orten",
       b_writer: "Notizen bei {n} Orten",
@@ -1540,6 +1570,16 @@ var O = {
       b_group_countries: "Länder",
       b_group_counts: "Meilensteine",
       b_group_special: "Besondere Leistungen",
+      b_reg_all: "Alle {units} in {country}",
+      d_reg_all: "Besuche alle {n} {units} in {country}.",
+      b_reg_half: "Hälfte der {units} in {country}",
+      d_reg_half: "Besuche mindestens {n} von {t} {units} in {country}.",
+      b_reg_n: "{n} {units} in {country}",
+      d_reg_n: "Besuche {n} verschiedene {units} in {country}.",
+      d_group: "Besuche alle {n} Länder: {list}.",
+      reg_progress: "({k} von {n})",
+      reg_fi_note: "(Åland zählt als eigenes Land.)",
+      board_badges: "Bestenliste — errungene Besondere Leistungen",
       d_country: "Checke irgendwo in {name} ein.",
       d_countries: "Checke in {n} verschiedenen Ländern ein.",
       d_countries_one: "Checke in 1 Land ein.",
@@ -1845,7 +1885,7 @@ var O = {
       b_week_desc: "En incheckning varje dag från måndag till söndag",
       b_streak: "{n} dagar i rad",
       b_three: "Tre länder på en dag",
-      b_nordic: "Hela Norden",
+      b_nordic: "De fem nordiska länderna",
       b_rater: "Betygsatt {n} platser",
       b_photo: "Foton på {n} platser",
       b_writer: "Anteckningar på {n} platser",
@@ -1862,6 +1902,16 @@ var O = {
       b_group_countries: "Länder",
       b_group_counts: "Milstolpar",
       b_group_special: "Bedrifter",
+      b_reg_all: "Alla {units} i {country}",
+      d_reg_all: "Besök alla {n} {units} i {country}.",
+      b_reg_half: "Hälften av {units} i {country}",
+      d_reg_half: "Besök minst {n} av {t} {units} i {country}.",
+      b_reg_n: "{n} {units} i {country}",
+      d_reg_n: "Besök {n} olika {units} i {country}.",
+      d_group: "Besök alla {n} länder: {list}.",
+      reg_progress: "({k} av {n})",
+      reg_fi_note: "(Åland räknas som eget land.)",
+      board_badges: "Topplista — antal bedrifter",
       d_country: "Checka in någonstans i {name}.",
       d_countries: "Checka in i {n} olika länder.",
       d_countries_one: "Checka in i 1 land.",
@@ -2167,7 +2217,7 @@ var O = {
       b_week_desc: "Et check-in hver dag fra mandag til søndag",
       b_streak: "{n} dage i træk",
       b_three: "Tre lande på én dag",
-      b_nordic: "Hele Norden",
+      b_nordic: "De fem nordiske lande",
       b_rater: "Bedømt {n} steder",
       b_photo: "Billeder på {n} steder",
       b_writer: "Noter på {n} steder",
@@ -2184,6 +2234,16 @@ var O = {
       b_group_countries: "Lande",
       b_group_counts: "Milepæle",
       b_group_special: "Bedrifter",
+      b_reg_all: "Alle {units} i {country}",
+      d_reg_all: "Besøg alle {n} {units} i {country}.",
+      b_reg_half: "Halvdelen af {units} i {country}",
+      d_reg_half: "Besøg mindst {n} af {t} {units} i {country}.",
+      b_reg_n: "{n} {units} i {country}",
+      d_reg_n: "Besøg {n} forskellige {units} i {country}.",
+      d_group: "Besøg alle {n} lande: {list}.",
+      reg_progress: "({k} af {n})",
+      reg_fi_note: "(Åland tæller som eget land.)",
+      board_badges: "Rangliste — antal bedrifter",
       d_country: "Tjek ind et sted i {name}.",
       d_countries: "Tjek ind i {n} forskellige lande.",
       d_countries_one: "Tjek ind i 1 land.",
@@ -3693,6 +3753,222 @@ var Ch_CONT_OF = (() => {
 
 var Ch_NORDIC = ["NO", "SE", "DK", "FI", "IS"];
 
+/* ---------- Regioner (fylker, kommuner, delstater ...) og landgrupper ----------
+   Grensene ligger i regions.js, som lastes forst naar de trengs. Et sted regnes
+   som besokt naar posisjonen ligger innenfor (eller helt inntil) grensen. */
+var CH_REG_META = {NO:["counties","municipalities",15,357],SE:["lan","municipalities",21,290],DK:["regions","municipalities",5,98],FI:["regions",null,0,18],NL:["provinces",null,0,12],BE:["provinces",null,0,11],DE:["states",null,0,16],AT:["states",null,0,9],CH:["cantons",null,0,26],PL:["provinces",null,0,16],CZ:["regions",null,0,14],SK:["regions",null,0,8],EE:["counties",null,0,15],LT:["counties",null,0,10],BG:["provinces",null,0,28],RO:["counties",null,0,42],AL:["counties",null,0,12],GR:["regions",null,0,13],TR:["provinces",null,0,81],FR:["regions",null,0,13],ES:["regions",null,0,17],IT:["regions",null,0,20],PT:["districts",null,0,20],SI:["regions",null,0,12],US:["states",null,0,50],CA:["provinces",null,0,13],BR:["states",null,0,27],AR:["provinces",null,0,24],CL:["regions",null,0,16],AU:["states",null,0,8],JP:["prefectures",null,0,47],KR:["provinces",null,0,17],IN:["states",null,0,36],TH:["provinces",null,0,77],VN:["provinces",null,0,63],MY:["states",null,0,16],ZA:["provinces",null,0,9],EG:["governorates",null,0,27]};
+var CH_REG_MILE = { NO: [50, 100, 200], SE: [50, 100, 200], DK: [25, 50] };
+var CH_NO_FYLKE = { "03": ["Oslo", 1], "11": ["Rogaland", 23], "15": ["Møre og Romsdal", 27], "18": ["Nordland", 41], "31": ["Østfold", 12], "32": ["Akershus", 21], "33": ["Buskerud", 18], "34": ["Innlandet", 46], "39": ["Vestfold", 6], "40": ["Telemark", 17], "42": ["Agder", 25], "46": ["Vestland", 43], "50": ["Trøndelag", 38], "55": ["Troms", 21], "56": ["Finnmark", 18] };
+var CH_UNITS = {
+  counties: { no: "fylker", en: "counties", nl: "provincies", de: "Bezirke", sv: "fylken", da: "fylker" },
+  lan: { no: "län", en: "counties (län)", nl: "län", de: "Län", sv: "län", da: "län" },
+  regions: { no: "regioner", en: "regions", nl: "regio's", de: "Regionen", sv: "regioner", da: "regioner" },
+  municipalities: { no: "kommuner", en: "municipalities", nl: "gemeenten", de: "Gemeinden", sv: "kommuner", da: "kommuner" },
+  provinces: { no: "provinser", en: "provinces", nl: "provincies", de: "Provinzen", sv: "provinser", da: "provinser" },
+  states: { no: "delstater", en: "states", nl: "deelstaten", de: "Bundesländer", sv: "delstater", da: "delstater" },
+  cantons: { no: "kantoner", en: "cantons", nl: "kantons", de: "Kantone", sv: "kantoner", da: "kantoner" },
+  districts: { no: "distrikter", en: "districts", nl: "districten", de: "Distrikte", sv: "distrikt", da: "distrikter" },
+  prefectures: { no: "prefekturer", en: "prefectures", nl: "prefecturen", de: "Präfekturen", sv: "prefekturer", da: "præfekturer" },
+  governorates: { no: "guvernement", en: "governorates", nl: "gouvernementen", de: "Gouvernements", sv: "guvernement", da: "guvernementer" },
+};
+function ChUnit(u, lang) {
+  let t = CH_UNITS[u];
+  return t ? t[lang] || t.no : u;
+}
+/* Landgrupper. Navn paa seks sprak: no, en, nl, de, sv, da. */
+var CH_GROUPS = [
+  { id: "norden", codes: ["NO", "SE", "DK", "FI", "IS", "FO", "GL", "AX"], n: ["Norden komplett", "The whole Nordic region", "Het hele Noordse gebied", "Der ganze Norden", "Hela Norden komplett", "Hele Norden komplet"] },
+  { id: "skand", codes: ["NO", "SE", "DK"], n: ["Skandinavia", "Scandinavia", "Scandinavië", "Skandinavien", "Skandinavien", "Skandinavien"] },
+  { id: "benelux", codes: ["BE", "NL", "LU"], n: ["Benelux", "Benelux", "Benelux", "Benelux", "Benelux", "Benelux"] },
+  { id: "baltikum", codes: ["EE", "LV", "LT"], n: ["Baltikum", "The Baltics", "De Baltische staten", "Baltikum", "Baltikum", "Baltikum"] },
+  { id: "balkan", codes: ["AL", "BA", "BG", "HR", "XK", "ME", "MK", "RS", "SI", "GR", "RO"], n: ["Balkan", "The Balkans", "De Balkan", "Balkan", "Balkan", "Balkan"] },
+  { id: "vbalkan", codes: ["AL", "BA", "XK", "ME", "MK", "RS"], n: ["Vest-Balkan", "Western Balkans", "West-Balkan", "Westbalkan", "Västra Balkan", "Vestbalkan"] },
+  { id: "brit", codes: ["GB", "IE", "IM", "JE", "GG"], n: ["Britiske øyer", "British Isles", "Britse Eilanden", "Britische Inseln", "Brittiska öarna", "Britiske øer"] },
+  { id: "iberia", codes: ["ES", "PT", "AD", "GI"], n: ["Iberia", "Iberia", "Iberië", "Iberische Halbinsel", "Iberiska halvön", "Den Iberiske Halvø"] },
+  { id: "alpene", codes: ["AT", "CH", "LI", "DE", "IT", "FR", "SI", "MC"], n: ["Alpene", "The Alps", "De Alpen", "Die Alpen", "Alperna", "Alperne"] },
+  { id: "dach", codes: ["DE", "AT", "CH"], n: ["DACH", "DACH", "DACH", "DACH", "DACH", "DACH"] },
+  { id: "visegrad", codes: ["PL", "CZ", "SK", "HU"], n: ["Visegrád-landene", "The Visegrád Group", "De Visegrád-landen", "Die Visegrád-Staaten", "Visegrádländerna", "Visegrád-landene"] },
+  { id: "middelhav", codes: ["ES", "FR", "MC", "IT", "MT", "SI", "HR", "BA", "ME", "AL", "GR", "TR", "CY", "SY", "LB", "IL", "EG", "LY", "TN", "DZ", "MA"], n: ["Middelhavet rundt", "Around the Mediterranean", "Rond de Middellandse Zee", "Rund ums Mittelmeer", "Runt Medelhavet", "Rundt om Middelhavet"] },
+  { id: "micro", codes: ["AD", "LI", "MC", "SM", "VA", "MT"], n: ["Europas mikrostater", "Europe's microstates", "Europese dwergstaten", "Europas Zwergstaaten", "Europas mikrostater", "Europas mikrostater"] },
+  { id: "eu", codes: ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"], n: ["Alle EU-land", "All EU countries", "Alle EU-landen", "Alle EU-Länder", "Alla EU-länder", "Alle EU-lande"] },
+  { id: "kaukasus", codes: ["GE", "AM", "AZ"], n: ["Kaukasus", "The Caucasus", "De Kaukasus", "Kaukasus", "Kaukasus", "Kaukasus"] },
+  { id: "centasia", codes: ["KZ", "KG", "TJ", "TM", "UZ"], n: ["Sentral-Asia", "Central Asia", "Centraal-Azië", "Zentralasien", "Centralasien", "Centralasien"] },
+  { id: "seasia", codes: ["BN", "KH", "ID", "LA", "MY", "MM", "PH", "SG", "TH", "TL", "VN"], n: ["Sørøst-Asia", "Southeast Asia", "Zuidoost-Azië", "Südostasien", "Sydostasien", "Sydøstasien"] },
+  { id: "indokina", codes: ["TH", "VN", "KH", "LA", "MM"], n: ["Indokina", "Indochina", "Indochina", "Indochina", "Indokina", "Indokina"] },
+  { id: "sasia", codes: ["IN", "PK", "BD", "LK", "NP", "BT", "MV", "AF"], n: ["Sør-Asia", "South Asia", "Zuid-Azië", "Südasien", "Sydasien", "Sydasien"] },
+  { id: "easia", codes: ["JP", "KR", "CN", "TW", "MN"], n: ["Øst-Asia", "East Asia", "Oost-Azië", "Ostasien", "Östasien", "Østasien"] },
+  { id: "golf", codes: ["SA", "AE", "QA", "KW", "BH", "OM"], n: ["Golfstatene", "The Gulf states", "De Golfstaten", "Die Golfstaaten", "Golfstaterna", "Golfstaterne"] },
+  { id: "levant", codes: ["LB", "SY", "JO", "IL", "PS"], n: ["Levanten", "The Levant", "De Levant", "Die Levante", "Levanten", "Levanten"] },
+  { id: "maghreb", codes: ["MA", "DZ", "TN", "LY", "MR"], n: ["Maghreb", "The Maghreb", "De Maghreb", "Maghreb", "Maghreb", "Maghreb"] },
+  { id: "oafrika", codes: ["KE", "TZ", "UG", "RW", "BI", "ET"], n: ["Øst-Afrika", "East Africa", "Oost-Afrika", "Ostafrika", "Östafrika", "Østafrika"] },
+  { id: "vafrika", codes: ["SN", "GM", "GN", "GW", "SL", "LR", "CI", "GH", "TG", "BJ", "NG", "BF", "ML", "NE", "CV"], n: ["Vest-Afrika", "West Africa", "West-Afrika", "Westafrika", "Västafrika", "Vestafrika"] },
+  { id: "safrika", codes: ["ZA", "NA", "BW", "ZW", "ZM", "MZ", "LS", "SZ"], n: ["Det sørlige Afrika", "Southern Africa", "Zuidelijk Afrika", "Südliches Afrika", "Södra Afrika", "Det sydlige Afrika"] },
+  { id: "indiahav", codes: ["MG", "MU", "SC", "KM", "MV"], n: ["Øyer i Indiahavet", "Indian Ocean islands", "Eilanden in de Indische Oceaan", "Inseln im Indischen Ozean", "Öar i Indiska oceanen", "Øer i Det Indiske Ocean"] },
+  { id: "stillehav", codes: ["FJ", "WS", "TO", "VU", "SB", "PG", "KI", "TV", "NR", "MH", "FM", "PW"], n: ["Stillehavsøyene", "The Pacific islands", "De Pacifische eilanden", "Pazifische Inselstaaten", "Stillahavsöarna", "Stillehavsøerne"] },
+  { id: "melam", codes: ["GT", "BZ", "HN", "SV", "NI", "CR", "PA"], n: ["Mellom-Amerika", "Central America", "Midden-Amerika", "Mittelamerika", "Centralamerika", "Mellemamerika"] },
+  { id: "karibia", codes: ["CU", "JM", "HT", "DO", "BS", "BB", "TT", "AG", "DM", "GD", "KN", "LC", "VC"], n: ["Karibia", "The Caribbean", "De Caraïben", "Karibik", "Karibien", "Caribien"] },
+  { id: "nordam", codes: ["US", "CA", "MX"], n: ["USA, Canada og Mexico", "USA, Canada and Mexico", "VS, Canada en Mexico", "USA, Kanada und Mexiko", "USA, Kanada och Mexiko", "USA, Canada og Mexico"] },
+  { id: "andes", codes: ["CO", "EC", "PE", "BO", "CL", "VE", "AR"], n: ["Andes-landene", "The Andean countries", "De Andeslanden", "Die Andenländer", "Andesländerna", "Andeslandene"] },
+  { id: "samerika", codes: ["AR", "BO", "BR", "CL", "CO", "EC", "GY", "PY", "PE", "SR", "UY", "VE"], n: ["Hele Sør-Amerika", "All of South America", "Heel Zuid-Amerika", "Ganz Südamerika", "Hela Sydamerika", "Hele Sydamerika"] },
+];
+var CH_LANGS = ["no", "en", "nl", "de", "sv", "da"];
+
+var Ch_REG = { p: null, dec: new Map(), memo: new Map() };
+function ChLoadRegions() {
+  return window.CH_REGIONS
+    ? Promise.resolve(window.CH_REGIONS)
+    : Ch_REG.p ||
+        (Ch_REG.p = new Promise((ok, no) => {
+          let sc = document.createElement("script");
+          ((sc.src = "regions.js?v=" + (window.__CH_REGIONS_V || "1")),
+            (sc.async = !0),
+            (sc.onload = () => (window.CH_REGIONS ? ok(window.CH_REGIONS) : ((Ch_REG.p = null), no(new Error("regions")))) ),
+            (sc.onerror = () => ((Ch_REG.p = null), no(new Error("regions")))),
+            document.head.appendChild(sc));
+        }));
+}
+function ChNeedsRegions(visits) {
+  return (visits || []).some((v) => {
+    if (v.lat == null || v.lng == null) return !1;
+    let c = yc(v.country);
+    return !!(c && CH_REG_META[c.code]);
+  });
+}
+function ChRegPolys(cc, r) {
+  let key = cc + ":" + r[0],
+    d = Ch_REG.dec.get(key);
+  if (!d) {
+    d = r[3].map((rings) =>
+      rings.map((flat) => {
+        let n = flat.length / 2,
+          a = new Float64Array(n * 2),
+          x = flat[0],
+          y = flat[1];
+        ((a[0] = x / 1000), (a[1] = y / 1000));
+        for (let i = 1; i < n; i++) {
+          ((x += flat[2 * i]), (y += flat[2 * i + 1]));
+          ((a[2 * i] = x / 1000), (a[2 * i + 1] = y / 1000));
+        }
+        return a;
+      }),
+    );
+    Ch_REG.dec.set(key, d);
+  }
+  return d;
+}
+function ChRingHas(a, x, y) {
+  let n = a.length / 2,
+    ins = !1;
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    let xi = a[2 * i],
+      yi = a[2 * i + 1],
+      xj = a[2 * j],
+      yj = a[2 * j + 1];
+    yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi && (ins = !ins);
+  }
+  return ins;
+}
+function ChRingDist2(a, x, y, k) {
+  let n = a.length / 2,
+    best = 1e9;
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    let ax = a[2 * j] * k,
+      ay = a[2 * j + 1],
+      bx = a[2 * i] * k,
+      by = a[2 * i + 1],
+      dx = bx - ax,
+      dy = by - ay,
+      l2 = dx * dx + dy * dy,
+      t = l2 ? Math.max(0, Math.min(1, ((x * k - ax) * dx + (y - ay) * dy) / l2)) : 0,
+      ex = ax + t * dx - x * k,
+      ey = ay + t * dy - y,
+      d2 = ex * ex + ey * ey;
+    d2 < best && (best = d2);
+  }
+  return best;
+}
+/* Finner regionen en posisjon ligger i. Treffer ingen, tas naermeste region
+   hvis den er helt inntil (havneplasser og kystbyer ligger ofte like utenfor
+   den forenklede grensen). */
+function ChRegionOf(cc, lat, lng) {
+  let data = window.CH_REGIONS && window.CH_REGIONS.c[cc];
+  if (!data) return null;
+  let key = cc + "|" + lat.toFixed(3) + "," + lng.toFixed(3);
+  if (Ch_REG.memo.has(key)) return Ch_REG.memo.get(key);
+  let hit = null;
+  for (let r of data.r) {
+    let b = r[2];
+    if (lng * 1000 < b[0] || lng * 1000 > b[2] || lat * 1000 < b[1] || lat * 1000 > b[3]) continue;
+    let polys = ChRegPolys(cc, r);
+    if (polys.some((rings) => rings.filter((a) => ChRingHas(a, lng, lat)).length % 2 === 1)) {
+      hit = r;
+      break;
+    }
+  }
+  if (!hit) {
+    let thr = data.m ? 0.05 : 0.15,
+      k = Math.cos((lat * Math.PI) / 180),
+      best = thr * thr;
+    for (let r of data.r) {
+      let b = r[2];
+      if (lng * 1000 < b[0] - thr * 1000 || lng * 1000 > b[2] + thr * 1000 || lat * 1000 < b[1] - thr * 1000 || lat * 1000 > b[3] + thr * 1000) continue;
+      for (let rings of ChRegPolys(cc, r))
+        for (let a of rings) {
+          let d2 = ChRingDist2(a, lng, lat, k);
+          d2 <= best && ((best = d2), (hit = r));
+        }
+    }
+  }
+  Ch_REG.memo.set(key, hit);
+  return hit;
+}
+/* Gir {landkode: {all:Set(regioner), par:Set(fylker), byPar:{fylke:Set(kommuner)}}}.
+   null hvis grensedataene ikke er lastet enna. */
+function ChRegionHits(visits) {
+  if (!ChNeedsRegions(visits)) return {};
+  if (!window.CH_REGIONS) return null;
+  let out = {};
+  for (let v of visits) {
+    if (v.lat == null || v.lng == null) continue;
+    let c = yc(v.country);
+    if (!c || !CH_REG_META[c.code]) continue;
+    let lat = +v.lat,
+      lng = +v.lng;
+    if (!isFinite(lat) || !isFinite(lng)) continue;
+    let r = ChRegionOf(c.code, lat, lng);
+    if (!r) continue;
+    let h = out[c.code] || (out[c.code] = { all: new Set(), par: new Set(), byPar: {} });
+    h.all.add(r[0]);
+    if (r[1]) {
+      h.par.add(r[1]);
+      (h.byPar[r[1]] || (h.byPar[r[1]] = new Set())).add(r[0]);
+    }
+  }
+  return out;
+}
+/* Klar = grensedataene er hentet (eller trengs ikke). */
+function useChRegReady(visits) {
+  let need = (0, U.useMemo)(() => !!visits && ChNeedsRegions(visits), [visits]),
+    [ok, setOk] = (0, U.useState)(!!window.CH_REGIONS);
+  (0, U.useEffect)(() => {
+    if (!need || ok) return;
+    let alive = !0;
+    return (
+      ChLoadRegions()
+        .then(() => alive && setOk(!0))
+        .catch(() => {}),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [need, ok]);
+  return !need || ok;
+}
+function useChRegHits(visits) {
+  let ready = useChRegReady(visits);
+  return (0, U.useMemo)(() => (visits && ready ? ChRegionHits(visits) : null), [visits, ready]);
+}
+
 function ChDayKey(v) {
   // Bruker datoen du har satt. Er den ikke satt, teller besoket ikke i dagbaserte merker.
   return v && v.visited_on ? String(v.visited_on).slice(0, 10) : null;
@@ -3730,7 +4006,7 @@ function ChPerfectWeek(days) {
 
 /* Regner ut alle merkene fra innsjekkene. Ingenting lagres: endrer du et sted,
    endrer merkene seg med. */
-function ChBadges(visits, lang) {
+function ChBadges(visits, lang, reg) {
   let codes = new Set(),
     days = [],
     perDay = new Map(),
@@ -3943,6 +4219,79 @@ function ChBadges(visits, lang) {
       icon: "moon",
       earned: night,
     }));
+  /* Regioner: fylker, kommuner, delstater ... (reg = treff fra ChRegionHits, eller null mens grensene lastes) */
+  {
+    let li = Math.max(0, CH_LANGS.indexOf(lang)),
+      prog = (k, n) => " " + P(lang, "reg_progress", { k, n }),
+      add = (o, k, n) => out.push({ ...o, earned: k >= n, desc: o.desc + (k >= n ? "" : prog(k, n)) });
+    for (let cc of Object.keys(CH_REG_META)) {
+      let [u, mu, np, nk] = CH_REG_META[cc],
+        c = vc.find((x) => x.code === cc);
+      if (!c) continue;
+      let h = reg && reg[cc],
+        fl = l8(c.name),
+        note = cc === "FI" ? " " + P(lang, "reg_fi_note") : "",
+        unit = ChUnit(u, lang);
+      if (mu) {
+        let munit = ChUnit(mu, lang),
+          kp = h ? h.par.size : 0,
+          km = h ? h.all.size : 0;
+        add(
+          { id: "reg-" + cc + "-u", group: "special", label: P(lang, "b_reg_all", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: np, units: unit, country: c.name }) },
+          kp,
+          np,
+        );
+        for (let n of CH_REG_MILE[cc] || [])
+          add(
+            { id: "reg-" + cc + "-m-" + n, group: "special", label: P(lang, "b_reg_n", { n, units: munit, country: c.name }), num: n, flag: fl, desc: P(lang, "d_reg_n", { n, units: munit, country: c.name }) },
+            km,
+            n,
+          );
+        add(
+          { id: "reg-" + cc + "-m", group: "special", label: P(lang, "b_reg_all", { units: munit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: munit, country: c.name }) },
+          km,
+          nk,
+        );
+        if (cc === "NO")
+          for (let id of Object.keys(CH_NO_FYLKE)) {
+            let [nm, tot] = CH_NO_FYLKE[id];
+            if (tot < 2) continue;
+            add(
+              { id: "reg-NO-f-" + id, group: "special", label: P(lang, "b_reg_all", { units: munit, country: nm }), flag: fl, desc: P(lang, "d_reg_all", { n: tot, units: munit, country: nm }) },
+              h && h.byPar[id] ? h.byPar[id].size : 0,
+              tot,
+            );
+          }
+      } else {
+        let k = h ? h.all.size : 0;
+        add(
+          { id: "reg-" + cc + "-all", group: "special", label: P(lang, "b_reg_all", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: unit, country: c.name }) + note },
+          k,
+          nk,
+        );
+        if (nk >= 10) {
+          let half = Math.ceil(nk / 2);
+          add(
+            { id: "reg-" + cc + "-half", group: "special", label: P(lang, "b_reg_half", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_half", { n: half, t: nk, units: unit, country: c.name }) },
+            k,
+            half,
+          );
+        }
+      }
+    }
+    // Landgrupper
+    let gbOk = codes.has("GB") || ["GB-ENG", "GB-SCT", "GB-WLS", "GB-NIR"].every((x) => codes.has(x)),
+      has = (x) => (x === "GB" ? gbOk : codes.has(x));
+    for (let g of CH_GROUPS) {
+      let k = g.codes.filter(has).length,
+        names = g.codes.map((x) => (vc.find((y) => y.code === x) || { name: x }).name).join(", ");
+      add(
+        { id: "grp-" + g.id, group: "special", label: g.n[li], sym: "\u{1F30D}", desc: P(lang, "d_group", { n: g.codes.length, list: names }) },
+        k,
+        g.codes.length,
+      );
+    }
+  }
   return out;
 }
 
@@ -5762,7 +6111,17 @@ function ChBadgeFace({ b, size: sz = 56 }) {
               },
               children: b.num,
             })
-          : (0, T.jsx)("span", {
+          : b.flag
+            ? (0, T.jsx)("span", {
+                style: { display: "flex", opacity: on ? 1 : 0.35 },
+                children: ChFlag({ value: b.flag, size: Math.round(sz * 0.46) }),
+              })
+            : b.sym
+              ? (0, T.jsx)("span", {
+                  style: { fontSize: Math.round(sz * 0.44), lineHeight: 1, opacity: on ? 1 : 0.35 },
+                  children: b.sym,
+                })
+              : (0, T.jsx)("span", {
               style: { fontSize: Math.round(sz * 0.4), color: ink, lineHeight: 1 },
               children: "\u2605",
             }),
@@ -5788,7 +6147,8 @@ function ChBadgesPanel({ uid, meId, onClose }) {
       }
     );
   }, [uid]);
-  let all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang) : []), [visits, lang]),
+  let chReg = useChRegHits(visits),
+    all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang, chReg) : []), [visits, lang, chReg]),
     mine = all.filter((b) => b.group === tab),
     sorted = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
     shown = hide && tab !== "special" ? sorted.filter((b) => b.earned) : sorted,
@@ -5992,7 +6352,8 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
       }
     );
   }, [uid, meId, mine]);
-  let badgeAll = (0, U.useMemo)(() => ChBadges(visits, lang), [visits, lang]),
+  let chReg = useChRegHits(visits),
+    badgeAll = (0, U.useMemo)(() => ChBadges(visits, lang, chReg), [visits, lang, chReg]),
     badgeGot = badgeAll.filter((b) => b.earned).length,
     badgePeek = badgeAll.filter((b) => b.earned).slice(-3),
     fav = (0, U.useMemo)(
@@ -7071,12 +7432,13 @@ function n5({ session: e, onLogout: t }) {
       alive = !1;
     };
   }, [e.user.id]);
+  let chRegMain = useChRegHits(h ? null : l);
   /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
      alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
   (0, U.useEffect)(() => {
-    if (h) return;
+    if (h || !chRegMain) return;
     let F = "ch_badges_" + e.user.id,
-      te = ChBadges(l, n).filter((at) => at.earned),
+      te = ChBadges(l, n, chRegMain).filter((at) => at.earned),
       Se = te.map((at) => at.id),
       gt = null;
     try {
@@ -7090,7 +7452,7 @@ function n5({ session: e, onLogout: t }) {
     try {
       localStorage.setItem(F, JSON.stringify(Se));
     } catch {}
-  }, [l, n, h, e.user.id]);
+  }, [l, n, h, e.user.id, chRegMain]);
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
       (D(P(n, "err_no_geo")), M(!0));
@@ -8533,7 +8895,7 @@ function s5({ session: e, onOpen: chOpen }) {
     [v, y] = (0, U.useState)("");
   (0, U.useEffect)(() => {
     (async () => {
-      let { data: N, error: M } = await ze.from("visits").select("user_id, country, place, rating, osm_id");
+      let { data: N, error: M } = await ze.from("visits").select("user_id, country, place, rating, osm_id, lat, lng, visited_on, created_at, photos, comment");
       if (M) {
         (y(P(t, "err_load_leaderboard")), r(!1));
         return;
@@ -8581,7 +8943,21 @@ function s5({ session: e, onOpen: chOpen }) {
     let M = yc(N.country);
     return !M || !M.capital ? !1 : ChKey(N.place, N.country) === ChKey(M.capital, N.country);
   }
-  let b = (0, U.useMemo)(
+  let chRegReady = useChRegReady(s),
+    chFeats = (0, U.useMemo)(
+      () =>
+        chRegReady
+          ? [...m.entries()]
+              .map(([N, M]) => ({
+                id: N,
+                name: k(N),
+                value: ChBadges(M.places, t, ChRegionHits(M.places)).filter((x) => x.group === "special" && x.earned).length,
+              }))
+              .sort((N, M) => M.value - N.value || N.name.localeCompare(M.name, "nb"))
+          : null,
+      [m, c, chRegReady, t],
+    ),
+    b = (0, U.useMemo)(
       () =>
         [...m.entries()]
           .map(([N, M]) => {
@@ -8785,6 +9161,9 @@ function s5({ session: e, onOpen: chOpen }) {
                   (0, T.jsx)(D, { title: P(t, "board_countries"), board: A }),
                   (0, T.jsx)(D, { title: P(t, "board_places"), board: R }),
                   (0, T.jsx)(D, { title: P(t, "board_capitals"), board: b }),
+                  chFeats
+                    ? (0, T.jsx)(D, { title: P(t, "board_badges"), board: chFeats })
+                    : (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15 }, children: P(t, "loading_leaderboards") }),
                 ],
               }),
         ],

@@ -361,6 +361,33 @@ function yc(e) {
   }
   return null;
 }
+/* Landnavn lagres på norsk i databasen. ChCN gir navnet på appens språk (kun visning). */
+var ChCNcache = {};
+var ChCNspecial = {
+  "GB-ENG": { en: "England", nl: "Engeland", de: "England", sv: "England", da: "England" },
+  "GB-SCT": { en: "Scotland", nl: "Schotland", de: "Schottland", sv: "Skottland", da: "Skotland" },
+  "GB-WLS": { en: "Wales", nl: "Wales", de: "Wales", sv: "Wales", da: "Wales" },
+  "GB-NIR": { en: "Northern Ireland", nl: "Noord-Ierland", de: "Nordirland", sv: "Nordirland", da: "Nordirland" },
+};
+function ChCN(chName) {
+  if (!chName || typeof chName !== "string") return chName;
+  let chLang = u8;
+  if (!chLang || chLang === "no") return chName;
+  let chKey = chLang + "|" + chName;
+  if (ChCNcache[chKey] !== undefined) return ChCNcache[chKey];
+  let chOut = chName;
+  try {
+    let c = vf(chName);
+    if (c) {
+      if (ChCNspecial[c.code]) chOut = ChCNspecial[c.code][chLang] || chName;
+      else if (typeof Intl !== "undefined" && Intl.DisplayNames) chOut = new Intl.DisplayNames([chLang], { type: "region" }).of(c.code) || chName;
+    }
+  } catch {
+    chOut = chName;
+  }
+  ChCNcache[chKey] = chOut;
+  return chOut;
+}
 function l8(e) {
   let t = yc(e);
   return t ? t.flag || s8(t.code) : "\u{1F30D}";
@@ -3440,7 +3467,7 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
                 (0, T.jsx)("div", { style: { fontSize: 20, fontWeight: 700 }, children: e.place }),
                 (0, T.jsx)("div", {
                   style: { color: O.sub, fontSize: 14, marginTop: 2 },
-                  children: e.country,
+                  children: ChCN(e.country),
                 }),
               ],
             }),
@@ -4037,9 +4064,9 @@ function ChBadges(visits, lang, reg) {
     out.push({
       id: "land-" + c.code,
       group: "countries",
-      label: c.name,
+      label: ChCN(c.name),
       flag: l8(c.name),
-      desc: P(lang, "d_country", { name: c.name }),
+      desc: P(lang, "d_country", { name: ChCN(c.name) }),
       earned: codes.has(c.code),
     });
 
@@ -4231,18 +4258,18 @@ function ChBadges(visits, lang, reg) {
           kp = h ? h.par.size : 0,
           km = h ? h.all.size : 0;
         add(
-          { id: "reg-" + cc + "-u", group: "special", label: P(lang, "b_reg_all", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: np, units: unit, country: c.name }) },
+          { id: "reg-" + cc + "-u", group: "special", label: P(lang, "b_reg_all", { units: unit, country: ChCN(c.name) }), flag: fl, desc: P(lang, "d_reg_all", { n: np, units: unit, country: ChCN(c.name) }) },
           kp,
           np,
         );
         for (let n of CH_REG_MILE[cc] || [])
           add(
-            { id: "reg-" + cc + "-m-" + n, group: "special", label: P(lang, "b_reg_n", { n, units: munit, country: c.name }), num: n, flag: fl, desc: P(lang, "d_reg_n", { n, units: munit, country: c.name }) },
+            { id: "reg-" + cc + "-m-" + n, group: "special", label: P(lang, "b_reg_n", { n, units: munit, country: ChCN(c.name) }), num: n, flag: fl, desc: P(lang, "d_reg_n", { n, units: munit, country: ChCN(c.name) }) },
             km,
             n,
           );
         add(
-          { id: "reg-" + cc + "-m", group: "special", label: P(lang, "b_reg_all", { units: munit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: munit, country: c.name }) },
+          { id: "reg-" + cc + "-m", group: "special", label: P(lang, "b_reg_all", { units: munit, country: ChCN(c.name) }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: munit, country: ChCN(c.name) }) },
           km,
           nk,
         );
@@ -4259,7 +4286,7 @@ function ChBadges(visits, lang, reg) {
       } else {
         let k = h ? h.all.size : 0;
         add(
-          { id: "reg-" + cc + "-all", group: "special", label: P(lang, "b_reg_all", { units: unit, country: c.name }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: unit, country: c.name }) + note },
+          { id: "reg-" + cc + "-all", group: "special", label: P(lang, "b_reg_all", { units: unit, country: ChCN(c.name) }), flag: fl, desc: P(lang, "d_reg_all", { n: nk, units: unit, country: ChCN(c.name) }) + note },
           k,
           nk,
         );
@@ -4686,7 +4713,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                       }),
                       (0, T.jsxs)("div", {
                         style: { color: chT ? chT.textDim : O.sub, fontSize: 12, marginTop: 1 },
-                        children: [ChFlag({ value: l8(fav.country), size: 12 }), " ", fav.country],
+                        children: [ChFlag({ value: l8(fav.country), size: 12 }), " ", ChCN(fav.country)],
                       }),
                     ],
                   }),
@@ -5632,7 +5659,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
     };
   }, [visits, csel]);
 
-  let cMatches = !csel && cq.trim() ? vc.filter((c) => c.name.toLowerCase().includes(cq.trim().toLowerCase())).slice(0, 8) : [];
+  let cMatches = !csel && cq.trim() ? vc.filter((c) => (c.name + " " + ChCN(c.name)).toLowerCase().includes(cq.trim().toLowerCase())).slice(0, 8) : [];
 
   let月 = null;
   return (0, T.jsx)(ChPanel, {
@@ -5690,7 +5717,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
                               cursor: "pointer",
                               fontFamily: "inherit",
                             },
-                            children: c.name,
+                            children: ChCN(c.name),
                           },
                           c.code
                         )
@@ -5702,7 +5729,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
                         (0, T.jsxs)("div", {
                           style: { display: "flex", alignItems: "center", justifyContent: "space-between", margin: "2px 0 8px" },
                           children: [
-                            (0, T.jsx)("span", { style: { fontSize: 15, fontWeight: 700 }, children: csel.name }),
+                            (0, T.jsx)("span", { style: { fontSize: 15, fontWeight: 700 }, children: ChCN(csel.name) }),
                             (0, T.jsx)("button", {
                               onClick: () => {
                                 (setCsel(null), setCq(""));
@@ -5715,7 +5742,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
                         !cstat || cstat.n === 0
                           ? (0, T.jsx)("p", {
                               style: { color: O.sub, fontSize: 14, lineHeight: 1.5 },
-                              children: P(lang, "st_country_none", { name: csel.name }),
+                              children: P(lang, "st_country_none", { name: ChCN(csel.name) }),
                             })
                           : (0, T.jsxs)(T.Fragment, {
                               children: [
@@ -5739,33 +5766,33 @@ function ChStatsPanel({ uid, meId, onClose }) {
                     }),
                 ],
               }),
-              ChStatRow({ label: P(lang, "st_north"), value: st.north ? st.north.place : "\u2013", sub: st.north && st.north.country }),
-              ChStatRow({ label: P(lang, "st_south"), value: st.south ? st.south.place : "\u2013", sub: st.south && st.south.country }),
-              ChStatRow({ label: P(lang, "st_east"), value: st.east ? st.east.place : "\u2013", sub: st.east && st.east.country }),
-              ChStatRow({ label: P(lang, "st_west"), value: st.west ? st.west.place : "\u2013", sub: st.west && st.west.country }),
-              ChStatRow({ label: P(lang, "st_cap_north"), value: st.capNorth ? st.capNorth.place : "\u2013", sub: st.capNorth && st.capNorth.country }),
-              ChStatRow({ label: P(lang, "st_cap_south"), value: st.capSouth ? st.capSouth.place : "\u2013", sub: st.capSouth && st.capSouth.country }),
-              ChStatRow({ label: P(lang, "st_cap_east"), value: st.capEast ? st.capEast.place : "\u2013", sub: st.capEast && st.capEast.country }),
-              ChStatRow({ label: P(lang, "st_cap_west"), value: st.capWest ? st.capWest.place : "\u2013", sub: st.capWest && st.capWest.country }),
+              ChStatRow({ label: P(lang, "st_north"), value: st.north ? st.north.place : "\u2013", sub: st.north && ChCN(st.north.country) }),
+              ChStatRow({ label: P(lang, "st_south"), value: st.south ? st.south.place : "\u2013", sub: st.south && ChCN(st.south.country) }),
+              ChStatRow({ label: P(lang, "st_east"), value: st.east ? st.east.place : "\u2013", sub: st.east && ChCN(st.east.country) }),
+              ChStatRow({ label: P(lang, "st_west"), value: st.west ? st.west.place : "\u2013", sub: st.west && ChCN(st.west.country) }),
+              ChStatRow({ label: P(lang, "st_cap_north"), value: st.capNorth ? st.capNorth.place : "\u2013", sub: st.capNorth && ChCN(st.capNorth.country) }),
+              ChStatRow({ label: P(lang, "st_cap_south"), value: st.capSouth ? st.capSouth.place : "\u2013", sub: st.capSouth && ChCN(st.capSouth.country) }),
+              ChStatRow({ label: P(lang, "st_cap_east"), value: st.capEast ? st.capEast.place : "\u2013", sub: st.capEast && ChCN(st.capEast.country) }),
+              ChStatRow({ label: P(lang, "st_cap_west"), value: st.capWest ? st.capWest.place : "\u2013", sub: st.capWest && ChCN(st.capWest.country) }),
               ChStatRow({
                 label: P(lang, "st_high"),
                 value: st.high ? st.high.place : "\u2013",
-                sub: st.high && P(lang, "st_masl", { n: Math.round(st.high.elevation) }) + " \u2022 " + st.high.country,
+                sub: st.high && P(lang, "st_masl", { n: Math.round(st.high.elevation) }) + " \u2022 " + ChCN(st.high.country),
               }),
               ChStatRow({
                 label: P(lang, "st_low"),
                 value: st.low ? st.low.place : "\u2013",
-                sub: st.low && P(lang, "st_masl", { n: Math.round(st.low.elevation) }) + " \u2022 " + st.low.country,
+                sub: st.low && P(lang, "st_masl", { n: Math.round(st.low.elevation) }) + " \u2022 " + ChCN(st.low.country),
               }),
               ChStatRow({
                 label: P(lang, "st_cap_high"),
                 value: st.capHigh ? st.capHigh.place : "\u2013",
-                sub: st.capHigh && P(lang, "st_masl", { n: Math.round(st.capHigh.elevation) }) + " \u2022 " + st.capHigh.country,
+                sub: st.capHigh && P(lang, "st_masl", { n: Math.round(st.capHigh.elevation) }) + " \u2022 " + ChCN(st.capHigh.country),
               }),
               ChStatRow({
                 label: P(lang, "st_cap_low"),
                 value: st.capLow ? st.capLow.place : "\u2013",
-                sub: st.capLow && P(lang, "st_masl", { n: Math.round(st.capLow.elevation) }) + " \u2022 " + st.capLow.country,
+                sub: st.capLow && P(lang, "st_masl", { n: Math.round(st.capLow.elevation) }) + " \u2022 " + ChCN(st.capLow.country),
               }),
               ChStatRow({
                 label: P(lang, "st_world"),
@@ -5924,7 +5951,7 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
                                   className: "ch-country",
                                   children: [
                                     ChFlag({ value: g.flag, size: 17 }),
-                                    (0, T.jsx)("span", { style: { flex: 1 }, children: g.land }),
+                                    (0, T.jsx)("span", { style: { flex: 1 }, children: ChCN(g.land) }),
                                     (0, T.jsx)("span", {
                                       style: { fontFamily: "'Fraunces', Georgia, serif" },
                                       children: g.list.length,
@@ -7832,7 +7859,7 @@ function n5({ session: e, onLogout: t }) {
                                 className: "ch-country",
                                 children: [
                                   ChFlag({ value: F.flag, size: 17 }),
-                                  (0, T.jsx)("span", { style: { flex: 1 }, children: F.display }),
+                                  (0, T.jsx)("span", { style: { flex: 1 }, children: ChCN(F.display) }),
                                   (0, T.jsx)("span", {
                                     style: { fontFamily: "'Fraunces', Georgia, serif" },
                                     children: F.list.length,
@@ -8256,7 +8283,7 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
                     onClick: () => {
                       ((y.current = !0), i(m), f(!1));
                     },
-                    children: [m.place, " ", (0, T.jsx)("span", { children: m.country })],
+                    children: [m.place, " ", (0, T.jsx)("span", { children: ChCN(m.country) })],
                   },
                   k,
                 ),
@@ -8333,7 +8360,7 @@ function L8({ value: e, onChange: t, onPick: n, onEnter: i }) {
                     },
                     children: [
                       (0, T.jsx)("span", { style: { marginRight: 8 }, children: ChFlag({ value: f.flag || s8(f.code), size: 15 }) }),
-                      f.name,
+                      ChCN(f.name),
                     ],
                   },
                   f.code,
@@ -8815,7 +8842,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
                         className: "ch-country",
                         children: [
                           ChFlag({ value: v.flag, size: 17 }),
-                          (0, T.jsx)("span", { style: { flex: 1 }, children: v.display }),
+                          (0, T.jsx)("span", { style: { flex: 1 }, children: ChCN(v.display) }),
                           (0, T.jsx)("span", {
                             style: { fontFamily: "'Fraunces', Georgia, serif" },
                             children: v.list.length,
@@ -9143,17 +9170,17 @@ function s5({ session: e, onOpen: chOpen }) {
                         },
                         children: [
                           (0, T.jsx)("option", { value: "", children: P(t, "choose_country") }),
-                          w.map((N) => (0, T.jsx)("option", { value: N, children: N }, N)),
+                          w.map((N) => (0, T.jsx)("option", { value: N, children: ChCN(N) }, N)),
                         ],
                       }),
                     ],
                   }),
                   f &&
                     (0, T.jsx)(chRated, {
-                      title: P(t, "board_top_rated", { country: f }),
+                      title: P(t, "board_top_rated", { country: ChCN(f) }),
                       board: chTop,
                     }),
-                  f && (0, T.jsx)(D, { title: f, board: E }),
+                  f && (0, T.jsx)(D, { title: ChCN(f), board: E }),
                   (0, T.jsx)(D, { title: P(t, "board_countries"), board: A }),
                   (0, T.jsx)(D, { title: P(t, "board_places"), board: R }),
                   (0, T.jsx)(D, { title: P(t, "board_capitals"), board: b }),
@@ -9314,7 +9341,7 @@ function o5({
           style: { background: O.row, borderBottom: `2px solid ${O.gap}`, padding: "10px 16px" },
           children: [
             (0, T.jsx)("div", { style: { fontSize: 16 }, children: xe.place }),
-            (0, T.jsx)("div", { style: { fontSize: 13, color: O.sub }, children: xe.country }),
+            (0, T.jsx)("div", { style: { fontSize: 13, color: O.sub }, children: ChCN(xe.country) }),
           ],
         }),
       (0, T.jsxs)("div", {
@@ -9330,7 +9357,7 @@ function o5({
                   }),
                   (0, T.jsx)("p", {
                     style: { margin: "0 0 12px", color: O.sub, fontSize: 14 },
-                    children: s.country,
+                    children: ChCN(s.country),
                   }),
                   M
                     ? (0, T.jsxs)(T.Fragment, {
@@ -9484,7 +9511,7 @@ function o5({
                       children: [
                         (0, T.jsxs)("span", {
                           style: { flex: 1, fontSize: 15 },
-                          children: [K.place, ", ", K.country],
+                          children: [K.place, ", ", ChCN(K.country)],
                         }),
                         (0, T.jsx)("button", {
                           onClick: () => l(K),
@@ -9566,7 +9593,7 @@ function l5({ pins: e, pickMode: t, onTap: n, onSelect: i, onFail: r, srcIdx: s,
         (Ra.default
           .marker([R.lat, R.lng], { icon: k })
           .on("click", () => i(R.id))
-          .bindPopup(`<strong>${R.place}</strong><br>${R.country}`)
+          .bindPopup(`<strong>${R.place}</strong><br>${ChCN(R.country)}`)
           .addTo(f.current),
           A.push([R.lat, R.lng]));
       }),

@@ -2644,6 +2644,7 @@ var Ch_ADMIN = [
     "grad",
   ],
   Qy = [
+    /\s+(?:(?:metropolitan|rural|city)\s+)?municipality$/i,
     /s\s+stad$/i,
     /\s+stad$/i,
     /s\s+kommun$/i,
@@ -3069,11 +3070,19 @@ var Ch_ALIAS_MAP = (() => {
   return e;
 })();
 
+/* Fjerner engelsk "Municipality"-endelse ("Stockholm Municipality" -> "Stockholm"),
+   ogsaa paa gamle innsjekker som alt er lagret med den lange formen. */
+function ChStripMuni(e) {
+  let s = (e || "").trim(),
+    t = s.replace(/\s+(?:(?:metropolitan|rural|city)\s+)?municipality$/i, "").trim();
+  return t || s;
+}
+
 function ChCanon(e, t) {
   let n = yc(t),
     i = n ? n.code : "",
-    r = Ch_ALIAS_MAP.get(i + "|" + ChFold(e));
-  return r || (e || "").trim();
+    r = Ch_ALIAS_MAP.get(i + "|" + ChFold(e)) || Ch_ALIAS_MAP.get(i + "|" + ChFold(ChStripMuni(e)));
+  return r || ChStripMuni(e);
 }
 
 function ChKey(e, t) {

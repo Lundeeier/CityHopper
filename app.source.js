@@ -3473,7 +3473,7 @@ function ChSheet({ visit: e, uid: t, readOnly: n = !1, onSave: i, onDelete: r, o
             (0, T.jsxs)("div", {
               style: { flex: 1 },
               children: [
-                (0, T.jsx)("div", { style: { fontSize: 20, fontWeight: 700 }, children: e.place }),
+                (0, T.jsx)("div", { style: { fontSize: 20, fontWeight: 700 }, children: ChCanon(e.place, e.country) }),
                 (0, T.jsx)("div", {
                   style: { color: O.sub, fontSize: 14, marginTop: 2 },
                   children: ChCN(e.country),
@@ -4590,7 +4590,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                   },
                   children: [
                     ChFlag({ value: l8(v.country), size: 14 }),
-                    (0, T.jsx)("span", { style: { flex: 1, minWidth: 0 }, children: v.place }),
+                    (0, T.jsx)("span", { style: { flex: 1, minWidth: 0 }, children: ChCanon(v.place, v.country) }),
                     v.rating != null &&
                       (0, T.jsx)("span", {
                         style: {
@@ -4718,7 +4718,7 @@ function ChFavCard({ lang, fav, favPhoto, mine, pick, setPick, visits, saveFav, 
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
                         },
-                        children: fav.place,
+                        children: ChCanon(fav.place, fav.country),
                       }),
                       (0, T.jsxs)("div", {
                         style: { color: chT ? chT.textDim : O.sub, fontSize: 12, marginTop: 1 },
@@ -5998,7 +5998,7 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
                                               textOverflow: "ellipsis",
                                               whiteSpace: "nowrap",
                                             },
-                                            children: v.place,
+                                            children: ChCanon(v.place, v.country),
                                           }),
                                           v.photos &&
                                             v.photos.length > 0 &&
@@ -7042,7 +7042,7 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
               key: "c" + v.id,
               user: u,
               open: { type: "feed", place: v.place, country: v.country, osm: v.osm_id || null },
-              text: P(lang, "notif_checkin", { name: u ? u.username : "", place: v.place }),
+              text: P(lang, "notif_checkin", { name: u ? u.username : "", place: ChCanon(v.place, v.country) }),
             });
           }));
         (alive && setItems(out),
@@ -7907,7 +7907,7 @@ function n5({ session: e, onLogout: t }) {
                                               textOverflow: "ellipsis",
                                               whiteSpace: "nowrap",
                                             },
-                                            children: te.place,
+                                            children: ChCanon(te.place, te.country),
                                           }),
                                           te.photos &&
                                             te.photos.length > 0 &&
@@ -8880,7 +8880,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
                                 cursor: "pointer",
                               },
                               children: [
-                                (0, T.jsx)("span", { style: { flex: 1 }, children: y.place }),
+                                (0, T.jsx)("span", { style: { flex: 1 }, children: ChCanon(y.place, y.country) }),
                                 y.photos &&
                                   y.photos.length > 0 &&
                                   (0, T.jsx)("span", {
@@ -9602,7 +9602,7 @@ function l5({ pins: e, pickMode: t, onTap: n, onSelect: i, onFail: r, srcIdx: s,
         (Ra.default
           .marker([R.lat, R.lng], { icon: k })
           .on("click", () => i(R.id))
-          .bindPopup(`<strong>${R.place}</strong><br>${ChCN(R.country)}`)
+          .bindPopup(`<strong>${ChCanon(R.place, R.country)}</strong><br>${ChCN(R.country)}`)
           .addTo(f.current),
           A.push([R.lat, R.lng]));
       }),

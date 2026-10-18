@@ -409,6 +409,17 @@ function ChFlag({ value: chV, size: chSz }) {
    endrer fargene overalt. ChTheme2 er samme objekt under et annet navn, brukt
    av komponenter som ble migrert til de nye feltnavnene (hair/surface/textDim
    osv.) da Profil-skjermen fikk det nye designet først. */
+/* Startspraak foerste gang: telefonens spraak hvis vi stoetter den, ellers engelsk. */
+function ChDefaultLang() {
+  try {
+    let l = String((navigator.languages && navigator.languages[0]) || navigator.language || "")
+      .toLowerCase()
+      .slice(0, 2);
+    if (l === "nb" || l === "nn" || l === "no") return "no";
+    if (["en", "nl", "de", "sv", "da"].indexOf(l) >= 0) return l;
+  } catch {}
+  return "en";
+}
 var O = {
     bg: "#1A1714",
     bar: "#1A1714",
@@ -2436,7 +2447,7 @@ var O = {
       privacy_note: "Ved at bruge CityHopper accepterer du privatlivspolitikken.",
     },
   },
-  u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || "no",
+  u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || ChDefaultLang(),
   bf = new Set();
 function Fy(e) {
   u8 = e;
@@ -2705,8 +2716,32 @@ function ChOsm(hit) {
     : null;
 }
 
+/* Samme navn + land regnes som samme sted hvis posisjonene ligger naer hverandre
+   (under 50 km, eller hvis posisjon mangler). Samme navn langt fra hverandre
+   (f.eks. to "Vik") blir to ulike steder. Ankerpunkter huskes mellom kall. */
+var ChAnchors = new Map();
 function ChKeyOf(v) {
-  return v && v.osm_id ? "#" + v.osm_id : ChKey(v ? v.place : "", v ? v.country : "");
+  let base = ChKey(v ? v.place : "", v ? v.country : ""),
+    lat = v && v.lat != null ? Number(v.lat) : NaN,
+    lng = v && v.lng != null ? Number(v.lng) : NaN,
+    has = isFinite(lat) && isFinite(lng),
+    list = ChAnchors.get(base);
+  list || ChAnchors.set(base, (list = []));
+  for (let i = 0; i < list.length; i++) {
+    let a = list[i];
+    if (a.lat == null) {
+      if (has) {
+        a.lat = lat;
+        a.lng = lng;
+      }
+      return base + "#" + i;
+    }
+    if (!has) return base + "#" + i;
+    let d = ChDistKm(a.lat, a.lng, lat, lng);
+    if (d != null && d < 50) return base + "#" + i;
+  }
+  list.push({ lat: has ? lat : null, lng: has ? lng : null });
+  return base + "#" + (list.length - 1);
 }
 
 function ChDistKm(lat1, lng1, lat2, lng2) {
@@ -3078,9 +3113,14 @@ var Ch_ALIAS_MAP = (() => {
 
 /* Fjerner engelsk "Municipality"-endelse ("Stockholm Municipality" -> "Stockholm"),
    ogsaa paa gamle innsjekker som alt er lagret med den lange formen. */
+function ChEsc(x) {
+  return String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
 function ChStripMuni(e) {
-  let s = (e || "").trim(),
-    t = s.replace(/\s+(?:(?:metropolitan|rural|city)\s+)?municipality$/i, "").trim();
+  let s = String(e || "").trim();
+  /* Lange tekster (misbruk) hoppes over: unngaar tregt regex-oppslag paa fremmede data. */
+  if (s.length > 200) return s;
+  let t = s.replace(/\s+(?:(?:metropolitan|rural|city)\s+)?municipality$/i, "").trim();
   return t || s;
 }
 
@@ -5056,36 +5096,31 @@ function ChSettings({ meId, onClose, onLogout }) {
       }),
       note && (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, margin: "6px 0 0" }, children: note }),
       (0, T.jsx)("div", {
-        style: {
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 8,
-          margin: "24px 0 0",
-          borderTop: `1px solid ${O.line}`,
-          paddingTop: 20,
-        },
-        children: ["no", "en", "nl", "de", "sv", "da"].map((code) =>
-          (0, T.jsx)(
-            "button",
-            {
-              onClick: () => setLang(code),
-              style: {
-                flex: "1 1 28%",
-                background: "none",
-                border: `1px solid ${lang === code ? O.nav : O.line}`,
-                borderRadius: 10,
-                color: lang === code ? O.nav : O.sub,
-                fontFamily: "inherit",
-                fontSize: 14,
-                fontWeight: lang === code ? 600 : 400,
-                padding: "11px 0",
-                cursor: "pointer",
-              },
-              children: code.toUpperCase(),
-            },
-            code,
-          ),
-        ),
+        style: { margin: "24px 0 0", borderTop: `1px solid ${O.line}`, paddingTop: 20 },
+        children: (0, T.jsx)("select", {
+          value: lang,
+          "aria-label": "Language",
+          onChange: (ev) => setLang(ev.target.value),
+          style: {
+            width: "100%",
+            background: O.bg,
+            border: `1px solid ${O.line}`,
+            borderRadius: 10,
+            color: O.text,
+            fontFamily: "inherit",
+            fontSize: 16,
+            padding: "12px 10px",
+            cursor: "pointer",
+          },
+          children: [
+            ["no", "Norsk"],
+            ["en", "English"],
+            ["nl", "Nederlands"],
+            ["de", "Deutsch"],
+            ["sv", "Svenska"],
+            ["da", "Dansk"],
+          ].map((l) => (0, T.jsx)("option", { value: l[0], children: l[1] }, l[0])),
+        }),
       }),
       (0, T.jsx)(ChBlockedList, { lang, meId }),
       (0, T.jsx)("div", { style: { marginTop: 18, textAlign: "center" }, children: (0, T.jsx)(ChPrivacyLink, { lang }) }),
@@ -6044,6 +6079,50 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
           readOnly: !0,
           onClose: () => chSetSheet(null),
         }),
+    ],
+  });
+}
+
+/* Bekreftelse foer en venneforespørsel sendes fra en invitasjonslenke. */
+function ChInviteBanner({ lang, who, onYes, onNo }) {
+  let no = !lang || lang === "no",
+    btn = (bg, fg) => ({
+      border: "none",
+      borderRadius: 8,
+      padding: "8px 14px",
+      fontWeight: 700,
+      fontSize: 14,
+      background: bg,
+      color: fg,
+      cursor: "pointer",
+    });
+  return (0, T.jsxs)("div", {
+    style: {
+      position: "fixed",
+      left: 12,
+      right: 12,
+      bottom: "calc(92px + env(safe-area-inset-bottom))",
+      zIndex: 1460,
+      maxWidth: 420,
+      margin: "0 auto",
+      background: O.bar,
+      border: `1px solid ${O.accent}`,
+      borderRadius: 10,
+      padding: 12,
+      fontFamily: "'Archivo', -apple-system, sans-serif",
+    },
+    children: [
+      (0, T.jsx)("div", {
+        style: { fontSize: 15, fontWeight: 600, marginBottom: 10, wordBreak: "break-word" },
+        children: no ? `Legge til ${who.username} som venn?` : `Add ${who.username} as a friend?`,
+      }),
+      (0, T.jsxs)("div", {
+        style: { display: "flex", gap: 8 },
+        children: [
+          (0, T.jsx)("button", { onClick: onYes, style: btn(O.accent, "#000"), children: no ? "Ja, send" : "Yes, send" }),
+          (0, T.jsx)("button", { onClick: onNo, style: btn(O.surface2, "inherit"), children: no ? "Nei" : "No" }),
+        ],
+      }),
     ],
   });
 }
@@ -7114,14 +7193,14 @@ function ChNotifs({ meId, onClose, onOpen, onSeen }) {
 function ChPlaceFeed({ place, country, osm, meId, onClose, onOpen }) {
   let [lang] = Un(),
     [rows, setRows] = (0, U.useState)(null),
-    key = osm ? "#" + osm : ChKey(place, country),
+    key = ChKey(place, country),
     title = ChCanon(place, country);
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
       (async () => {
         let { data: vs } = await ze.from("visits").select("*").eq("country", country);
-        let mine = (vs || []).filter((v) => ChKeyOf(v) === key);
+        let mine = (vs || []).filter((v) => ChKey(v.place, v.country) === key);
         let ids = [...new Set(mine.map((v) => v.user_id))],
           people = new Map();
         if (ids.length) {
@@ -7263,6 +7342,7 @@ function n5({ session: e, onLogout: t }) {
     [chOsm, chSetOsm] = (0, U.useState)(null),
     [chQ, chSetQ] = (0, U.useState)(""),
     [chNytt, chSetNytt] = (0, U.useState)(null),
+    [chInv, chSetInv] = (0, U.useState)(null),
     [chAsk, chSetAsk] = (0, U.useState)(!1),
     [chView, chSetView] = (0, U.useState)(null),
     [chMe, chSetMe] = (0, U.useState)(null),
@@ -7376,7 +7456,7 @@ function n5({ session: e, onLogout: t }) {
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
     if (
-      l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, osm_id: chOsm }))
+      l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, lat: Se, lng: at }))
     )
       return P(n, "err_already_logged", { place: gt });
     let chHoyde = null;
@@ -7457,8 +7537,8 @@ function n5({ session: e, onLogout: t }) {
               `and(requester_id.eq.${e.user.id},addressee_id.eq.${who.id}),and(requester_id.eq.${who.id},addressee_id.eq.${e.user.id})`,
             );
           if (!ex || ex.length === 0) {
-            await ze.from("friends").insert({ requester_id: e.user.id, addressee_id: who.id, status: "pending" });
-            alive && s("venner");
+            /* Sender ikke automatisk: brukeren maa bekrefte i et banner foerst. */
+            alive && chSetInv({ id: who.id, username: who.username });
           }
         }
       } catch {}
@@ -8126,6 +8206,20 @@ function n5({ session: e, onLogout: t }) {
             }),
           chNytt &&
             (0, T.jsx)(ChBadgeToast, { badges: chNytt, lang: n, onClose: () => chSetNytt(null) }),
+          chInv &&
+            (0, T.jsx)(ChInviteBanner, {
+              lang: n,
+              who: chInv,
+              onNo: () => chSetInv(null),
+              onYes: async () => {
+                let w = chInv;
+                chSetInv(null);
+                try {
+                  await ze.from("friends").insert({ requester_id: e.user.id, addressee_id: w.id, status: "pending" });
+                } catch {}
+                s("venner");
+              },
+            }),
           chAsk &&
             (0, T.jsx)(ChPushPrompt, {
               lang: n,
@@ -8538,7 +8632,34 @@ function a5({ session: e, onOpen: chOpen, meName }) {
                       borderBottom: `1px solid ${O.line}`,
                     },
                     children: [
-                      (0, T.jsx)("span", { style: { flex: 1, fontSize: 16 }, children: G.username }),
+                      (0, T.jsx)("button", {
+                        onClick: () => chOpen && chOpen({ type: "profile", id: G.id }),
+                        style: {
+                          flex: 1,
+                          textAlign: "left",
+                          background: "none",
+                          border: "none",
+                          color: O.text,
+                          fontSize: 16,
+                          fontFamily: "inherit",
+                          padding: 0,
+                          cursor: "pointer",
+                        },
+                        children: G.username,
+                      }),
+                      (0, T.jsx)("button", {
+                        onClick: () => chOpen && chOpen({ type: "profile", id: G.id }),
+                        style: {
+                          border: "none",
+                          background: "none",
+                          color: O.accent,
+                          fontSize: 13,
+                          fontFamily: "inherit",
+                          padding: "4px 2px",
+                          cursor: "pointer",
+                        },
+                        children: P(t, "view_profile"),
+                      }),
                       !re &&
                         (0, T.jsx)("button", {
                           onClick: () => M(G.id),
@@ -8973,7 +9094,7 @@ function s5({ session: e, onOpen: chOpen }) {
     R = (0, U.useMemo)(
       () =>
         [...m.entries()]
-          .map(([N, M]) => ({ id: N, name: k(N), value: M.places.length }))
+          .map(([N, M]) => ({ id: N, name: k(N), value: new Set(M.places.map(ChKeyOf)).size }))
           .sort((N, M) => M.value - N.value || N.name.localeCompare(M.name, "nb")),
       [m, c],
     );
@@ -9013,7 +9134,7 @@ function s5({ session: e, onOpen: chOpen }) {
       () =>
         f
           ? [...m.entries()]
-              .map(([N, M]) => ({ id: N, name: k(N), value: M.places.filter((I) => I.country === f).length }))
+              .map(([N, M]) => ({ id: N, name: k(N), value: new Set(M.places.filter((I) => I.country === f).map(ChKeyOf)).size }))
               .filter((N) => N.value > 0)
               .sort((N, M) => M.value - N.value || N.name.localeCompare(M.name, "nb"))
           : [],
@@ -9027,6 +9148,7 @@ function s5({ session: e, onOpen: chOpen }) {
         if (M.country !== f || M.rating == null) return;
         let I = ChKeyOf(M);
         N.has(I) || N.set(I, { name: ChCanon(M.place, M.country), sum: 0, n: 0, osm: M.osm_id || null });
+        N.get(I).osm || (N.get(I).osm = M.osm_id || null);
         let Z = N.get(I);
         ChCanon(M.place, M.country) !== M.place && (Z.name = ChCanon(M.place, M.country));
         ((Z.sum += Number(M.rating)), (Z.n += 1));
@@ -9608,7 +9730,7 @@ function l5({ pins: e, pickMode: t, onTap: n, onSelect: i, onFail: r, srcIdx: s,
         (Ra.default
           .marker([R.lat, R.lng], { icon: k })
           .on("click", () => i(R.id))
-          .bindPopup(`<strong>${ChCanon(R.place, R.country)}</strong><br>${ChCN(R.country)}`)
+          .bindPopup(`<strong>${ChEsc(ChCanon(R.place, R.country))}</strong><br>${ChEsc(ChCN(R.country))}`)
           .addTo(f.current),
           A.push([R.lat, R.lng]));
       }),
@@ -10173,7 +10295,7 @@ class ChBoundary extends U.Component {
   render() {
     let lang = "no";
     try {
-      lang = localStorage.getItem("ch_lang") || "no";
+      lang = localStorage.getItem("ch_lang") || ChDefaultLang();
     } catch {}
     return this.state.dead
       ? (0, T.jsxs)("div", {

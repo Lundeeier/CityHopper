@@ -2543,9 +2543,6 @@ function c8({ size: e = 30 }) {
 
 var i8 = (e, t) => ({ x: ((t + 180) / 360) * Wr, y: ((90 - e) / 180) * qo }),
   Yy = (e, t) => ({ lat: 90 - (t / qo) * 180, lng: (e / Wr) * 360 - 180 });
-async function wf() {
-  throw new Error("Ikke tilgjengelig utenfor Claude");
-}
 var h8 = (e, t) => e.city || e.town || e.village || e.hamlet || e.suburb || e.locality || t;
 /* Noen steder har tospr\xE5klig navn i OpenStreetMap (f.eks. "Cottbus/Ch\xF3śebuz").
    Bruker bare f\xF8rste del s\xE5 vi ikke sjekker inn med begge navnene. */
@@ -2858,14 +2855,7 @@ async function e5(e, t) {
     )
       return l.slice(0, 6);
   } catch {}
-  let i = await wf(
-    `En bruker skriver "${e}" i et reisearkiv og leter etter en by eller et tettsted` +
-      (t ? ` i ${t}` : "") +
-      ". Foresl\xE5 inntil 6 steder som matcher" +
-      (t ? `, kun steder i ${t}` : "") +
-      '. Bruk norske landnavn. Svar kun med JSON-array, ingen annen tekst: [{"place":"stedsnavn","country":"land","lat":0.0,"lng":0.0}]',
-  );
-  return Array.isArray(i) ? i.slice(0, 6) : [];
+  return [];
 }
 async function f8(e, t) {
   try {
@@ -2880,9 +2870,7 @@ async function f8(e, t) {
       c = o8(r);
     if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i) };
   } catch {}
-  return await wf(
-    `Koordinatene ${e}, ${t}. Hvilken by eller hvilket tettsted og land er dette? Bruk norske landnavn. Svar kun med JSON, ingen annen tekst: {"place":"stedsnavn","country":"land"}`,
-  );
+  throw new Error("not found");
 }
 async function t5(e) {
   try {
@@ -2892,10 +2880,7 @@ async function t5(e) {
       ).json();
     if (r && r[0]) return { lat: parseFloat(r[0].lat), lng: parseFloat(r[0].lon) };
   } catch {}
-  let t = await wf(
-    `Omtrentlige koordinater for ${e.place}, ${e.country}. Svar kun med JSON, ingen annen tekst: {"lat":0.0,"lng":0.0}`,
-  );
-  return { lat: Number(t.lat), lng: Number(t.lng) };
+  throw new Error("not found");
 }
 
 

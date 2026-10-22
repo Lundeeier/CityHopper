@@ -6110,6 +6110,83 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
 }
 
 /* Bekreftelse foer en venneforespørsel sendes fra en invitasjonslenke. */
+/* Veiviser for nye brukere: vises en gang paa kontoer uten innsjekker. */
+var ChTourText = {
+  no: ["Velkommen til CityHopper", "Sjekk inn byer og steder du har vært, gi stjerner og legg ved bilde og notat.", "Se dem på kartet og i statistikken, og samle merker for land, steder og bragder.", "Legg til venner, se topplister og sammenlign hvem som har vært hvor.", "Du styrer selv om profilen er åpen eller privat under Innstillinger.", "Neste", "Hopp over", "Kom i gang"],
+  en: ["Welcome to CityHopper", "Check in to cities and places you've been, give stars and add a photo and note.", "See them on the map and in your statistics, and collect badges for countries, places and achievements.", "Add friends, see leaderboards and compare who has been where.", "You decide whether your profile is open or private under Settings.", "Next", "Skip", "Get started"],
+  nl: ["Welkom bij CityHopper", "Check in op steden en plaatsen waar je bent geweest, geef sterren en voeg een foto en notitie toe.", "Bekijk ze op de kaart en in je statistieken en verzamel badges voor landen, plaatsen en prestaties.", "Voeg vrienden toe, bekijk ranglijsten en vergelijk wie waar is geweest.", "Jij bepaalt of je profiel open of privé is bij Instellingen.", "Volgende", "Overslaan", "Aan de slag"],
+  de: ["Willkommen bei CityHopper", "Checke in Städten und Orten ein, vergib Sterne und füge Foto und Notiz hinzu.", "Sieh sie auf der Karte und in der Statistik und sammle Abzeichen für Länder, Orte und Leistungen.", "Füge Freunde hinzu, sieh Ranglisten und vergleiche, wer wo war.", "In den Einstellungen entscheidest du, ob dein Profil offen oder privat ist.", "Weiter", "Überspringen", "Los geht's"],
+  sv: ["Välkommen till CityHopper", "Checka in på städer och platser du varit på, ge stjärnor och lägg till foto och anteckning.", "Se dem på kartan och i statistiken och samla märken för länder, platser och bragder.", "Lägg till vänner, se topplistor och jämför vem som varit var.", "Du bestämmer om profilen är öppen eller privat under Inställningar.", "Nästa", "Hoppa över", "Kom igång"],
+  da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"],
+};
+function ChTour({ lang, uid }) {
+  let key = "ch_tour_" + uid,
+    [step, setStep] = (0, U.useState)(0),
+    [open, setOpen] = (0, U.useState)(() => {
+      try {
+        return !localStorage.getItem(key);
+      } catch {
+        return !1;
+      }
+    }),
+    tx = ChTourText[lang] || ChTourText.en,
+    last = step === 3;
+  function done() {
+    try {
+      localStorage.setItem(key, "1");
+    } catch {}
+    setOpen(!1);
+  }
+  if (!open) return null;
+  let btn = (bg, fg) => ({
+    border: "none",
+    borderRadius: 8,
+    padding: "10px 16px",
+    fontWeight: 700,
+    fontSize: 15,
+    background: bg,
+    color: fg,
+    cursor: "pointer",
+    fontFamily: "inherit",
+  });
+  return (0, T.jsx)("div", {
+    style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 1500,
+      background: "rgba(0,0,0,0.7)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 20,
+    },
+    children: (0, T.jsxs)("div", {
+      role: "dialog",
+      style: {
+        maxWidth: 380,
+        width: "100%",
+        background: O.bar,
+        border: `1px solid ${O.accent}`,
+        borderRadius: 12,
+        padding: 20,
+        fontFamily: "'Archivo', -apple-system, sans-serif",
+      },
+      children: [
+        (0, T.jsx)("div", { style: { fontSize: 13, color: O.sub, marginBottom: 6 }, children: `${step + 1} / 4` }),
+        (0, T.jsx)("div", { style: { fontSize: 20, fontWeight: 700, marginBottom: 8 }, children: step === 0 ? tx[0] : "" }),
+        (0, T.jsx)("div", { style: { fontSize: 16, lineHeight: 1.45, marginBottom: 18 }, children: tx[step + 1] }),
+        (0, T.jsxs)("div", {
+          style: { display: "flex", gap: 8, justifyContent: "space-between" },
+          children: [
+            (0, T.jsx)("button", { onClick: done, style: btn("transparent", O.sub), children: tx[6] }),
+            (0, T.jsx)("button", { onClick: last ? done : () => setStep(step + 1), style: btn(O.accent, "#000"), children: last ? tx[7] : tx[5] }),
+          ],
+        }),
+      ],
+    }),
+  });
+}
+
 function ChInviteBanner({ lang, who, onYes, onNo }) {
   let no = !lang || lang === "no",
     btn = (bg, fg) => ({
@@ -8230,6 +8307,7 @@ function n5({ session: e, onLogout: t }) {
                 (chSetView(null), chLoadBell());
               },
             }),
+          !h && l.length === 0 && (0, T.jsx)(ChTour, { lang: n, uid: e.user.id }),
           chNytt &&
             (0, T.jsx)(ChBadgeToast, { badges: chNytt, lang: n, onClose: () => chSetNytt(null) }),
           chInv &&

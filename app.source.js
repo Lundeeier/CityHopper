@@ -5009,12 +5009,30 @@ function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
 }
 
 
-function ChSettings({ meId, onClose, onLogout }) {
+function ChSettings({ meId, meName, onClose, onLogout }) {
   let [lang, setLang] = Un(),
+    [chCopied, chSetCopied] = (0, U.useState)(!1),
     [priv, setPriv] = (0, U.useState)(!1),
     [msgOnly, setMsgOnly] = (0, U.useState)(!1),
     [note, setNote] = (0, U.useState)(""),
     [push, setPush] = (0, U.useState)(ChPushState());
+  async function chShare() {
+    if (!meName) return;
+    let url = ChInviteLink(meName);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "CityHopper", text: P(lang, "invite_share_text"), url });
+        return;
+      }
+    } catch (er) {
+      if (er && er.name === "AbortError") return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      chSetCopied(!0);
+      setTimeout(() => chSetCopied(!1), 2500);
+    } catch {}
+  }
   (0, U.useEffect)(() => {
     let alive = !0;
     return (
@@ -5113,6 +5131,13 @@ function ChSettings({ meId, onClose, onLogout }) {
           ].map((l) => (0, T.jsx)("option", { value: l[0], children: l[1] }, l[0])),
         }),
       }),
+      meName &&
+        (0, T.jsx)("button", {
+          className: "ch-secondary",
+          onClick: chShare,
+          style: { width: "100%", marginTop: 14 },
+          children: chCopied ? P(lang, "invite_copied") : P(lang, "invite_share"),
+        }),
       (0, T.jsx)(ChBlockedList, { lang, meId }),
       (0, T.jsx)("div", {
         style: { marginTop: 18, textAlign: "center" },
@@ -8047,7 +8072,7 @@ function n5({ session: e, onLogout: t }) {
               onSetLocateTarget: we,
               onConfirmLocate: et,
             }),
-          r === "venner" && (0, T.jsx)(a5, { session: e, onOpen: chSetView, meName: chMe ? chMe.username : "" }),
+          r === "venner" && (0, T.jsx)(a5, { session: e, onOpen: chSetView }),
           r === "topplister" && (0, T.jsx)(s5, { session: e, onOpen: chSetView }),
           r === "innsjekk" &&
             (0, T.jsxs)("div", {
@@ -8263,6 +8288,7 @@ function n5({ session: e, onLogout: t }) {
             chView.type === "settings" &&
             (0, T.jsx)(ChSettings, {
               meId: e.user.id,
+              meName: chMe ? chMe.username : "",
               onLogout: t,
               onClose: () => chSetView({ type: "profile", id: e.user.id }),
             }),
@@ -8482,7 +8508,7 @@ function L8({ value: e, onChange: t, onPick: n, onEnter: i }) {
     })
   );
 }
-function a5({ session: e, onOpen: chOpen, meName }) {
+function a5({ session: e, onOpen: chOpen }) {
   let [t] = Un(),
     n = e.user.id,
     [i, r] = (0, U.useState)(""),
@@ -8493,25 +8519,7 @@ function a5({ session: e, onOpen: chOpen, meName }) {
     [m, k] = (0, U.useState)(!0),
     [A, R] = (0, U.useState)(""),
     [S, b] = (0, U.useState)(""),
-    [w, E] = (0, U.useState)(null),
-    [chCopied, chSetCopied] = (0, U.useState)(!1);
-  async function chShare() {
-    if (!meName) return;
-    let url = ChInviteLink(meName);
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: "CityHopper", text: P(t, "invite_share_text"), url });
-        return;
-      }
-    } catch (er) {
-      if (er && er.name === "AbortError") return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      chSetCopied(!0);
-      setTimeout(() => chSetCopied(!1), 2500);
-    } catch {}
-  }
+    [w, E] = (0, U.useState)(null);
   async function D() {
     let { data: G, error: re } = await ze
       .from("friends")
@@ -8591,13 +8599,6 @@ function a5({ session: e, onOpen: chOpen, meName }) {
     : (0, T.jsxs)("div", {
         style: { padding: 16 },
         children: [
-          meName &&
-            (0, T.jsx)("button", {
-              className: "ch-secondary",
-              onClick: chShare,
-              style: { width: "100%", marginBottom: 12 },
-              children: chCopied ? P(t, "invite_copied") : P(t, "invite_share"),
-            }),
           (0, T.jsxs)("div", {
             style: { position: "relative", marginBottom: 8 },
             children: [

@@ -478,6 +478,7 @@ var O = {
       close_suggestions: "Lukk forslag",
       err_load_list: "Klarte ikke \xE5 hente listen. Sjekk nettforbindelsen.",
       err_place_country_required: "Sted og land m\xE5 fylles ut.",
+      err_pick_real_place: "Velg et ekte sted fra forslagene.",
       err_already_logged: "{place} er allerede i loggen.",
       err_save_place: "Klarte ikke \xE5 lagre stedet. Pr\xF8v igjen.",
       err_no_geo: "Denne enheten gir ikke appen tilgang til posisjon.",
@@ -814,6 +815,7 @@ var O = {
       close_suggestions: "Close suggestions",
       err_load_list: "Couldn't load the list. Check your connection.",
       err_place_country_required: "Place and country must be filled in.",
+      err_pick_real_place: "Choose a real place from the suggestions.",
       err_already_logged: "{place} is already in the log.",
       err_save_place: "Couldn't save the place. Try again.",
       err_no_geo: "This device isn't sharing location with the app.",
@@ -1150,6 +1152,7 @@ var O = {
       close_suggestions: "Suggesties sluiten",
       err_load_list: "Kon de lijst niet ophalen. Controleer je internetverbinding.",
       err_place_country_required: "Plaats en land moeten worden ingevuld.",
+      err_pick_real_place: "Kies een echte plaats uit de suggesties.",
       err_already_logged: "{place} staat al in het logboek.",
       err_save_place: "Kon de plaats niet opslaan. Probeer het opnieuw.",
       err_no_geo: "Dit apparaat deelt geen locatie met de app.",
@@ -1484,6 +1487,7 @@ var O = {
       close_suggestions: "Vorschläge schließen",
       err_load_list: "Die Liste konnte nicht geladen werden. Überprüfe deine Verbindung.",
       err_place_country_required: "Ort und Land müssen ausgefüllt sein.",
+      err_pick_real_place: "W\xE4hle einen echten Ort aus den Vorschl\xE4gen.",
       err_already_logged: "{place} ist bereits im Protokoll.",
       err_save_place: "Der Ort konnte nicht gespeichert werden. Versuche es erneut.",
       err_no_geo: "Dieses Gerät teilt den Standort nicht mit der App.",
@@ -1816,6 +1820,7 @@ var O = {
       close_suggestions: "Stäng förslag",
       err_load_list: "Kunde inte ladda listan. Kontrollera din anslutning.",
       err_place_country_required: "Plats och land måste fyllas i.",
+      err_pick_real_place: "V\xE4lj en riktig plats fr\xE5n f\xF6rslagen.",
       err_already_logged: "{place} finns redan i loggen.",
       err_save_place: "Kunde inte spara platsen. Försök igen.",
       err_no_geo: "Den här enheten delar inte plats med appen.",
@@ -2148,6 +2153,7 @@ var O = {
       close_suggestions: "Luk forslag",
       err_load_list: "Kunne ikke indlæse listen. Tjek din forbindelse.",
       err_place_country_required: "Sted og land skal udfyldes.",
+      err_pick_real_place: "V\xE6lg et rigtigt sted fra forslagene.",
       err_already_logged: "{place} er allerede i loggen.",
       err_save_place: "Kunne ikke gemme stedet. Prøv igen.",
       err_no_geo: "Denne enhed deler ikke placering med appen.",
@@ -7558,6 +7564,7 @@ function n5({ session: e, onLogout: t }) {
     let gt = (F || "").trim(),
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
+    if (Se == null || at == null) return P(n, "err_pick_real_place");
     if (
       l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, lat: Se, lng: at }))
     )
@@ -8201,7 +8208,7 @@ function n5({ session: e, onLogout: t }) {
                 (0, T.jsx)(i5, {
                   value: g,
                   country: y,
-                  onChange: (F) => (v(F), chSetOsm(null)),
+                  onChange: (F) => (v(F), chSetOsm(null), A(null)),
                   onPick: async (F) => {
                     (v(F.place),
                       F.country && m(F.country),

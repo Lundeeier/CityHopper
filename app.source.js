@@ -479,6 +479,9 @@ var O = {
       err_load_list: "Klarte ikke \xE5 hente listen. Sjekk nettforbindelsen.",
       err_place_country_required: "Sted og land m\xE5 fylles ut.",
       err_pick_real_place: "Velg et ekte sted fra forslagene.",
+      search_no_results: "Ingen treff. Pr\xF8v et annet s\xF8k.",
+      search_failed: "S\xF8ket feilet. Sjekk nettet og pr\xF8v igjen.",
+      err_delete_place: "Klarte ikke \xE5 slette stedet. Pr\xF8v igjen.",
       err_already_logged: "{place} er allerede i loggen.",
       err_save_place: "Klarte ikke \xE5 lagre stedet. Pr\xF8v igjen.",
       err_no_geo: "Denne enheten gir ikke appen tilgang til posisjon.",
@@ -816,6 +819,9 @@ var O = {
       err_load_list: "Couldn't load the list. Check your connection.",
       err_place_country_required: "Place and country must be filled in.",
       err_pick_real_place: "Choose a real place from the suggestions.",
+      search_no_results: "No results. Try a different search.",
+      search_failed: "Search failed. Check your connection and try again.",
+      err_delete_place: "Could not delete the place. Try again.",
       err_already_logged: "{place} is already in the log.",
       err_save_place: "Couldn't save the place. Try again.",
       err_no_geo: "This device isn't sharing location with the app.",
@@ -1153,6 +1159,9 @@ var O = {
       err_load_list: "Kon de lijst niet ophalen. Controleer je internetverbinding.",
       err_place_country_required: "Plaats en land moeten worden ingevuld.",
       err_pick_real_place: "Kies een echte plaats uit de suggesties.",
+      search_no_results: "Geen resultaten. Probeer een andere zoekopdracht.",
+      search_failed: "Zoeken mislukt. Controleer je verbinding en probeer opnieuw.",
+      err_delete_place: "Kon de plaats niet verwijderen. Probeer opnieuw.",
       err_already_logged: "{place} staat al in het logboek.",
       err_save_place: "Kon de plaats niet opslaan. Probeer het opnieuw.",
       err_no_geo: "Dit apparaat deelt geen locatie met de app.",
@@ -1488,6 +1497,9 @@ var O = {
       err_load_list: "Die Liste konnte nicht geladen werden. Überprüfe deine Verbindung.",
       err_place_country_required: "Ort und Land müssen ausgefüllt sein.",
       err_pick_real_place: "W\xE4hle einen echten Ort aus den Vorschl\xE4gen.",
+      search_no_results: "Keine Treffer. Versuche eine andere Suche.",
+      search_failed: "Suche fehlgeschlagen. Pr\xFCfe die Verbindung und versuche es erneut.",
+      err_delete_place: "Ort konnte nicht gel\xF6scht werden. Versuche es erneut.",
       err_already_logged: "{place} ist bereits im Protokoll.",
       err_save_place: "Der Ort konnte nicht gespeichert werden. Versuche es erneut.",
       err_no_geo: "Dieses Gerät teilt den Standort nicht mit der App.",
@@ -1821,6 +1833,9 @@ var O = {
       err_load_list: "Kunde inte ladda listan. Kontrollera din anslutning.",
       err_place_country_required: "Plats och land måste fyllas i.",
       err_pick_real_place: "V\xE4lj en riktig plats fr\xE5n f\xF6rslagen.",
+      search_no_results: "Inga tr\xE4ffar. Prova en annan s\xF6kning.",
+      search_failed: "S\xF6kningen misslyckades. Kontrollera n\xE4tet och f\xF6rs\xF6k igen.",
+      err_delete_place: "Kunde inte ta bort platsen. F\xF6rs\xF6k igen.",
       err_already_logged: "{place} finns redan i loggen.",
       err_save_place: "Kunde inte spara platsen. Försök igen.",
       err_no_geo: "Den här enheten delar inte plats med appen.",
@@ -2154,6 +2169,9 @@ var O = {
       err_load_list: "Kunne ikke indlæse listen. Tjek din forbindelse.",
       err_place_country_required: "Sted og land skal udfyldes.",
       err_pick_real_place: "V\xE6lg et rigtigt sted fra forslagene.",
+      search_no_results: "Ingen resultater. Pr\xF8v en anden s\xF8gning.",
+      search_failed: "S\xF8gningen mislykkedes. Tjek forbindelsen og pr\xF8v igen.",
+      err_delete_place: "Kunne ikke slette stedet. Pr\xF8v igen.",
       err_already_logged: "{place} er allerede i loggen.",
       err_save_place: "Kunne ikke gemme stedet. Prøv igen.",
       err_no_geo: "Denne enhed deler ikke placering med appen.",
@@ -2866,7 +2884,9 @@ async function e5(e, t) {
       l.length)
     )
       return l.slice(0, 6);
-  } catch {}
+  } catch {
+    throw new Error("search failed");
+  }
   return [];
 }
 async function f8(e, t) {
@@ -5743,7 +5763,6 @@ function ChStatsPanel({ uid, meId, onClose }) {
 
   let cMatches = !csel && cq.trim() ? vc.filter((c) => (c.name + " " + ChCN(c.name)).toLowerCase().includes(cq.trim().toLowerCase())).slice(0, 8) : [];
 
-  let月 = null;
   return (0, T.jsx)(ChPanel, {
     title: P(lang, "stats_title"),
     onClose,
@@ -6525,7 +6544,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
 
 function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
   let chT = ChTheme2,
-    [lang, setLang] = Un(),
+    [lang] = Un(),
     [prof, setProf] = (0, U.useState)(null),
     [rel, setRel] = (0, U.useState)(null),
     [visits, setVisits] = (0, U.useState)([]),
@@ -7426,7 +7445,7 @@ function ChPlaceFeed({ place, country, osm, meId, onClose, onOpen }) {
 }
 
 function n5({ session: e, onLogout: t }) {
-  let [n, i] = Un(),
+  let [n] = Un(),
     [r, s] = (0, U.useState)("oversikt"),
     [l, c] = (0, U.useState)([]),
     [h, f] = (0, U.useState)(!0),
@@ -7439,7 +7458,6 @@ function n5({ session: e, onLogout: t }) {
     [N, M] = (0, U.useState)(!1),
     [I, Z] = (0, U.useState)(!1),
     [q, we] = (0, U.useState)(null),
-    [$e, xt] = (0, U.useState)("venner"),
     [G, re] = (0, U.useState)(0),
     [chSheet, chSetSheet] = (0, U.useState)(null),
     [chDate, chSetDate] = (0, U.useState)(""),
@@ -7752,7 +7770,7 @@ function n5({ session: e, onLogout: t }) {
     (c(l.filter((at) => at.id !== F)),
       gt && gt.photos && gt.photos.length && ze.storage.from("visit-photos").remove([...gt.photos, ...gt.photos.map(ChThumbPath)]));
     let { error: Se } = await ze.from("visits").delete().eq("id", F);
-    Se && c(te);
+    Se && (c(te), D(P(n, "err_delete_place")));
   }
   let he = (0, U.useMemo)(() => {
       let F = new Map();
@@ -7781,10 +7799,6 @@ function n5({ session: e, onLogout: t }) {
     }, [he, chQ]),
     K = l.filter((F) => F.lat != null && F.lng != null),
     Ie = l.filter((F) => F.lat == null || F.lng == null),
-    mt = (F) =>
-      F.lat != null && F.lng != null
-        ? `https://www.google.com/maps/search/?api=1&query=${F.lat},${F.lng}`
-        : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${F.place}, ${F.country}`),
     Go = [
       ["oversikt", P(n, "tab_overview")],
       ["kart", P(n, "tab_map")],
@@ -8430,6 +8444,7 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
     [l, c] = (0, U.useState)([]),
     [h, f] = (0, U.useState)(!1),
     [g, v] = (0, U.useState)(!1),
+    [chMsg, chSetMsg] = (0, U.useState)(""),
     y = (0, U.useRef)(!1);
   return (
     (0, U.useEffect)(() => {
@@ -8439,7 +8454,7 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
       }
       let m = e.trim();
       if (m.length < 2) {
-        (c([]), f(!1));
+        (c([]), f(!1), chSetMsg(""));
         return;
       }
       let k = !0,
@@ -8447,9 +8462,9 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
           v(!0);
           try {
             let R = await e5(m, t);
-            (k && (c(R), f(R.length > 0)), k && R.length && ChResolveList(R, k0 => k && (c(k0), f(k0.length > 0))));
+            (k && (c(R), f(R.length > 0), chSetMsg(R.length ? "" : "search_no_results")), k && R.length && ChResolveList(R, k0 => k && (c(k0), f(k0.length > 0))));
           } catch {
-            k && (c([]), f(!1));
+            k && (c([]), f(!1), chSetMsg("search_failed"));
           }
           k && v(!1);
         }, 420);
@@ -8478,6 +8493,10 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
             style: { position: "absolute", right: 12, top: 13, color: O.sub, fontSize: 13 },
             children: P(s, "searching"),
           }),
+        chMsg &&
+          !g &&
+          !h &&
+          (0, T.jsx)("p", { style: { color: O.sub, fontSize: 12, margin: "4px 2px 0" }, children: P(s, chMsg) }),
         h &&
           (0, T.jsxs)("div", {
             className: "ch-sug",
@@ -9003,11 +9022,7 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
             list: m.sort((k, A) => k.place.localeCompare(A.place, "nb")),
           }))
       );
-    }, [s]),
-    g = (v) =>
-      v.lat != null && v.lng != null
-        ? `https://www.google.com/maps/search/?api=1&query=${v.lat},${v.lng}`
-        : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${v.place}, ${v.country}`);
+    }, [s]);
   return (0, T.jsxs)("div", {
     children: [
       (0, T.jsxs)("div", {
@@ -9135,7 +9150,6 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
 }
 function s5({ session: e, onOpen: chOpen }) {
   let [t] = Un(),
-    n = e.user.id,
     [i, r] = (0, U.useState)(!0),
     [s, l] = (0, U.useState)([]),
     [c, h] = (0, U.useState)({}),

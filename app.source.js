@@ -2827,16 +2827,23 @@ async function ChPostTown(postcode, country) {
 /* Slaar opp postnummeret for de oeverste forslagene, slik at lista viser
    navnet du faktisk faar ved innsjekk. Ett oppslag om gangen, og bare for
    de fire foerste, av hensyn til karttjenestens grenser. */
-async function ChResolveList(list, onUpdate) {
+/* Tettsteder, landsbyer og bygder har sitt eget navn og skal ikke byttes ut
+   med poststedet (som kan vaere kommunen). Bare bydeler og delomraader byttes. */
+function ChOwnName(it) {
+  return !!it && ["village", "town", "city", "hamlet", "locality", "island", "municipality"].includes(it.kind);
+}
+
+async function ChResolveList(list, onUpdate, query) {
   let out = list.slice(),
     changed = !1;
   for (let i = 0; i < Math.min(4, out.length); i++) {
     let it = out[i];
-    if (!it.postcode) continue;
+    if (!it.postcode || ChOwnName(it)) continue;
     let hit = await ChPostTown(it.postcode, it.country);
     if (!hit || !ChPostOk(hit, it.lat, it.lng)) continue;
     let name = ChCanon(hit.place, it.country);
     if (ChKey(name, it.country) === ChKey(it.place, it.country)) continue;
+    if (query && ChFold(it.place).startsWith(ChFold(query.trim())) && !ChFold(name).startsWith(ChFold(query.trim()))) continue;
     ((out[i] = { ...it, place: name, osm: hit.osm || it.osm }), (changed = !0));
   }
   if (!changed) return;
@@ -2866,8 +2873,12 @@ async function e5(e, t) {
         let h = c.addresstype || c.type;
         if (!Xy.has(h)) return;
         let f = c.address || {},
-          g = ChRollUp(f, h, ChMonoName(c.name) || h8(f, (c.display_name || "").split(",")[0])),
-          v = d8(g, e, h === "municipality"),
+          chOwn = ChMonoName(c.name),
+          g = ChRollUp(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0])),
+          /* Skrev brukeren navnet paa stedet selv (f.eks. "Loeken"), beholder vi det
+             i stedet for aa rulle opp til byen eller kommunen det ligger i. */
+          chKeep = chOwn && h !== "municipality" && ChFold(chOwn).startsWith(ChFold(e.trim())),
+          v = d8(chKeep ? chOwn : g, e, h === "municipality"),
           y = o8(f);
         if (!v || !y || ChIsAdmin(v)) return;
         let m = ChKey(v, y);
@@ -2879,6 +2890,7 @@ async function e5(e, t) {
             lng: +c.lon,
             postcode: f.postcode || null,
             osm: ChOsm(c),
+            kind: h,
           });
       }),
       l.length)
@@ -8230,7 +8242,7 @@ function n5({ session: e, onLogout: t }) {
                       F.country && m(F.country),
                       F.lat != null && A({ lat: F.lat, lng: F.lng }),
                       chSetOsm(F.osm || null));
-                    if (!F.postcode) return;
+                    if (!F.postcode || ChOwnName(F)) return;
                     let te = await ChPostTown(F.postcode, F.country || y);
                     te &&
                       te.place !== F.place &&
@@ -8462,7 +8474,7 @@ function i5({ value: e, country: t, onChange: n, onPick: i, onEnter: r }) {
           v(!0);
           try {
             let R = await e5(m, t);
-            (k && (c(R), f(R.length > 0), chSetMsg(R.length ? "" : "search_no_results")), k && R.length && ChResolveList(R, k0 => k && (c(k0), f(k0.length > 0))));
+            (k && (c(R), f(R.length > 0), chSetMsg(R.length ? "" : "search_no_results")), k && R.length && ChResolveList(R, k0 => k && (c(k0), f(k0.length > 0)), m));
           } catch {
             k && (c([]), f(!1), chSetMsg("search_failed"));
           }

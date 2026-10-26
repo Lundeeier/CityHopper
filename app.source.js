@@ -7565,6 +7565,8 @@ function n5({ session: e, onLogout: t }) {
       dn = (te || "").trim();
     if (!gt || !dn) return P(n, "err_place_country_required");
     if (Se == null || at == null) return P(n, "err_pick_real_place");
+    if (!yc(dn)) return P(n, "err_pick_real_place");
+    dn = yc(dn).name;
     if (
       l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, lat: Se, lng: at }))
     )

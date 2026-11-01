@@ -780,6 +780,8 @@ var O = {
       report_r4: "Annet",
       report_sent: "Takk. Rapporten er sendt.",
       report_failed: "Kunne ikke sende rapporten.",
+      report_details: "Forklar kort hva som er galt (valgfritt)",
+      report_send: "Send rapport",
       block_user: "Blokker bruker",
       block_confirm: "Blokkere {name}? Dere blir ikke lenger venner, og vedkommende kan ikke sende deg meldinger eller venneforesp\u00f8rsler.",
       block_done: "Brukeren er blokkert.",
@@ -1119,6 +1121,8 @@ var O = {
       report_r4: "Other",
       report_sent: "Thanks. The report has been sent.",
       report_failed: "Could not send the report.",
+      report_details: "Briefly explain what is wrong (optional)",
+      report_send: "Send report",
       block_user: "Block user",
       block_confirm: "Block {name}? You will no longer be friends, and they cannot send you messages or friend requests.",
       block_done: "The user is blocked.",
@@ -1460,6 +1464,8 @@ var O = {
       report_r4: "Anders",
       report_sent: "Bedankt. De melding is verstuurd.",
       report_failed: "De melding kon niet worden verstuurd.",
+      report_details: "Leg kort uit wat er mis is (optioneel)",
+      report_send: "Melding versturen",
       block_user: "Gebruiker blokkeren",
       block_confirm: "{name} blokkeren? Jullie zijn geen vrienden meer en deze persoon kan je geen berichten of vriendschapsverzoeken sturen.",
       block_done: "De gebruiker is geblokkeerd.",
@@ -1796,6 +1802,8 @@ var O = {
       report_r4: "Sonstiges",
       report_sent: "Danke. Die Meldung wurde gesendet.",
       report_failed: "Die Meldung konnte nicht gesendet werden.",
+      report_details: "Erkl\u00e4re kurz, was falsch ist (optional)",
+      report_send: "Meldung senden",
       block_user: "Nutzer blockieren",
       block_confirm: "{name} blockieren? Ihr seid dann keine Freunde mehr, und die Person kann dir keine Nachrichten oder Freundschaftsanfragen senden.",
       block_done: "Der Nutzer ist blockiert.",
@@ -2132,6 +2140,8 @@ var O = {
       report_r4: "Annat",
       report_sent: "Tack. Rapporten har skickats.",
       report_failed: "Rapporten kunde inte skickas.",
+      report_details: "F\u00f6rklara kort vad som \u00e4r fel (valfritt)",
+      report_send: "Skicka rapport",
       block_user: "Blockera anv\u00e4ndare",
       block_confirm: "Blockera {name}? Ni \u00e4r inte l\u00e4ngre v\u00e4nner, och personen kan inte skicka meddelanden eller v\u00e4nf\u00f6rfr\u00e5gningar till dig.",
       block_done: "Anv\u00e4ndaren \u00e4r blockerad.",
@@ -2468,6 +2478,8 @@ var O = {
       report_r4: "Andet",
       report_sent: "Tak. Rapporten er sendt.",
       report_failed: "Rapporten kunne ikke sendes.",
+      report_details: "Forklar kort hvad der er galt (valgfrit)",
+      report_send: "Send rapport",
       block_user: "Bloker bruger",
       block_confirm: "Blokere {name}? I er ikke l\u00e6ngere venner, og vedkommende kan ikke sende dig beskeder eller venneanmodninger.",
       block_done: "Brugeren er blokeret.",
@@ -4981,12 +4993,17 @@ function ChBlockedList({ lang, meId }) {
 function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
   let [mode, setMode] = (0, U.useState)(null),
     [note, setNote] = (0, U.useState)(""),
+    [chSel, chSetSel] = (0, U.useState)(null),
+    [chText, chSetText] = (0, U.useState)(""),
     [busy, setBusy] = (0, U.useState)(!1);
   async function report(reason) {
     setBusy(!0);
-    let { error } = await ze.from("reports").insert({ reporter_id: meId, target_user_id: uid, reason });
+    let details = chText.trim().slice(0, 500) || null;
+    let { error } = await ze.from("reports").insert({ reporter_id: meId, target_user_id: uid, reason, details });
     setBusy(!1);
     setMode(null);
+    chSetSel(null);
+    chSetText("");
     setNote(error ? P(lang, "report_failed") : P(lang, "report_sent"));
   }
   async function block() {
@@ -5021,11 +5038,21 @@ function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
             [1, 2, 3, 4].map((i) =>
               (0, T.jsx)(
                 ChSmallBtn,
-                { onClick: () => report(P("en", "report_r" + i)), disabled: busy, style: { display: "block", width: "100%", marginBottom: 8, textAlign: "left" }, children: P(lang, "report_r" + i) },
+                { onClick: () => chSetSel(P("en", "report_r" + i)), disabled: busy, style: { display: "block", width: "100%", marginBottom: 8, textAlign: "left", fontWeight: chSel === P("en", "report_r" + i) ? 700 : 400, border: chSel === P("en", "report_r" + i) ? `2px solid ${O.line}` : undefined }, children: P(lang, "report_r" + i) },
                 i,
               ),
             ),
-            (0, T.jsx)(ChSmallBtn, { onClick: () => setMode(null), style: { width: "100%" }, children: P(lang, "delete_cancel") }),
+            chSel &&
+              (0, T.jsx)("textarea", {
+                value: chText,
+                onChange: (e) => chSetText(e.target.value),
+                maxLength: 500,
+                rows: 3,
+                placeholder: P(lang, "report_details"),
+                style: { display: "block", width: "100%", boxSizing: "border-box", marginBottom: 8, padding: 10, fontSize: 14, fontFamily: "inherit", borderRadius: 10, border: `1px solid ${O.line}`, resize: "vertical" },
+              }),
+            chSel && (0, T.jsx)(ChSmallBtn, { onClick: () => report(chSel), disabled: busy, style: { width: "100%", marginBottom: 8, fontWeight: 700 }, children: P(lang, "report_send") }),
+            (0, T.jsx)(ChSmallBtn, { onClick: () => (setMode(null), chSetSel(null), chSetText("")), style: { width: "100%" }, children: P(lang, "delete_cancel") }),
           ],
         }),
       mode === "block" &&

@@ -364,10 +364,10 @@ function yc(e) {
 /* Landnavn lagres på norsk i databasen. ChCN gir navnet på appens språk (kun visning). */
 var ChCNcache = {};
 var ChCNspecial = {
-  "GB-ENG": { en: "England", nl: "Engeland", de: "England", sv: "England", da: "England" },
-  "GB-SCT": { en: "Scotland", nl: "Schotland", de: "Schottland", sv: "Skottland", da: "Skotland" },
-  "GB-WLS": { en: "Wales", nl: "Wales", de: "Wales", sv: "Wales", da: "Wales" },
-  "GB-NIR": { en: "Northern Ireland", nl: "Noord-Ierland", de: "Nordirland", sv: "Nordirland", da: "Nordirland" },
+  "GB-ENG": { en: "England", nl: "Engeland", de: "England", sv: "England", da: "England", es: "Inglaterra" },
+  "GB-SCT": { en: "Scotland", nl: "Schotland", de: "Schottland", sv: "Skottland", da: "Skotland", es: "Escocia" },
+  "GB-WLS": { en: "Wales", nl: "Wales", de: "Wales", sv: "Wales", da: "Wales", es: "Gales" },
+  "GB-NIR": { en: "Northern Ireland", nl: "Noord-Ierland", de: "Nordirland", sv: "Nordirland", da: "Nordirland", es: "Irlanda del Norte" },
 };
 function ChCN(chName) {
   if (!chName || typeof chName !== "string") return chName;
@@ -416,7 +416,7 @@ function ChDefaultLang() {
       .toLowerCase()
       .slice(0, 2);
     if (l === "nb" || l === "nn" || l === "no") return "no";
-    if (["en", "nl", "de", "sv", "da"].indexOf(l) >= 0) return l;
+    if (["en", "nl", "de", "sv", "da", "es"].indexOf(l) >= 0) return l;
   } catch {}
   return "en";
 }
@@ -2488,6 +2488,347 @@ var O = {
       unblock: "Ophæv",
       privacy_note: "Ved at bruge CityHopper accepterer du privatlivspolitikken.",
     },
+    es: {
+      tab_checkin: "Registrar",
+      tab_overview: "Resumen",
+      tab_map: "Mapa",
+      tab_social: "Amigos",
+      tab_friends: "Amigos",
+      tab_leaderboards: "Clasificaciones",
+      logout: "Cerrar sesión",
+      rate_app: "Valora la app en Google Play",
+      countries: "países",
+      places: "lugares",
+      loading_log: "Cargando tu diario de viaje…",
+      empty_log: "El diario está vacío. Ve a Registrar para añadir tu primer lugar.",
+      confirm_delete: "¿Eliminar {place}?",
+      im_here_now: "Estoy aquí ahora",
+      getting_position: "Obteniendo ubicación…",
+      help_ios:
+        'Ajustes → Privacidad y seguridad → Localización → actívala, busca Claude y elige "Mientras se usa la app".',
+      help_android: "Ajustes → Aplicaciones → Claude → Permisos → Ubicación → Permitir.",
+      help_fallback:
+        "¿Sigue sin preguntar? La ventana del chat bloquea la ubicación. Marca tú mismo el punto en el mapa.",
+      open_map: "Abrir el mapa",
+      place_placeholder: "Lugar o ciudad",
+      country_placeholder: "País",
+      checkin_btn: "Registrar",
+      checkin_here: "Registrar aquí",
+      searching: "buscando…",
+      close_suggestions: "Cerrar sugerencias",
+      err_load_list: "No se pudo cargar la lista. Comprueba tu conexión.",
+      err_place_country_required: "Hay que rellenar el lugar y el país.",
+      err_pick_real_place: "Elige un lugar real de las sugerencias.",
+      search_no_results: "Sin resultados. Prueba con otra búsqueda.",
+      search_failed: "La búsqueda falló. Comprueba tu conexión e inténtalo de nuevo.",
+      err_delete_place: "No se pudo eliminar el lugar. Inténtalo de nuevo.",
+      err_already_logged: "{place} ya está en el diario.",
+      err_save_place: "No se pudo guardar el lugar. Inténtalo de nuevo.",
+      err_no_geo: "Este dispositivo no comparte la ubicación con la app.",
+      status_finding_position: "Buscando tu ubicación…",
+      status_looking_up_place: "Buscando el lugar…",
+      status_confirm_and_checkin: "Comprueba que el lugar es correcto y pulsa Registrar.",
+      status_found_pos_not_name: "Se encontró la ubicación, pero no el nombre del lugar. Escríbelo tú.",
+      err_no_geo_access: "La app no tiene acceso a tu ubicación.",
+      err_pos_not_found: "No se pudo encontrar tu ubicación. Inténtalo de nuevo al aire libre o con wifi.",
+      err_pos_timeout: "Encontrar tu ubicación tardó demasiado. Inténtalo de nuevo.",
+      err_save_position: "No se pudo guardar la posición. Inténtalo de nuevo.",
+      err_load_friends: "No se pudieron cargar los amigos.",
+      err_send_request: "No se pudo enviar la solicitud.",
+      search_username: "Buscar por nombre de usuario",
+      add: "Añadir",
+      sent: "Enviada",
+      awaiting_your_reply: "Esperando tu respuesta",
+      friends_label: "Amigos",
+      loading_friends: "Cargando amigos…",
+      friend_requests: "Solicitudes de amistad",
+      accept: "Aceptar",
+      decline: "Rechazar",
+      sent_requests: "Solicitudes enviadas",
+      cancel: "Cancelar",
+      no_friends_yet: "Aún no tienes amigos. Busca un nombre de usuario arriba.",
+      remove_friend: "Eliminar amigo",
+      err_load_places: "No se pudieron cargar los lugares.",
+      back_to_friends: "Volver a amigos",
+      countries_places_count: "{countries} países · {places} lugares",
+      loading_places: "Cargando lugares…",
+      friend_no_places: "{name} aún no ha registrado ningún lugar.",
+      err_load_leaderboard: "No se pudo cargar la clasificación.",
+      no_data_yet: "Aún no hay datos.",
+      loading_leaderboards: "Cargando clasificaciones…",
+      no_data_leaderboard_hint: "Aún no hay datos. Registra algunos lugares y añade amigos para comparar.",
+      board_countries: "Clasificación — número de países",
+      board_places: "Clasificación — total de lugares",
+      board_capitals: "Clasificación — capitales visitadas",
+      board_country_specific: "Clasificación — lugares en un país",
+      choose_country: "Elige un país…",
+      err_no_geo_device: "Este dispositivo no comparte la ubicación con la app.",
+      err_no_geo_access_short: "No se pudo acceder a tu ubicación.",
+      err_no_place_name_found: "No se encontró el nombre del lugar. Escríbelo tú.",
+      my_position: "Mi ubicación",
+      tap_where_it_is: "Toca el mapa donde está realmente el lugar.",
+      is_this_correct: "¿Es este el lugar correcto?",
+      saving: "Guardando…",
+      confirm_correct_place: "Confirmar lugar correcto",
+      try_again: "Inténtalo de nuevo",
+      cancel_just_viewing: "Cancelar — solo mirar el mapa",
+      set_pin_myself: "Marcar el punto yo mismo",
+      tap_where_you_were: "Toca el mapa donde has estado.",
+      checking_tiles: "Comprobando los mosaicos del mapa…",
+      tiles_blocked:
+        "Los mosaicos del mapa están bloqueados en la ventana del chat, así que CityHopper dibuja el mapamundi por sí mismo.",
+      retry_real_map: "Probar de nuevo el mapa real",
+      no_pins_yet: "Aún no hay marcadores. Registra un lugar y aparecerá en el mapa.",
+      missing_pin_label: "Falta el marcador en el mapa:",
+      find_on_map: "Buscar en el mapa",
+      zoom_in: "Acercar",
+      zoom_out: "Alejar",
+      show_all: "Mostrar todo",
+      err_fill_email: "Introduce tu correo electrónico.",
+      err_send_email: "No se pudo enviar el correo. Inténtalo más tarde.",
+      info_check_email_reset: "Revisa tu correo: te hemos enviado un enlace para crear una nueva contraseña.",
+      err_fill_email_password: "Introduce tu correo y tu contraseña.",
+      err_password_min: "La contraseña debe tener al menos 6 caracteres.",
+      err_username_format: "Nombre de usuario: de 3 a 20 caracteres, solo letras, números y guiones bajos.",
+      err_username_taken: "Ese nombre de usuario ya está en uso. Elige otro.",
+      err_wrong_login: "Correo o contraseña incorrectos.",
+      err_email_taken: "Este correo ya tiene una cuenta. Prueba a iniciar sesión.",
+      err_create_account: "No se pudo crear la cuenta. Inténtalo de nuevo.",
+      err_username_not_saved: "La cuenta se creó, pero no se pudo guardar el nombre de usuario. Prueba a iniciar sesión.",
+      heading_login: "Inicia sesión para ver tu lista.",
+      heading_signup: "Crea una cuenta para empezar.",
+      heading_forgot: "Introduce tu correo y te enviaremos un enlace para crear una nueva contraseña.",
+      username_placeholder: "Nombre de usuario",
+      email_placeholder: "Correo electrónico",
+      password_placeholder: "Contraseña",
+      wait_a_moment: "Un momento…",
+      login_btn: "Iniciar sesión",
+      create_account_btn: "Crear cuenta",
+      send_reset_link: "Enviar enlace",
+      forgot_password: "¿Olvidaste la contraseña?",
+      have_account: "¿Ya tienes cuenta? Inicia sesión",
+      back_to_login: "Volver al inicio de sesión",
+      no_account: "¿No tienes cuenta? Crea una",
+      err_set_password: "No se pudo guardar la nueva contraseña. Inténtalo de nuevo.",
+      new_password_title: "Nueva contraseña",
+      new_password_subtitle: "Introduce una nueva contraseña para tu cuenta.",
+      new_password_placeholder: "Nueva contraseña",
+      save_new_password: "Guardar nueva contraseña",
+      note_placeholder: "¿Qué tal fue? Deja una nota",
+      favorite_city: "Mi ciudad favorita",
+      settings_title: "Ajustes",
+      tab_badges: "Insignias",
+      badges_title: "Insignias",
+      badges_earned: "{n} de {t}",
+      visited_on: "Fecha de la visita",
+      visited_on_unset: "Sin definir",
+      checkin_date_hint: "Déjalo vacío para usar la fecha de hoy.",
+      checkin_no_date: "Sin fecha",
+      b_countries: "{n} países",
+      b_places: "{n} lugares",
+      b_capitals: "{n} capitales",
+      b_week: "Semana perfecta",
+      b_week_desc: "Un registro cada día de lunes a domingo",
+      b_streak: "{n} días seguidos",
+      b_three: "Tres países en un día",
+      b_nordic: "Los cinco países nórdicos",
+      b_rater: "Valoraste {n} lugares",
+      b_photo: "Fotos en {n} lugares",
+      b_writer: "Notas en {n} lugares",
+      b_night: "Noctámbulo",
+      b_cap_high: "La capital más alta del mundo",
+      d_cap_high: "Regístrate en La Paz, Bolivia, a 3.640 metros sobre el nivel del mar.",
+      b_cap_low: "La capital más baja del mundo",
+      d_cap_low: "Regístrate en Bakú, Azerbaiyán, a 28 metros bajo el nivel del mar.",
+      b_cap_n: "La capital más septentrional del mundo",
+      d_cap_n: "Regístrate en Reikiavik, Islandia, a 64 grados norte.",
+      b_cap_s: "La capital más meridional del mundo",
+      d_cap_s: "Regístrate en Wellington, Nueva Zelanda, a 41 grados sur.",
+      b_night_desc: "Un registro entre medianoche y las cinco",
+      b_group_countries: "Países",
+      b_group_counts: "Hitos",
+      b_group_special: "Hazañas",
+      b_reg_all: "Todas las {units} de {country}",
+      d_reg_all: "Visita las {n} {units} de {country}.",
+      b_reg_n: "{n} {units} en {country}",
+      d_reg_n: "Visita {n} {units} distintas en {country}.",
+      d_group: "Visita los {n} países: {list}.",
+      reg_progress: "({k} de {n})",
+      prog_of: "{k} de {n}",
+      reg_fi_note: "(Åland cuenta como país propio.)",
+      board_badges: "Clasificación — hazañas conseguidas",
+      d_country: "Regístrate en algún lugar de {name}.",
+      d_countries: "Regístrate en {n} países distintos.",
+      d_countries_one: "Regístrate en 1 país.",
+      d_places: "Regístrate en {n} lugares.",
+      d_places_one: "Regístrate en 1 lugar.",
+      d_capitals: "Regístrate en {n} capitales.",
+      d_streak: "Regístrate en algún lugar {n} días seguidos.",
+      d_three: "Regístrate en tres países el mismo día.",
+      d_nordic: "Visita Noruega, Suecia, Dinamarca, Finlandia e Islandia.",
+      d_rater: "Valora {n} lugares.",
+      d_photo: "Añade una foto a {n} lugares.",
+      d_writer: "Escribe una nota en {n} lugares.",
+      d_cont: "Visita un país de {name}.",
+      d_cont_all: "Visita al menos un país en los siete continentes.",
+      d_needs_date: "Requiere que los lugares tengan fecha de visita.",
+      badge_earned: "Conseguida",
+      hide_locked: "Ocultar bloqueadas",
+      new_badge: "Nueva insignia",
+      no_results: "Sin coincidencias.",
+      stats_title: "Estadísticas",
+      compare_open: "Comparar conmigo",
+      compare_title: "{name} y tú",
+      cmp_both: "Los dos",
+      cmp_only_them: "Solo {name}",
+      cmp_only_me: "Solo tú",
+      cmp_none: "Aún no hay nada que comparar.",
+      stats_open: "Cifras de viaje",
+      places_open: "Lugares",
+      places_empty_friend: "No hay lugares que mostrar.",
+      st_north: "Más al norte",
+      st_high: "Más alto sobre el nivel del mar",
+      st_cap_high: "Capital más alta",
+      st_cap_low: "Capital más baja",
+      st_low: "Más bajo sobre el nivel del mar",
+      st_masl: "{n} m",
+      st_world: "Porcentaje de los países del mundo",
+      st_caps: "Capitales visitadas",
+      st_caps_sub: "{n}% de tus países",
+      st_cap_north: "Capital más septentrional",
+      st_cap_south: "Capital más meridional",
+      st_cap_east: "Capital más oriental",
+      st_cap_west: "Capital más occidental",
+      st_south: "Más al sur",
+      st_east: "Más al este",
+      st_west: "Más al oeste",
+      st_far: "Mayor distancia entre dos lugares",
+      st_first: "Primer registro",
+      st_last: "Último registro",
+      st_month: "Mes más activo",
+      st_years: "Año por año",
+      st_no_dates: "Añade fechas de visita a tus lugares para ver las cifras anuales.",
+      st_km: "{n} km",
+      st_places_n: "{n} lugares",
+      st_country_title: "Estadísticas de un país",
+      st_country_placeholder: "Escribe el nombre de un país …",
+      st_country_none: "Aún no hay visitas registradas en {name}.",
+      st_country_change: "Buscar otro país",
+      new_badges: "{n} insignias nuevas",
+      empty_places: "Aún no hay lugares. Toca Registrar para añadir el primero.",
+      empty_friends: "Aún no tienes amigos. Busca el nombre de usuario de alguien.",
+      empty_boards: "Las clasificaciones se llenan a medida que tú y tus amigos registráis lugares.",
+      see_feed: "Ver aquí todos los registros",
+      edit_place: "Editar mi visita",
+      cont_EU: "Europa",
+      cont_AS: "Asia",
+      cont_AF: "África",
+      cont_NA: "Norteamérica",
+      cont_SA: "Sudamérica",
+      cont_OC: "Oceanía",
+      cont_AN: "Antártida",
+      b_cont: "Todo {name}",
+      b_cont_all: "Todos los continentes",
+      b_locked: "Aún no conseguida",
+      push_title: "Recibe avisos cuando pase algo",
+      push_body: "Te avisaremos de mensajes, solicitudes de amistad y cuando un amigo se registre en algún lugar.",
+      push_enable: "Activar notificaciones",
+      push_later: "Ahora no",
+      push_toggle: "Notificaciones en este teléfono",
+      push_blocked: "Las notificaciones están bloqueadas. Actívalas en los ajustes del navegador de tu teléfono.",
+      push_unsupported: "Tu teléfono no admite notificaciones aquí. En iPhone hay que añadir la app a la pantalla de inicio desde Safari.",
+      favorite_city_other: "Ciudad favorita",
+      change_choice: "Cambiar",
+      choose_place: "Elegir lugar",
+      choose_photo: "Elegir foto",
+      no_favorite: "Aún no has elegido",
+      pick_favorite: "Elige una ciudad favorita",
+      search_places: "Buscar lugares",
+      tab_top: "Clasificaciones",
+      crash_title: "Algo salió mal",
+      crash_body: "La app encontró un error inesperado. Recarga para intentarlo de nuevo.",
+      crash_reload: "Recargar",
+      nav_profile: "Perfil",
+      my_profile: "Mi perfil",
+      profile_bio: "Sobre mí",
+      bio_placeholder: "Escribe algo sobre ti",
+      profile_private_label: "Solo mis amigos pueden ver mi perfil",
+      msg_friends_only_label: "Solo mis amigos pueden enviarme mensajes",
+      profile_is_private: "Este perfil es privado.",
+      change_avatar: "Cambiar foto de perfil",
+      remove_avatar: "Quitar foto de perfil",
+      profile_saved: "Guardado",
+      err_save_profile: "No se pudo guardar el perfil. Inténtalo de nuevo.",
+      send_message: "Enviar mensaje",
+      message_placeholder: "Escribe un mensaje",
+      send_btn: "Enviar",
+      no_messages: "Aún no hay mensajes.",
+      err_send_message: "No se envió el mensaje. Puede que este usuario solo acepte mensajes de amigos.",
+      notifications: "Notificaciones",
+      no_notifications: "No hay notificaciones nuevas.",
+      notif_request: "{name} quiere ser tu amigo",
+      notif_messages: "{n} mensajes nuevos de {name}",
+      notif_message_one: "Mensaje nuevo de {name}",
+      notif_checkin: "{name} se registró en {place}",
+      place_feed_title: "{place} — registros",
+      no_feed_yet: "Aún no hay fotos ni comentarios de este lugar.",
+      avg_rating: "Media",
+      friends_state: "Amigos",
+      request_pending: "Solicitud enviada",
+      add_friend_btn: "Añadir amigo",
+      loading_profile: "Cargando perfil…",
+      view_profile: "Ver perfil",
+      delete_place: "Eliminar lugar",
+      add_photo: "Añadir foto",
+      rating_label: "VALORACIÓN",
+      chars_left: "{n} caracteres restantes",
+      save_changes: "Guardar",
+      close_sheet: "Cerrar",
+      open_in_maps: "Abrir en Google Maps",
+      remove_photo: "Quitar foto",
+      clear_rating: "Borrar valoración",
+      uploading_photo: "Subiendo…",
+      err_upload_photo: "No se pudo subir la foto. Inténtalo de nuevo.",
+      err_save_changes: "No se pudieron guardar los cambios. Inténtalo de nuevo.",
+      board_top_rated: "Lugares mejor valorados — {country}",
+      no_ratings_yet: "Aún no hay valoraciones.",
+      rating_votes: "{n} valoraciones",
+      rating_vote: "1 valoración",
+      not_rated: "Sin valorar",
+      invite_share: "Invitar a un amigo",
+      invite_copied: "Enlace copiado",
+      invite_banner: "{name} te ha invitado a CityHopper",
+      invite_share_text: "Únete a mí en CityHopper y mira dónde hemos estado.",
+      trophy_title: "Mapa de viajes",
+      trophy_sub: "{n} de {t} países · {p}%",
+      trophy_share: "Compartir mapa",
+      trophy_zoom: "Toca el mapa para acercar",
+      privacy_link: "Política de privacidad",
+      delete_account: "Eliminar cuenta",
+      delete_title: "¿Eliminar tu cuenta?",
+      delete_warn: "Todos tus registros, fotos, amigos y mensajes se eliminarán de forma permanente. No se puede deshacer.",
+      delete_confirm: "Sí, eliminar todo",
+      delete_cancel: "Cancelar",
+      delete_busy: "Eliminando …",
+      delete_failed: "No se pudo eliminar la cuenta. Inténtalo de nuevo o escribe a {email}.",
+      report_user: "Denunciar usuario",
+      report_title: "¿Por qué lo denuncias?",
+      report_r1: "Contenido inapropiado",
+      report_r2: "Acoso o spam",
+      report_r3: "Perfil falso",
+      report_r4: "Otro",
+      report_sent: "Gracias. La denuncia se ha enviado.",
+      report_failed: "No se pudo enviar la denuncia.",
+      report_details: "Explica brevemente qué ocurre (opcional)",
+      report_send: "Enviar denuncia",
+      block_user: "Bloquear usuario",
+      block_confirm: "¿Bloquear a {name}? Dejaréis de ser amigos y no podrá enviarte mensajes ni solicitudes de amistad.",
+      block_done: "El usuario está bloqueado.",
+      blocked_title: "Usuarios bloqueados",
+      blocked_none: "No hay usuarios bloqueados.",
+      unblock: "Desbloquear",
+      privacy_note: "Al usar CityHopper aceptas la política de privacidad.",
+    },
   },
   u8 = (typeof localStorage < "u" && localStorage.getItem("ch_lang")) || ChDefaultLang(),
   bf = new Set();
@@ -2548,7 +2889,7 @@ function ChMonthLabel(ym, lang) {
   if (!ym) return ym;
   let [y, m] = ym.split("-").map(Number);
   if (!y || !m) return ym;
-  let loc = { no: "nb-NO", en: "en-GB", nl: "nl-NL", de: "de-DE", sv: "sv-SE", da: "da-DK" }[lang] || "en-GB",
+  let loc = { no: "nb-NO", en: "en-GB", nl: "nl-NL", de: "de-DE", sv: "sv-SE", da: "da-DK", es: "es-ES" }[lang] || "en-GB",
     s = new Date(y, m - 1, 1).toLocaleDateString(loc, { month: "long", year: "numeric" });
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -2831,7 +3172,7 @@ async function ChPostTown(postcode, country) {
         !name && a.municipality && (name = d8(a.municipality)),
         name && (out = { place: name, lat: +hit.lat, lng: +hit.lon, osm: ChOsm(hit) }));
     }
-  } catch {}
+  } catch (chE) { ChLogError("search_hit", chE); }
   Ch_POST_CACHE.set(key, out);
   return out;
 }
@@ -2925,7 +3266,7 @@ async function f8(e, t) {
       l = d8(s),
       c = o8(r);
     if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i) };
-  } catch {}
+  } catch (chE) { ChLogError("reverse_geo", chE); }
   throw new Error("not found");
 }
 async function t5(e) {
@@ -2935,7 +3276,7 @@ async function t5(e) {
         await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${n}`)
       ).json();
     if (r && r[0]) return { lat: parseFloat(r[0].lat), lng: parseFloat(r[0].lon) };
-  } catch {}
+  } catch (chE) { ChLogError("coords", chE); }
   throw new Error("not found");
 }
 
@@ -3302,6 +3643,26 @@ async function ChShrink(e, maks = 1400, kvalitet = 0.82) {
   return await new Promise((r) => i.toBlob(r, "image/jpeg", kvalitet));
 }
 
+/* Enkel feillogg: sender korte feilmeldinger til tabellen client_errors (maks 5 per okt). */
+var chErrCount = 0;
+function ChLogError(where, err) {
+  try {
+    if (chErrCount >= 5) return;
+    chErrCount++;
+    let msg = String((err && (err.message || err.code)) || err || "").slice(0, 400);
+    ze.from("client_errors")
+      .insert({ place: String(where).slice(0, 80), message: msg, agent: (navigator.userAgent || "").slice(0, 190) })
+      .then(
+        () => {},
+        () => {},
+      );
+  } catch {}
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("error", (e) => ChLogError("window.error", e && e.message));
+  window.addEventListener("unhandledrejection", (e) => ChLogError("unhandled", e && e.reason));
+}
+
 /* Lagrer bildet i to storrelser: full (1400 px) og miniatyr (240 px, *_t.jpg).
    Lister og kort bruker miniatyren; full storrelse hentes bare ved trykk. */
 async function ChUpload(e, t) {
@@ -3310,10 +3671,10 @@ async function ChUpload(e, t) {
   try {
     let s = await ChShrink(t);
     s && (n = s);
-  } catch {}
+  } catch (chE) { ChLogError("shrink_full", chE); }
   try {
     tn = await ChShrink(t, 240, 0.72);
-  } catch {}
+  } catch (chE) { ChLogError("shrink_thumb", chE); }
   let stamme = `${e}/${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     i = stamme + ".jpg",
     { error: r } = await ze.storage
@@ -3877,58 +4238,58 @@ var CH_REG_META = {NO:["counties","municipalities",15,357],SE:["lan","municipali
 var CH_REG_MILE = { NO: [50, 100, 200], SE: [50, 100, 200], DK: [25, 50] };
 var CH_NO_FYLKE = { "03": ["Oslo", 1], "11": ["Rogaland", 23], "15": ["Møre og Romsdal", 27], "18": ["Nordland", 41], "31": ["Østfold", 12], "32": ["Akershus", 21], "33": ["Buskerud", 18], "34": ["Innlandet", 46], "39": ["Vestfold", 6], "40": ["Telemark", 17], "42": ["Agder", 25], "46": ["Vestland", 43], "50": ["Trøndelag", 38], "55": ["Troms", 21], "56": ["Finnmark", 18] };
 var CH_UNITS = {
-  counties: { no: "fylker", en: "counties", nl: "provincies", de: "Bezirke", sv: "fylken", da: "fylker" },
-  lan: { no: "län", en: "counties (län)", nl: "län", de: "Län", sv: "län", da: "län" },
-  regions: { no: "regioner", en: "regions", nl: "regio's", de: "Regionen", sv: "regioner", da: "regioner" },
-  municipalities: { no: "kommuner", en: "municipalities", nl: "gemeenten", de: "Gemeinden", sv: "kommuner", da: "kommuner" },
-  provinces: { no: "provinser", en: "provinces", nl: "provincies", de: "Provinzen", sv: "provinser", da: "provinser" },
-  states: { no: "delstater", en: "states", nl: "deelstaten", de: "Bundesländer", sv: "delstater", da: "delstater" },
-  cantons: { no: "kantoner", en: "cantons", nl: "kantons", de: "Kantone", sv: "kantoner", da: "kantoner" },
-  districts: { no: "distrikter", en: "districts", nl: "districten", de: "Distrikte", sv: "distrikt", da: "distrikter" },
-  prefectures: { no: "prefekturer", en: "prefectures", nl: "prefecturen", de: "Präfekturen", sv: "prefekturer", da: "præfekturer" },
-  governorates: { no: "guvernement", en: "governorates", nl: "gouvernementen", de: "Gouvernements", sv: "guvernement", da: "guvernementer" },
+  counties: { no: "fylker", en: "counties", nl: "provincies", de: "Bezirke", sv: "fylken", da: "fylker", es: "provincias" },
+  lan: { no: "län", en: "counties (län)", nl: "län", de: "Län", sv: "län", da: "län", es: "condados (län)" },
+  regions: { no: "regioner", en: "regions", nl: "regio's", de: "Regionen", sv: "regioner", da: "regioner", es: "regiones" },
+  municipalities: { no: "kommuner", en: "municipalities", nl: "gemeenten", de: "Gemeinden", sv: "kommuner", da: "kommuner", es: "municipios" },
+  provinces: { no: "provinser", en: "provinces", nl: "provincies", de: "Provinzen", sv: "provinser", da: "provinser", es: "provincias" },
+  states: { no: "delstater", en: "states", nl: "deelstaten", de: "Bundesländer", sv: "delstater", da: "delstater", es: "estados" },
+  cantons: { no: "kantoner", en: "cantons", nl: "kantons", de: "Kantone", sv: "kantoner", da: "kantoner", es: "cantones" },
+  districts: { no: "distrikter", en: "districts", nl: "districten", de: "Distrikte", sv: "distrikt", da: "distrikter", es: "distritos" },
+  prefectures: { no: "prefekturer", en: "prefectures", nl: "prefecturen", de: "Präfekturen", sv: "prefekturer", da: "præfekturer", es: "prefecturas" },
+  governorates: { no: "guvernement", en: "governorates", nl: "gouvernementen", de: "Gouvernements", sv: "guvernement", da: "guvernementer", es: "gobernaciones" },
 };
 function ChUnit(u, lang) {
   let t = CH_UNITS[u];
   return t ? t[lang] || t.no : u;
 }
-/* Landgrupper. Navn paa seks sprak: no, en, nl, de, sv, da. */
+/* Landgrupper. Navn paa sju sprak: no, en, nl, de, sv, da, es. */
 var CH_GROUPS = [
-  { id: "norden", codes: ["NO", "SE", "DK", "FI", "IS", "FO", "GL", "AX"], n: ["Norden komplett", "The whole Nordic region", "Het hele Noordse gebied", "Der ganze Norden", "Hela Norden komplett", "Hele Norden komplet"] },
-  { id: "skand", codes: ["NO", "SE", "DK"], n: ["Skandinavia", "Scandinavia", "Scandinavië", "Skandinavien", "Skandinavien", "Skandinavien"] },
-  { id: "benelux", codes: ["BE", "NL", "LU"], n: ["Benelux", "Benelux", "Benelux", "Benelux", "Benelux", "Benelux"] },
-  { id: "baltikum", codes: ["EE", "LV", "LT"], n: ["Baltikum", "The Baltics", "De Baltische staten", "Baltikum", "Baltikum", "Baltikum"] },
-  { id: "balkan", codes: ["AL", "BA", "BG", "HR", "XK", "ME", "MK", "RS", "SI", "GR", "RO"], n: ["Balkan", "The Balkans", "De Balkan", "Balkan", "Balkan", "Balkan"] },
-  { id: "vbalkan", codes: ["AL", "BA", "XK", "ME", "MK", "RS"], n: ["Vest-Balkan", "Western Balkans", "West-Balkan", "Westbalkan", "Västra Balkan", "Vestbalkan"] },
-  { id: "brit", codes: ["GB", "IE", "IM", "JE", "GG"], n: ["Britiske øyer", "British Isles", "Britse Eilanden", "Britische Inseln", "Brittiska öarna", "Britiske øer"] },
-  { id: "iberia", codes: ["ES", "PT", "AD", "GI"], n: ["Iberia", "Iberia", "Iberië", "Iberische Halbinsel", "Iberiska halvön", "Den Iberiske Halvø"] },
-  { id: "alpene", codes: ["AT", "CH", "LI", "DE", "IT", "FR", "SI", "MC"], n: ["Alpene", "The Alps", "De Alpen", "Die Alpen", "Alperna", "Alperne"] },
-  { id: "dach", codes: ["DE", "AT", "CH"], n: ["DACH", "DACH", "DACH", "DACH", "DACH", "DACH"] },
-  { id: "visegrad", codes: ["PL", "CZ", "SK", "HU"], n: ["Visegrád-landene", "The Visegrád Group", "De Visegrád-landen", "Die Visegrád-Staaten", "Visegrádländerna", "Visegrád-landene"] },
-  { id: "middelhav", codes: ["ES", "FR", "MC", "IT", "MT", "SI", "HR", "BA", "ME", "AL", "GR", "TR", "CY", "SY", "LB", "IL", "EG", "LY", "TN", "DZ", "MA"], n: ["Middelhavet rundt", "Around the Mediterranean", "Rond de Middellandse Zee", "Rund ums Mittelmeer", "Runt Medelhavet", "Rundt om Middelhavet"] },
-  { id: "micro", codes: ["AD", "LI", "MC", "SM", "VA", "MT"], n: ["Europas mikrostater", "Europe's microstates", "Europese dwergstaten", "Europas Zwergstaaten", "Europas mikrostater", "Europas mikrostater"] },
-  { id: "eu", codes: ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"], n: ["Alle EU-land", "All EU countries", "Alle EU-landen", "Alle EU-Länder", "Alla EU-länder", "Alle EU-lande"] },
-  { id: "kaukasus", codes: ["GE", "AM", "AZ"], n: ["Kaukasus", "The Caucasus", "De Kaukasus", "Kaukasus", "Kaukasus", "Kaukasus"] },
-  { id: "centasia", codes: ["KZ", "KG", "TJ", "TM", "UZ"], n: ["Sentral-Asia", "Central Asia", "Centraal-Azië", "Zentralasien", "Centralasien", "Centralasien"] },
-  { id: "seasia", codes: ["BN", "KH", "ID", "LA", "MY", "MM", "PH", "SG", "TH", "TL", "VN"], n: ["Sørøst-Asia", "Southeast Asia", "Zuidoost-Azië", "Südostasien", "Sydostasien", "Sydøstasien"] },
-  { id: "indokina", codes: ["TH", "VN", "KH", "LA", "MM"], n: ["Indokina", "Indochina", "Indochina", "Indochina", "Indokina", "Indokina"] },
-  { id: "sasia", codes: ["IN", "PK", "BD", "LK", "NP", "BT", "MV", "AF"], n: ["Sør-Asia", "South Asia", "Zuid-Azië", "Südasien", "Sydasien", "Sydasien"] },
-  { id: "easia", codes: ["JP", "KR", "CN", "TW", "MN"], n: ["Øst-Asia", "East Asia", "Oost-Azië", "Ostasien", "Östasien", "Østasien"] },
-  { id: "golf", codes: ["SA", "AE", "QA", "KW", "BH", "OM"], n: ["Golfstatene", "The Gulf states", "De Golfstaten", "Die Golfstaaten", "Golfstaterna", "Golfstaterne"] },
-  { id: "levant", codes: ["LB", "SY", "JO", "IL", "PS"], n: ["Levanten", "The Levant", "De Levant", "Die Levante", "Levanten", "Levanten"] },
-  { id: "maghreb", codes: ["MA", "DZ", "TN", "LY", "MR"], n: ["Maghreb", "The Maghreb", "De Maghreb", "Maghreb", "Maghreb", "Maghreb"] },
-  { id: "oafrika", codes: ["KE", "TZ", "UG", "RW", "BI", "ET"], n: ["Øst-Afrika", "East Africa", "Oost-Afrika", "Ostafrika", "Östafrika", "Østafrika"] },
-  { id: "vafrika", codes: ["SN", "GM", "GN", "GW", "SL", "LR", "CI", "GH", "TG", "BJ", "NG", "BF", "ML", "NE", "CV"], n: ["Vest-Afrika", "West Africa", "West-Afrika", "Westafrika", "Västafrika", "Vestafrika"] },
-  { id: "safrika", codes: ["ZA", "NA", "BW", "ZW", "ZM", "MZ", "LS", "SZ"], n: ["Det sørlige Afrika", "Southern Africa", "Zuidelijk Afrika", "Südliches Afrika", "Södra Afrika", "Det sydlige Afrika"] },
-  { id: "indiahav", codes: ["MG", "MU", "SC", "KM", "MV"], n: ["Øyer i Indiahavet", "Indian Ocean islands", "Eilanden in de Indische Oceaan", "Inseln im Indischen Ozean", "Öar i Indiska oceanen", "Øer i Det Indiske Ocean"] },
-  { id: "stillehav", codes: ["FJ", "WS", "TO", "VU", "SB", "PG", "KI", "TV", "NR", "MH", "FM", "PW"], n: ["Stillehavsøyene", "The Pacific islands", "De Pacifische eilanden", "Pazifische Inselstaaten", "Stillahavsöarna", "Stillehavsøerne"] },
-  { id: "melam", codes: ["GT", "BZ", "HN", "SV", "NI", "CR", "PA"], n: ["Mellom-Amerika", "Central America", "Midden-Amerika", "Mittelamerika", "Centralamerika", "Mellemamerika"] },
-  { id: "karibia", codes: ["CU", "JM", "HT", "DO", "BS", "BB", "TT", "AG", "DM", "GD", "KN", "LC", "VC"], n: ["Karibia", "The Caribbean", "De Caraïben", "Karibik", "Karibien", "Caribien"] },
-  { id: "nordam", codes: ["US", "CA", "MX"], n: ["USA, Canada og Mexico", "USA, Canada and Mexico", "VS, Canada en Mexico", "USA, Kanada und Mexiko", "USA, Kanada och Mexiko", "USA, Canada og Mexico"] },
-  { id: "andes", codes: ["CO", "EC", "PE", "BO", "CL", "VE", "AR"], n: ["Andes-landene", "The Andean countries", "De Andeslanden", "Die Andenländer", "Andesländerna", "Andeslandene"] },
-  { id: "samerika", codes: ["AR", "BO", "BR", "CL", "CO", "EC", "GY", "PY", "PE", "SR", "UY", "VE"], n: ["Hele Sør-Amerika", "All of South America", "Heel Zuid-Amerika", "Ganz Südamerika", "Hela Sydamerika", "Hele Sydamerika"] },
+  { id: "norden", codes: ["NO", "SE", "DK", "FI", "IS", "FO", "GL", "AX"], n: ["Norden komplett", "The whole Nordic region", "Het hele Noordse gebied", "Der ganze Norden", "Hela Norden komplett", "Hele Norden komplet", "Los países nórdicos al completo"] },
+  { id: "skand", codes: ["NO", "SE", "DK"], n: ["Skandinavia", "Scandinavia", "Scandinavië", "Skandinavien", "Skandinavien", "Skandinavien", "Escandinavia"] },
+  { id: "benelux", codes: ["BE", "NL", "LU"], n: ["Benelux", "Benelux", "Benelux", "Benelux", "Benelux", "Benelux", "Benelux"] },
+  { id: "baltikum", codes: ["EE", "LV", "LT"], n: ["Baltikum", "The Baltics", "De Baltische staten", "Baltikum", "Baltikum", "Baltikum", "Los países bálticos"] },
+  { id: "balkan", codes: ["AL", "BA", "BG", "HR", "XK", "ME", "MK", "RS", "SI", "GR", "RO"], n: ["Balkan", "The Balkans", "De Balkan", "Balkan", "Balkan", "Balkan", "Los Balcanes"] },
+  { id: "vbalkan", codes: ["AL", "BA", "XK", "ME", "MK", "RS"], n: ["Vest-Balkan", "Western Balkans", "West-Balkan", "Westbalkan", "Västra Balkan", "Vestbalkan", "Balcanes Occidentales"] },
+  { id: "brit", codes: ["GB", "IE", "IM", "JE", "GG"], n: ["Britiske øyer", "British Isles", "Britse Eilanden", "Britische Inseln", "Brittiska öarna", "Britiske øer", "Islas Británicas"] },
+  { id: "iberia", codes: ["ES", "PT", "AD", "GI"], n: ["Iberia", "Iberia", "Iberië", "Iberische Halbinsel", "Iberiska halvön", "Den Iberiske Halvø", "Iberia"] },
+  { id: "alpene", codes: ["AT", "CH", "LI", "DE", "IT", "FR", "SI", "MC"], n: ["Alpene", "The Alps", "De Alpen", "Die Alpen", "Alperna", "Alperne", "Los Alpes"] },
+  { id: "dach", codes: ["DE", "AT", "CH"], n: ["DACH", "DACH", "DACH", "DACH", "DACH", "DACH", "DACH"] },
+  { id: "visegrad", codes: ["PL", "CZ", "SK", "HU"], n: ["Visegrád-landene", "The Visegrád Group", "De Visegrád-landen", "Die Visegrád-Staaten", "Visegrádländerna", "Visegrád-landene", "Grupo de Visegrado"] },
+  { id: "middelhav", codes: ["ES", "FR", "MC", "IT", "MT", "SI", "HR", "BA", "ME", "AL", "GR", "TR", "CY", "SY", "LB", "IL", "EG", "LY", "TN", "DZ", "MA"], n: ["Middelhavet rundt", "Around the Mediterranean", "Rond de Middellandse Zee", "Rund ums Mittelmeer", "Runt Medelhavet", "Rundt om Middelhavet", "Alrededor del Mediterráneo"] },
+  { id: "micro", codes: ["AD", "LI", "MC", "SM", "VA", "MT"], n: ["Europas mikrostater", "Europe's microstates", "Europese dwergstaten", "Europas Zwergstaaten", "Europas mikrostater", "Europas mikrostater", "Microestados de Europa"] },
+  { id: "eu", codes: ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"], n: ["Alle EU-land", "All EU countries", "Alle EU-landen", "Alle EU-Länder", "Alla EU-länder", "Alle EU-lande", "Todos los países de la UE"] },
+  { id: "kaukasus", codes: ["GE", "AM", "AZ"], n: ["Kaukasus", "The Caucasus", "De Kaukasus", "Kaukasus", "Kaukasus", "Kaukasus", "El Cáucaso"] },
+  { id: "centasia", codes: ["KZ", "KG", "TJ", "TM", "UZ"], n: ["Sentral-Asia", "Central Asia", "Centraal-Azië", "Zentralasien", "Centralasien", "Centralasien", "Asia Central"] },
+  { id: "seasia", codes: ["BN", "KH", "ID", "LA", "MY", "MM", "PH", "SG", "TH", "TL", "VN"], n: ["Sørøst-Asia", "Southeast Asia", "Zuidoost-Azië", "Südostasien", "Sydostasien", "Sydøstasien", "Sudeste Asiático"] },
+  { id: "indokina", codes: ["TH", "VN", "KH", "LA", "MM"], n: ["Indokina", "Indochina", "Indochina", "Indochina", "Indokina", "Indokina", "Indochina"] },
+  { id: "sasia", codes: ["IN", "PK", "BD", "LK", "NP", "BT", "MV", "AF"], n: ["Sør-Asia", "South Asia", "Zuid-Azië", "Südasien", "Sydasien", "Sydasien", "Asia Meridional"] },
+  { id: "easia", codes: ["JP", "KR", "CN", "TW", "MN"], n: ["Øst-Asia", "East Asia", "Oost-Azië", "Ostasien", "Östasien", "Østasien", "Asia Oriental"] },
+  { id: "golf", codes: ["SA", "AE", "QA", "KW", "BH", "OM"], n: ["Golfstatene", "The Gulf states", "De Golfstaten", "Die Golfstaaten", "Golfstaterna", "Golfstaterne", "Estados del Golfo"] },
+  { id: "levant", codes: ["LB", "SY", "JO", "IL", "PS"], n: ["Levanten", "The Levant", "De Levant", "Die Levante", "Levanten", "Levanten", "El Levante"] },
+  { id: "maghreb", codes: ["MA", "DZ", "TN", "LY", "MR"], n: ["Maghreb", "The Maghreb", "De Maghreb", "Maghreb", "Maghreb", "Maghreb", "El Magreb"] },
+  { id: "oafrika", codes: ["KE", "TZ", "UG", "RW", "BI", "ET"], n: ["Øst-Afrika", "East Africa", "Oost-Afrika", "Ostafrika", "Östafrika", "Østafrika", "África Oriental"] },
+  { id: "vafrika", codes: ["SN", "GM", "GN", "GW", "SL", "LR", "CI", "GH", "TG", "BJ", "NG", "BF", "ML", "NE", "CV"], n: ["Vest-Afrika", "West Africa", "West-Afrika", "Westafrika", "Västafrika", "Vestafrika", "África Occidental"] },
+  { id: "safrika", codes: ["ZA", "NA", "BW", "ZW", "ZM", "MZ", "LS", "SZ"], n: ["Det sørlige Afrika", "Southern Africa", "Zuidelijk Afrika", "Südliches Afrika", "Södra Afrika", "Det sydlige Afrika", "África Austral"] },
+  { id: "indiahav", codes: ["MG", "MU", "SC", "KM", "MV"], n: ["Øyer i Indiahavet", "Indian Ocean islands", "Eilanden in de Indische Oceaan", "Inseln im Indischen Ozean", "Öar i Indiska oceanen", "Øer i Det Indiske Ocean", "Islas del océano Índico"] },
+  { id: "stillehav", codes: ["FJ", "WS", "TO", "VU", "SB", "PG", "KI", "TV", "NR", "MH", "FM", "PW"], n: ["Stillehavsøyene", "The Pacific islands", "De Pacifische eilanden", "Pazifische Inselstaaten", "Stillahavsöarna", "Stillehavsøerne", "Islas del Pacífico"] },
+  { id: "melam", codes: ["GT", "BZ", "HN", "SV", "NI", "CR", "PA"], n: ["Mellom-Amerika", "Central America", "Midden-Amerika", "Mittelamerika", "Centralamerika", "Mellemamerika", "Centroamérica"] },
+  { id: "karibia", codes: ["CU", "JM", "HT", "DO", "BS", "BB", "TT", "AG", "DM", "GD", "KN", "LC", "VC"], n: ["Karibia", "The Caribbean", "De Caraïben", "Karibik", "Karibien", "Caribien", "El Caribe"] },
+  { id: "nordam", codes: ["US", "CA", "MX"], n: ["USA, Canada og Mexico", "USA, Canada and Mexico", "VS, Canada en Mexico", "USA, Kanada und Mexiko", "USA, Kanada och Mexiko", "USA, Canada og Mexico", "EE. UU., Canadá y México"] },
+  { id: "andes", codes: ["CO", "EC", "PE", "BO", "CL", "VE", "AR"], n: ["Andes-landene", "The Andean countries", "De Andeslanden", "Die Andenländer", "Andesländerna", "Andeslandene", "Países andinos"] },
+  { id: "samerika", codes: ["AR", "BO", "BR", "CL", "CO", "EC", "GY", "PY", "PE", "SR", "UY", "VE"], n: ["Hele Sør-Amerika", "All of South America", "Heel Zuid-Amerika", "Ganz Südamerika", "Hela Sydamerika", "Hele Sydamerika", "Toda Sudamérica"] },
 ];
-var CH_LANGS = ["no", "en", "nl", "de", "sv", "da"];
+var CH_LANGS = ["no", "en", "nl", "de", "sv", "da", "es"];
 
 var Ch_REG = { p: null, dec: new Map(), memo: new Map() };
 function ChLoadRegions() {
@@ -4468,7 +4829,7 @@ async function ChUploadAvatar(uid, file) {
   try {
     let small = await ChShrink(file);
     small && (blob = small);
-  } catch {}
+  } catch (chE) { ChLogError("shrink_avatar", chE); }
   let path = `${uid}/${Date.now()}.jpg`,
     { error } = await ze.storage
       .from("avatars")
@@ -5193,6 +5554,7 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
             ["de", "Deutsch"],
             ["sv", "Svenska"],
             ["da", "Dansk"],
+            ["es", "Español"],
           ].map((l) => (0, T.jsx)("option", { value: l[0], children: l[1] }, l[0])),
         }),
       }),
@@ -6181,7 +6543,8 @@ var ChTourText = {
   nl: ["Welkom bij CityHopper", "Check in op steden en plaatsen waar je bent geweest, geef sterren en voeg een foto en notitie toe.", "Bekijk ze op de kaart en in je statistieken en verzamel badges voor landen, plaatsen en prestaties.", "Voeg vrienden toe, bekijk ranglijsten en vergelijk wie waar is geweest.", "Jij bepaalt of je profiel open of privé is bij Instellingen.", "Volgende", "Overslaan", "Aan de slag"],
   de: ["Willkommen bei CityHopper", "Checke in Städten und Orten ein, vergib Sterne und füge Foto und Notiz hinzu.", "Sieh sie auf der Karte und in der Statistik und sammle Abzeichen für Länder, Orte und Leistungen.", "Füge Freunde hinzu, sieh Ranglisten und vergleiche, wer wo war.", "In den Einstellungen entscheidest du, ob dein Profil offen oder privat ist.", "Weiter", "Überspringen", "Los geht's"],
   sv: ["Välkommen till CityHopper", "Checka in på städer och platser du varit på, ge stjärnor och lägg till foto och anteckning.", "Se dem på kartan och i statistiken och samla märken för länder, platser och bragder.", "Lägg till vänner, se topplistor och jämför vem som varit var.", "Du bestämmer om profilen är öppen eller privat under Inställningar.", "Nästa", "Hoppa över", "Kom igång"],
-  da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"],
+  da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"]
+  es: ["Te damos la bienvenida a CityHopper", "Regístrate en las ciudades y lugares donde has estado, da estrellas y añade una foto y una nota.", "Míralos en el mapa y en las estadísticas, y colecciona insignias de países, lugares y hazañas.", "Añade amigos, mira las clasificaciones y compara quién ha estado dónde.", "Tú decides si tu perfil es abierto o privado en Ajustes.", "Siguiente", "Omitir", "Empezar"],,
 };
 function ChTour({ lang, uid }) {
   let key = "ch_tour_" + uid,
@@ -6281,13 +6644,13 @@ function ChInviteBanner({ lang, who, onYes, onNo }) {
     children: [
       (0, T.jsx)("div", {
         style: { fontSize: 15, fontWeight: 600, marginBottom: 10, wordBreak: "break-word" },
-        children: no ? `Legge til ${who.username} som venn?` : `Add ${who.username} as a friend?`,
+        children: no ? `Legge til ${who.username} som venn?` : lang === "es" ? `¿Añadir a ${who.username} como amigo?` : `Add ${who.username} as a friend?`,
       }),
       (0, T.jsxs)("div", {
         style: { display: "flex", gap: 8 },
         children: [
-          (0, T.jsx)("button", { onClick: onYes, style: btn(O.accent, "#000"), children: no ? "Ja, send" : "Yes, send" }),
-          (0, T.jsx)("button", { onClick: onNo, style: btn(O.surface2, "inherit"), children: no ? "Nei" : "No" }),
+          (0, T.jsx)("button", { onClick: onYes, style: btn(O.accent, "#000"), children: no ? "Ja, send" : lang === "es" ? "Sí, enviar" : "Yes, send" }),
+          (0, T.jsx)("button", { onClick: onNo, style: btn(O.surface2, "inherit"), children: no ? "Nei" : lang === "es" ? "No" : "No" }),
         ],
       }),
     ],
@@ -7635,7 +7998,7 @@ function n5({ session: e, onLogout: t }) {
           await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${Se}&longitude=${at}`)
         ).json();
         Hn && Array.isArray(Hn.elevation) && Hn.elevation[0] != null && (chHoyde = Hn.elevation[0]);
-      } catch {}
+      } catch (chE) { ChLogError("elevation", chE); }
     let { data: Zn, error: Qr } = await ze
       .from("visits")
       .insert({
@@ -7790,7 +8153,7 @@ function n5({ session: e, onLogout: t }) {
           .single();
         !at && Se && c((gt) => gt.map((dn) => (dn.id === F.id ? Se : dn)));
       }
-    } catch {}
+    } catch (chE) { ChLogError("visit_update", chE); }
   }
   async function et(F, te, Se) {
     let { data: at, error: gt } = await ze
@@ -8382,7 +8745,7 @@ function n5({ session: e, onLogout: t }) {
                 chSetInv(null);
                 try {
                   await ze.from("friends").insert({ requester_id: e.user.id, addressee_id: w.id, status: "pending" });
-                } catch {}
+                } catch (chE) { ChLogError("friend_request", chE); }
                 s("venner");
               },
             }),
@@ -10250,6 +10613,7 @@ function h5() {
                   (0, T.jsx)("option", { value: "de", children: "DE" }),
                   (0, T.jsx)("option", { value: "sv", children: "SV" }),
                   (0, T.jsx)("option", { value: "da", children: "DA" }),
+                  (0, T.jsx)("option", { value: "es", children: "ES" }),
                 ],
               }),
             ],

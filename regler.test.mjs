@@ -120,3 +120,15 @@ test("banner vises når serveren ikke svarer", async () => {
   assert.match(a.textContent, /server/i);
   w.dispatchEvent(new w.CustomEvent("ch-net", { detail: "ok" }));
 });
+
+// Nye brukere: de første sekundene
+test("innloggingsskjermen forteller hva appen er", async () => {
+  await new Promise((r) => setTimeout(r, 300));
+  const pitch = w.document.querySelector(".ch-pitch");
+  assert.ok(pitch, "fant ikke beskrivelsen av appen");
+  assert.ok(pitch.textContent.length > 20);
+});
+test("tekstene for første sted og nettbanner finnes på alle sju språk", () => {
+  const keys = ["app_pitch", "first_title", "first_sub", "first_btn", "net_offline", "net_down", "name_choice_title", "name_choice_sub", "name_from_map", "name_from_post"];
+  for (const lang of ["no", "en", "nl", "de", "sv", "da", "es"]) for (const k of keys) assert.ok(R.LANGS[lang] && R.LANGS[lang][k], `${lang}.${k} mangler`);
+});

@@ -480,7 +480,6 @@ var O = {
       countries: "land",
       places: "steder",
       loading_log: "Henter reiseloggen\u2026",
-      empty_log: "Loggen er tom. G\xE5 til Sjekk inn for \xE5 legge til det f\xF8rste stedet.",
       confirm_delete: "Slette {place}?",
       im_here_now: "Jeg er her n\xE5",
       getting_position: "Henter posisjon\u2026",
@@ -759,6 +758,10 @@ var O = {
       chars_left: "{n} tegn igjen",
       save_changes: "Lagre",
       close_sheet: "Lukk",
+      app_pitch: "Logg byene og stedene du har vært, samle merker og sammenlign med venner.",
+      first_title: "Hvor har du vært?",
+      first_sub: "Start med ett sted, for eksempel byen du er i nå.",
+      first_btn: "Registrer ditt første sted",
       net_offline: "Du er uten nett. Det du gjør nå blir ikke lagret før nettet er tilbake.",
       net_down: "Får ikke kontakt med serveren akkurat nå. Prøv igjen om litt.",
       name_choice_title: "Hva heter stedet?",
@@ -862,7 +865,6 @@ var O = {
       countries: "countries",
       places: "places",
       loading_log: "Loading your travel log\u2026",
-      empty_log: "The log is empty. Go to Check in to add your first place.",
       confirm_delete: "Delete {place}?",
       im_here_now: "I'm here now",
       getting_position: "Getting position\u2026",
@@ -1139,6 +1141,10 @@ var O = {
       chars_left: "{n} characters left",
       save_changes: "Save",
       close_sheet: "Close",
+      app_pitch: "Log the cities and places you've been, collect badges and compare with friends.",
+      first_title: "Where have you been?",
+      first_sub: "Start with one place, for example the town you're in now.",
+      first_btn: "Add your first place",
       net_offline: "You are offline. Changes won't be saved until you're back online.",
       net_down: "Can't reach the server right now. Please try again in a moment.",
       name_choice_title: "What is this place called?",
@@ -1242,7 +1248,6 @@ var O = {
       countries: "landen",
       places: "plaatsen",
       loading_log: "Reislog wordt geladen\u2026",
-      empty_log: "Het logboek is leeg. Ga naar Inchecken om je eerste plaats toe te voegen.",
       confirm_delete: "{place} verwijderen?",
       im_here_now: "Ik ben hier nu",
       getting_position: "Locatie ophalen\u2026",
@@ -1521,6 +1526,10 @@ var O = {
       chars_left: "Nog {n} tekens",
       save_changes: "Opslaan",
       close_sheet: "Sluiten",
+      app_pitch: "Houd bij welke steden en plaatsen je hebt bezocht, verzamel badges en vergelijk met vrienden.",
+      first_title: "Waar ben je geweest?",
+      first_sub: "Begin met één plek, bijvoorbeeld de stad waar je nu bent.",
+      first_btn: "Voeg je eerste plek toe",
       net_offline: "Je bent offline. Wijzigingen worden pas opgeslagen als je weer online bent.",
       net_down: "Kan de server nu niet bereiken. Probeer het zo opnieuw.",
       name_choice_title: "Hoe heet deze plek?",
@@ -1602,7 +1611,6 @@ var O = {
       countries: "Länder",
       places: "Orte",
       loading_log: "Dein Reiseprotokoll wird geladen…",
-      empty_log: "Das Protokoll ist leer. Gehe zu Einchecken, um deinen ersten Ort hinzuzufügen.",
       confirm_delete: "{place} löschen?",
       im_here_now: "Ich bin jetzt hier",
       getting_position: "Position wird ermittelt…",
@@ -1876,6 +1884,10 @@ var O = {
       chars_left: "Noch {n} Zeichen",
       save_changes: "Speichern",
       close_sheet: "Schließen",
+      app_pitch: "Halte fest, welche Städte und Orte du besucht hast, sammle Abzeichen und vergleiche dich mit Freunden.",
+      first_title: "Wo warst du schon?",
+      first_sub: "Fang mit einem Ort an, zum Beispiel der Stadt, in der du gerade bist.",
+      first_btn: "Ersten Ort hinzufügen",
       net_offline: "Du bist offline. Änderungen werden erst gespeichert, wenn du wieder online bist.",
       net_down: "Der Server ist gerade nicht erreichbar. Versuche es gleich noch einmal.",
       name_choice_title: "Wie heißt dieser Ort?",
@@ -1957,7 +1969,6 @@ var O = {
       countries: "länder",
       places: "platser",
       loading_log: "Laddar din reselogg…",
-      empty_log: "Loggen är tom. Gå till Checka in för att lägga till din första plats.",
       confirm_delete: "Radera {place}?",
       im_here_now: "Jag är här nu",
       getting_position: "Hämtar position…",
@@ -2231,6 +2242,10 @@ var O = {
       chars_left: "{n} tecken kvar",
       save_changes: "Spara",
       close_sheet: "Stäng",
+      app_pitch: "Logga städerna och platserna du varit på, samla märken och jämför med vänner.",
+      first_title: "Var har du varit?",
+      first_sub: "Börja med en plats, till exempel staden du är i nu.",
+      first_btn: "Lägg till din första plats",
       net_offline: "Du är offline. Det du gör sparas inte förrän nätet är tillbaka.",
       net_down: "Får inte kontakt med servern just nu. Försök igen om en stund.",
       name_choice_title: "Vad heter platsen?",
@@ -2312,7 +2327,6 @@ var O = {
       countries: "lande",
       places: "steder",
       loading_log: "Indlæser din rejselog…",
-      empty_log: "Loggen er tom. Gå til Tjek ind for at tilføje dit første sted.",
       confirm_delete: "Slet {place}?",
       im_here_now: "Jeg er her nu",
       getting_position: "Henter position…",
@@ -2586,6 +2600,10 @@ var O = {
       chars_left: "{n} tegn tilbage",
       save_changes: "Gem",
       close_sheet: "Luk",
+      app_pitch: "Log de byer og steder, du har været, saml mærker og sammenlign med venner.",
+      first_title: "Hvor har du været?",
+      first_sub: "Start med ét sted, for eksempel byen, du er i nu.",
+      first_btn: "Tilføj dit første sted",
       net_offline: "Du er offline. Det, du gør nu, gemmes ikke, før nettet er tilbage.",
       net_down: "Kan ikke få kontakt med serveren lige nu. Prøv igen om lidt.",
       name_choice_title: "Hvad hedder stedet?",
@@ -2667,7 +2685,6 @@ var O = {
       countries: "países",
       places: "lugares",
       loading_log: "Cargando tu diario de viaje…",
-      empty_log: "El diario está vacío. Ve a Registrar para añadir tu primer lugar.",
       confirm_delete: "¿Eliminar {place}?",
       im_here_now: "Estoy aquí ahora",
       getting_position: "Obteniendo ubicación…",
@@ -2944,6 +2961,10 @@ var O = {
       chars_left: "{n} caracteres restantes",
       save_changes: "Guardar",
       close_sheet: "Cerrar",
+      app_pitch: "Registra las ciudades y lugares donde has estado, colecciona insignias y compárate con tus amigos.",
+      first_title: "¿Dónde has estado?",
+      first_sub: "Empieza con un lugar, por ejemplo la ciudad donde estás ahora.",
+      first_btn: "Añade tu primer lugar",
       net_offline: "No tienes conexión. Los cambios no se guardarán hasta que vuelva la red.",
       net_down: "No se puede conectar con el servidor ahora. Inténtalo de nuevo en un momento.",
       name_choice_title: "¿Cómo se llama este lugar?",
@@ -7587,7 +7608,7 @@ var ChTourText = {
   da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"],
   es: ["Te damos la bienvenida a CityHopper", "Regístrate en las ciudades y lugares donde has estado, da estrellas y añade una foto y una nota.", "Míralos en el mapa y en las estadísticas, y colecciona insignias de países, lugares y hazañas.", "Añade amigos, mira las clasificaciones y compara quién ha estado dónde.", "Tú decides si tu perfil es abierto o privado en Ajustes.", "Siguiente", "Omitir", "Empezar"],
 };
-function ChTour({ lang, uid }) {
+function ChTour({ lang, uid, onStart }) {
   let key = "ch_tour_" + uid,
     [step, setStep] = (0, U.useState)(0),
     [open, setOpen] = (0, U.useState)(() => {
@@ -7647,7 +7668,7 @@ function ChTour({ lang, uid }) {
           style: { display: "flex", gap: 8, justifyContent: "space-between" },
           children: [
             (0, T.jsx)("button", { onClick: done, style: btn("transparent", O.sub), children: tx[6] }),
-            (0, T.jsx)("button", { onClick: last ? done : () => setStep(step + 1), style: btn(O.accent, "#000"), children: last ? tx[7] : tx[5] }),
+            (0, T.jsx)("button", { onClick: last ? () => (done(), onStart && onStart()) : () => setStep(step + 1), style: btn(O.accent, "#000"), children: last ? P(lang, "first_btn") : tx[5] }),
           ],
         }),
       ],
@@ -9552,9 +9573,15 @@ function n5({ session: e, onLogout: t }) {
                       children: P(n, "loading_log"),
                     })
                   : he.length === 0
-                    ? (0, T.jsx)("p", {
-                        style: { color: O.sub, fontSize: 15, padding: "24px 16px", textAlign: "center" },
-                        children: P(n, "empty_log"),
+                    ? /* Ny bruker: stor knapp rett til innsjekk i stedet for bare tekst. */
+                      (0, T.jsxs)("div", {
+                        className: "ch-first",
+                        style: { padding: "32px 16px", textAlign: "center" },
+                        children: [
+                          (0, T.jsx)("p", { style: { color: O.text, fontSize: 18, fontWeight: 600, margin: "0 0 6px" }, children: P(n, "first_title") }),
+                          (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15, margin: "0 0 18px", lineHeight: 1.45 }, children: P(n, "first_sub") }),
+                          (0, T.jsx)("button", { className: "ch-primary ch-first-btn", onClick: () => s("innsjekk"), style: { width: "100%", maxWidth: 340 }, children: P(n, "first_btn") }),
+                        ],
                       })
                     : chGroups.length === 0
                       ? (0, T.jsx)("p", {
@@ -9850,7 +9877,7 @@ function n5({ session: e, onLogout: t }) {
                 (chSetView(null), chLoadBell());
               },
             }),
-          !h && l.length === 0 && (0, T.jsx)(ChTour, { lang: n, uid: e.user.id }),
+          !h && l.length === 0 && (0, T.jsx)(ChTour, { lang: n, uid: e.user.id, onStart: () => s("innsjekk") }),
           chNytt &&
             (0, T.jsx)(ChBadgeToast, { badges: chNytt, lang: n, onClose: () => chSetNytt(null) }),
           chInv &&
@@ -11706,6 +11733,7 @@ function h5() {
       fontSize: 16,
       color: O.text,
       fontFamily: "inherit",
+      boxSizing: "border-box",
     },
     w = { login: P(e, "heading_login"), signup: P(e, "heading_signup"), forgot: P(e, "heading_forgot") }[n];
   return (0, T.jsxs)("div", {
@@ -11776,6 +11804,8 @@ function h5() {
               }),
             ],
           }),
+          /* Første møte: én setning om hva appen er, før skjemaet. */
+          (0, T.jsx)("p", { className: "ch-pitch", style: { color: O.text, fontSize: 16, lineHeight: 1.4, margin: "10px 0 6px" }, children: P(e, "app_pitch") }),
           (0, T.jsx)("p", { style: { color: O.sub, fontSize: 14, margin: "0 0 24px" }, children: w }),
           ChInviteGet() &&
             (0, T.jsx)("p", {
@@ -12060,7 +12090,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

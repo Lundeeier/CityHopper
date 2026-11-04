@@ -8,6 +8,23 @@ import { spawn } from "node:child_process";
 
 const STATIC = ["sw.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "personvern.html", "slett-konto.html", "regions.js"];
 
+// Vaktbikkja: ESLint sjekker koden før bygging. Feil stopper publiseringen.
+let ESLint = null;
+try {
+  ({ ESLint } = await import("eslint"));
+} catch (e) {
+  console.log("ESLint hoppet over: kunne ikke lastes (" + e.message + ").");
+}
+if (ESLint) {
+  const results = await new ESLint().lintFiles(["app.source.js"]);
+  const errs = results.reduce((n, r) => n + r.errorCount, 0);
+  if (errs) {
+    console.error((await (await new ESLint().loadFormatter("stylish")).format(results)));
+    throw new Error(`ESLint fant ${errs} feil — publiserer ikke.`);
+  }
+  console.log("ESLint OK.");
+}
+
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 
@@ -24,6 +41,12 @@ await build({
 await new Promise((ok, no) => {
   const t = spawn(process.execPath, ["smoke.mjs"], { stdio: "inherit" });
   t.on("exit", (code) => (code === 0 ? ok() : no(new Error("Røyktesten feilet — publiserer ikke."))));
+});
+
+// Regeltester (regler.test.mjs): f.eks. at en innsjekk aldri får kommunenavnet.
+await new Promise((ok, no) => {
+  const t = spawn(process.execPath, ["--test", "--test-reporter=dot", "regler.test.mjs"], { stdio: "inherit" });
+  t.on("exit", (code) => (code === 0 ? ok() : no(new Error("Regeltestene feilet — publiserer ikke."))));
 });
 
 // Kartbiblioteket i egen fil, lastes forst naar Kart-fanen apnes

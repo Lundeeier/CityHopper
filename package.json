@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node smoke.mjs"
+    "test": "node smoke.mjs && node --test regler.test.mjs",
+    "lint": "eslint app.source.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "esbuild": "0.28.2",
+    "eslint": "9.39.5",
     "jsdom": "30.0.1"
   }
 }

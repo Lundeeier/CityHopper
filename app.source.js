@@ -3163,13 +3163,6 @@ var Ch_ADMIN = [
     "isolated_dwelling",
     "locality",
   ]),
-  ChRollUp = (addr, type, fallback) =>
-    // Mangler stedet by/tettsted over seg OG eget postnummer, er det ikke et
-    // ekte eget sted (f.eks. et fjellanlegg uten egen postadresse) — da
-    // ruller vi opp til kommunen, siden d8() uansett strips "kommune"-endelsen.
-    (Ch_SUB.has(type) && (addr.city || addr.town)) ||
-    (Ch_SUB.has(type) && !addr.postcode && addr.municipality) ||
-    fallback,
   Xy = new Set([
     "city",
     "town",
@@ -3344,19 +3337,9 @@ async function ChPostTown(postcode, country) {
     ).json();
     let hit = res && res[0];
     if (hit) {
-      let a = hit.address || {},
-        raw = a.city || a.town || a.village || null,
-        name = raw ? d8(raw) : null;
-      // Aldri bytt et stedsnavn mot navnet paa fylket/delstaten det ligger i.
-      (name &&
-        (ChFold(name) === ChFold(a.county || "\u0000") ||
-          ChFold(name) === ChFold(a.state || "\u0000")) &&
-        (name = null),
-        // Har postnummeret ikke noe eget by/tettsted registrert (vanlig for
-        // mindre kommuner, f.eks. "2636" -> bare "Øyer" kommune), er
-        // kommunen selv poststedet. Da skal vi ikke blokkere det.
-        !name && a.municipality && (name = d8(a.municipality)),
-        name && (out = { place: name, lat: +hit.lat, lng: +hit.lon, osm: ChOsm(hit) }));
+      // Aldri kommune, fylke eller delstat som poststed (regel fra 4. nov).
+      let name = ChPostName(hit.address);
+      name && (out = { place: name, lat: +hit.lat, lng: +hit.lon, osm: ChOsm(hit) });
     }
   } catch (chE) { ChLogError("search_hit", chE); }
   Ch_POST_CACHE.set(key, out);
@@ -3413,13 +3396,14 @@ async function e5(e, t) {
         if (!Xy.has(h)) return;
         let f = c.address || {},
           chOwn = ChMonoName(c.name),
-          g = ChRollUp(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0])),
+          g = ChPlaceFrom(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0])),
           /* Skrev brukeren navnet paa stedet selv (f.eks. "Loeken"), beholder vi det
              i stedet for aa rulle opp til byen eller kommunen det ligger i. */
           chKeep = chOwn && h !== "municipality" && ChFold(chOwn).startsWith(ChFold(e.trim())),
           v = d8(chKeep ? chOwn : g, e, h === "municipality"),
           y = o8(f);
         if (!v || !y || ChIsAdmin(v)) return;
+        if (h === "municipality" && !(f.city || f.town || f.village)) return;
         let m = ChKey(v, y);
         l.some((k) => ChKey(k.place, k.country) === m) ||
           l.push({
@@ -3440,6 +3424,44 @@ async function e5(e, t) {
   }
   return [];
 }
+/* Regel (Kristian, 4. nov): en innsjekk skal aldri hete det samme som kommunen, i noe land.
+   Bare ekte steder (by, tettsted, landsby, grend, bydel). Kommunenavnet godtas bare når det
+   også er navnet på selve byen/tettstedet (f.eks. Oslo, Lillestrøm). Gir null hvis ingen sted finnes. */
+var Ch_SETTLE = ["city", "town", "village", "hamlet"];
+function ChPlaceFrom(addr, type, name) {
+  let a = addr || {},
+    settle = a.city || a.town || a.village || a.hamlet || null,
+    muni = a.municipality ? d8(a.municipality) : null,
+    isMuni = (x) => !!muni && ChFold(d8(x)) === ChFold(muni) && !(settle && ChFold(d8(settle)) === ChFold(d8(x))),
+    own = ChMonoName(name),
+    cand = [];
+  Ch_SUB.has(type) && (a.city || a.town) && cand.push(a.city || a.town);
+  type !== "municipality" && cand.push(own);
+  cand.push(settle, a.suburb, a.quarter, a.neighbourhood, a.locality);
+  for (let c of cand) if (c && !isMuni(c) && !ChIsAdmin(d8(c))) return c;
+  return null;
+}
+/* Poststedet fra et postnummeroppslag: bare by/tettsted/landsby, aldri kommune, fylke eller delstat. */
+function ChPostName(a) {
+  a = a || {};
+  let raw = a.city || a.town || a.village || null,
+    name = raw ? d8(raw) : null;
+  if (!name) return null;
+  if (ChFold(name) === ChFold(a.county || "\u0000") || ChFold(name) === ChFold(a.state || "\u0000")) return null;
+  return name;
+}
+/* Velger navn ved live-innsjekk ut fra kartoppslaget (gt) og postnummeret (post).
+   use: navnet som forvelges. alt: to valg når kart og postnummer gir ulike ekte stedsnavn. */
+function ChNameChoice(gt, post, lat, lng) {
+  let muni = gt && gt.muni ? ChFold(d8(gt.muni)) : null,
+    postOk = ChPostOk(post, lat, lng) && !(muni && ChFold(post.place) === muni && ChFold(gt.place) !== ChFold(post.place)),
+    use = postOk && !gt.own ? post : { place: gt.place, osm: gt.osm || null },
+    alt =
+      gt.place && postOk && ChFold(post.place) !== ChFold(gt.place)
+        ? { map: { place: gt.place, osm: gt.osm || null }, post: { place: post.place, osm: post.osm || gt.osm || null, code: String(gt.postcode || "") } }
+        : null;
+  return { use: { place: use.place, osm: use.osm || gt.osm || null }, alt };
+}
 async function f8(e, t) {
   try {
     let i = await (
@@ -3448,10 +3470,11 @@ async function f8(e, t) {
         )
       ).json(),
       r = i.address || {},
-      s = ChRollUp(r, i.addresstype || i.type, ChMonoName(i.name) || h8(r, null)),
-      l = d8(s),
+      chT = i.addresstype || i.type,
+      s = ChPlaceFrom(r, chT, i.name),
+      l = s ? d8(s) : null,
       c = o8(r);
-    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i), own: ChOwnName({ kind: i.addresstype || i.type }) || !!(r.village || r.town || r.city), muni: r.municipality || null };
+    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: chT === "municipality" ? null : ChOsm(i), own: (Ch_SETTLE.includes(chT) && ChFold(l) === ChFold(d8(ChMonoName(i.name) || ""))) || !!(r.village || r.town || r.city), muni: r.municipality || null };
   } catch (chE) { ChLogError("reverse_geo", chE); }
   throw new Error("not found");
 }
@@ -9180,15 +9203,11 @@ function n5({ session: e, onLogout: t }) {
             let gt = await f8(Se, at),
               dn = yf(gt.country) || "",
               Zn = gt.postcode ? await ChPostTown(gt.postcode, dn) : null;
-            let chUse = ChPostOk(Zn, Se, at) && !gt.own && !(gt.muni && ChFold(Zn.place) === ChFold(d8(gt.muni)) && ChFold(gt.place) !== ChFold(Zn.place));
-            /* Kartet og postnummeret gir ulike navn (f.eks. Aursmoen / 1930 Aurskog): la brukeren velge. Ikke når postnummernavnet bare er kommunenavnet. */
-            chSetAlt(
-              gt.place && ChPostOk(Zn, Se, at) && ChFold(Zn.place) !== ChFold(gt.place) && !(gt.muni && ChFold(Zn.place) === ChFold(d8(gt.muni)))
-                ? { map: { place: gt.place, osm: gt.osm || null }, post: { place: Zn.place, osm: Zn.osm || gt.osm || null, code: String(gt.postcode) } }
-                : null,
-            );
-            (v((chUse && Zn.place) || gt.place || ""),
-              chSetOsm((chUse && Zn.osm) || gt.osm || null),
+            /* Kartet og postnummeret gir ulike navn (f.eks. Aursmoen / 1930 Aurskog): la brukeren velge (ChNameChoice). */
+            let chC = ChNameChoice(gt, Zn, Se, at);
+            chSetAlt(chC.alt);
+            (v(chC.use.place || ""),
+              chSetOsm(chC.use.osm),
               m(dn),
               S(P(n, "status_confirm_and_checkin")));
           } catch {
@@ -12038,6 +12057,10 @@ function f5() {
           : (0, T.jsx)(h5, {})
   );
 }
+/* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
+typeof window < "u" &&
+  window.__CH_TEST &&
+  Object.assign(window.__CH_TEST, { ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

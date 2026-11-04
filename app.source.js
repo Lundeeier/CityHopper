@@ -813,6 +813,7 @@ var O = {
       report_r4: "Annet",
       report_sent: "Takk. Rapporten er sendt.",
       report_failed: "Kunne ikke sende rapporten.",
+      report_limit: "Du har sendt mange rapporter. Prøv igjen om en time.",
       report_details: "Forklar kort hva som er galt (valgfritt)",
       report_send: "Send rapport",
       block_user: "Blokker bruker",
@@ -1186,6 +1187,7 @@ var O = {
       report_r4: "Other",
       report_sent: "Thanks. The report has been sent.",
       report_failed: "Could not send the report.",
+      report_limit: "You have sent many reports. Try again in an hour.",
       report_details: "Briefly explain what is wrong (optional)",
       report_send: "Send report",
       block_user: "Block user",
@@ -1539,6 +1541,7 @@ var O = {
       report_r4: "Anders",
       report_sent: "Bedankt. De melding is verstuurd.",
       report_failed: "De melding kon niet worden verstuurd.",
+      report_limit: "Je hebt veel meldingen verstuurd. Probeer het over een uur opnieuw.",
       report_details: "Leg kort uit wat er mis is (optioneel)",
       report_send: "Melding versturen",
       block_user: "Gebruiker blokkeren",
@@ -1887,6 +1890,7 @@ var O = {
       report_r4: "Sonstiges",
       report_sent: "Danke. Die Meldung wurde gesendet.",
       report_failed: "Die Meldung konnte nicht gesendet werden.",
+      report_limit: "Du hast viele Meldungen gesendet. Versuche es in einer Stunde erneut.",
       report_details: "Erkl\u00e4re kurz, was falsch ist (optional)",
       report_send: "Meldung senden",
       block_user: "Nutzer blockieren",
@@ -2235,6 +2239,7 @@ var O = {
       report_r4: "Annat",
       report_sent: "Tack. Rapporten har skickats.",
       report_failed: "Rapporten kunde inte skickas.",
+      report_limit: "Du har skickat många rapporter. Försök igen om en timme.",
       report_details: "F\u00f6rklara kort vad som \u00e4r fel (valfritt)",
       report_send: "Skicka rapport",
       block_user: "Blockera anv\u00e4ndare",
@@ -2583,6 +2588,7 @@ var O = {
       report_r4: "Andet",
       report_sent: "Tak. Rapporten er sendt.",
       report_failed: "Rapporten kunne ikke sendes.",
+      report_limit: "Du har sendt mange rapporter. Prøv igen om en time.",
       report_details: "Forklar kort hvad der er galt (valgfrit)",
       report_send: "Send rapport",
       block_user: "Bloker bruger",
@@ -2934,6 +2940,7 @@ var O = {
       report_r4: "Otro",
       report_sent: "Gracias. La denuncia se ha enviado.",
       report_failed: "No se pudo enviar la denuncia.",
+      report_limit: "Has enviado muchas denuncias. Inténtalo de nuevo en una hora.",
       report_details: "Explica brevemente qué ocurre (opcional)",
       report_send: "Enviar denuncia",
       block_user: "Bloquear usuario",
@@ -5534,7 +5541,7 @@ function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
     setMode(null);
     chSetSel(null);
     chSetText("");
-    setNote(error ? P(lang, "report_failed") : P(lang, "report_sent"));
+    setNote(error ? P(lang, /report_rate_limit/.test(error.message || "") ? "report_limit" : "report_failed") : P(lang, "report_sent"));
   }
   async function block() {
     setBusy(!0);
@@ -6087,8 +6094,8 @@ function ChComparePanel({ uid, meId, name, onClose, onOpen }) {
     let alive = !0;
     return (
       (async () => {
-        let { data: a } = await ze.from("visits").select("*").eq("user_id", meId),
-          { data: b } = await ze.from("visits").select("*").eq("user_id", uid);
+        let { data: a } = await ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", meId),
+          { data: b } = await ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", uid);
         if (!alive) return;
         let mine = new Map(),
           theirs = new Map();
@@ -7006,7 +7013,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
     let alive = !0;
     return (
       (async () => {
-        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        let { data } = await ze.from("visits").select("id, place, country, lat, lng, visited_on, rating, elevation, added, created_at").eq("user_id", uid);
         alive && setVisits(data || []);
       })(),
       () => {
@@ -8706,7 +8713,7 @@ function ChPlaceFeed({ place, country, osm, meId, onClose, onOpen }) {
     let alive = !0;
     return (
       (async () => {
-        let { data: vs } = await ze.from("visits").select("*").eq("country", country);
+        let { data: vs } = await ze.from("visits").select("id, user_id, place, country, comment, photos, rating, visited_on, created_at").eq("country", country);
         let mine = (vs || []).filter((v) => ChKey(v.place, v.country) === key);
         let ids = [...new Set(mine.map((v) => v.user_id))],
           people = new Map();
@@ -10056,7 +10063,7 @@ function a5({ session: e, onOpen: chOpen }) {
           let { data: Ft, error: W } = await ze
             .from("profiles")
             .select("id, username")
-            .ilike("username", `%${G}%`)
+            .ilike("username", `%${G.replace(/[%_\\]/g, "\\$&")}%`)
             .neq("id", n)
             .limit(8);
           re && (l(W ? [] : Ft || []), h(!1));

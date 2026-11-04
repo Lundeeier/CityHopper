@@ -737,6 +737,10 @@ var O = {
       chars_left: "{n} tegn igjen",
       save_changes: "Lagre",
       close_sheet: "Lukk",
+      name_choice_title: "Hva heter stedet?",
+      name_choice_sub: "Kartet og postnummeret gir to ulike navn. Velg det du vil bruke.",
+      name_from_map: "fra kartet",
+      name_from_post: "fra postnummer {code}",
       map_hint: "Trykk rett på kartet der du har vært for å sjekke inn. Nålene viser steder du allerede har logget.",
       map_hint_ok: "Skjønner",
       rs_title: "Velg tekst å dele",
@@ -1111,6 +1115,10 @@ var O = {
       chars_left: "{n} characters left",
       save_changes: "Save",
       close_sheet: "Close",
+      name_choice_title: "What is this place called?",
+      name_choice_sub: "The map and the postcode give two different names. Choose the one you want.",
+      name_from_map: "from the map",
+      name_from_post: "from postcode {code}",
       map_hint: "Tap the map where you've been to check in. The pins show places you've already logged.",
       map_hint_ok: "Got it",
       rs_title: "Choose text to share",
@@ -1487,6 +1495,10 @@ var O = {
       chars_left: "Nog {n} tekens",
       save_changes: "Opslaan",
       close_sheet: "Sluiten",
+      name_choice_title: "Hoe heet deze plek?",
+      name_choice_sub: "De kaart en de postcode geven twee verschillende namen. Kies de naam die je wilt.",
+      name_from_map: "van de kaart",
+      name_from_post: "van postcode {code}",
       map_hint: "Tik op de kaart waar je bent geweest om in te checken. De spelden tonen plaatsen die je al hebt gelogd.",
       map_hint_ok: "Begrepen",
       rs_title: "Kies tekst om te delen",
@@ -1836,6 +1848,10 @@ var O = {
       chars_left: "Noch {n} Zeichen",
       save_changes: "Speichern",
       close_sheet: "Schließen",
+      name_choice_title: "Wie heißt dieser Ort?",
+      name_choice_sub: "Karte und Postleitzahl nennen zwei verschiedene Namen. Wähle den gewünschten.",
+      name_from_map: "von der Karte",
+      name_from_post: "von Postleitzahl {code}",
       map_hint: "Tippe auf die Karte, wo du warst, um einzuchecken. Die Pins zeigen Orte, die du schon eingetragen hast.",
       map_hint_ok: "Verstanden",
       rs_title: "Text zum Teilen wählen",
@@ -2185,6 +2201,10 @@ var O = {
       chars_left: "{n} tecken kvar",
       save_changes: "Spara",
       close_sheet: "Stäng",
+      name_choice_title: "Vad heter platsen?",
+      name_choice_sub: "Kartan och postnumret ger två olika namn. Välj det du vill använda.",
+      name_from_map: "från kartan",
+      name_from_post: "från postnummer {code}",
       map_hint: "Tryck på kartan där du har varit för att checka in. Nålarna visar platser du redan har loggat.",
       map_hint_ok: "Uppfattat",
       rs_title: "Välj text att dela",
@@ -2534,6 +2554,10 @@ var O = {
       chars_left: "{n} tegn tilbage",
       save_changes: "Gem",
       close_sheet: "Luk",
+      name_choice_title: "Hvad hedder stedet?",
+      name_choice_sub: "Kortet og postnummeret giver to forskellige navne. Vælg det, du vil bruge.",
+      name_from_map: "fra kortet",
+      name_from_post: "fra postnummer {code}",
       map_hint: "Tryk på kortet, hvor du har været, for at tjekke ind. Nålene viser steder, du allerede har logget.",
       map_hint_ok: "Forstået",
       rs_title: "Vælg tekst at dele",
@@ -2886,6 +2910,10 @@ var O = {
       chars_left: "{n} caracteres restantes",
       save_changes: "Guardar",
       close_sheet: "Cerrar",
+      name_choice_title: "¿Cómo se llama este lugar?",
+      name_choice_sub: "El mapa y el código postal dan dos nombres distintos. Elige el que quieras.",
+      name_from_map: "del mapa",
+      name_from_post: "del código postal {code}",
       map_hint: "Toca el mapa donde hayas estado para registrar una visita. Los marcadores muestran los lugares que ya has registrado.",
       map_hint_ok: "Entendido",
       rs_title: "Elige el texto para compartir",
@@ -8853,6 +8881,7 @@ function n5({ session: e, onLogout: t }) {
     [chPhotos, chSetPhotos] = (0, U.useState)([]),
     [chBusy, chSetBusy] = (0, U.useState)(!1),
     [chOsm, chSetOsm] = (0, U.useState)(null),
+    [chAlt, chSetAlt] = (0, U.useState)(null),
     [chQ, chSetQ] = (0, U.useState)(""),
     [chNytt, chSetNytt] = (0, U.useState)(null),
     [chInv, chSetInv] = (0, U.useState)(null),
@@ -9032,6 +9061,7 @@ function n5({ session: e, onLogout: t }) {
       chSetRate(null),
       chSetPhotos([]),
       chSetOsm(null),
+      chSetAlt(null),
       chSetDate(""),
       chSetNoDate(!1),
       s("oversikt"));
@@ -9110,6 +9140,12 @@ function n5({ session: e, onLogout: t }) {
               dn = yf(gt.country) || "",
               Zn = gt.postcode ? await ChPostTown(gt.postcode, dn) : null;
             let chUse = ChPostOk(Zn, Se, at) && !gt.own && !(gt.muni && ChFold(Zn.place) === ChFold(d8(gt.muni)) && ChFold(gt.place) !== ChFold(Zn.place));
+            /* Kartet og postnummeret gir ulike navn (f.eks. Aursmoen / 1930 Aurskog): la brukeren velge. Ikke når postnummernavnet bare er kommunenavnet. */
+            chSetAlt(
+              gt.place && ChPostOk(Zn, Se, at) && ChFold(Zn.place) !== ChFold(gt.place) && !(gt.muni && ChFold(Zn.place) === ChFold(d8(gt.muni)))
+                ? { map: { place: gt.place, osm: gt.osm || null }, post: { place: Zn.place, osm: Zn.osm || gt.osm || null, code: String(gt.postcode) } }
+                : null,
+            );
             (v((chUse && Zn.place) || gt.place || ""),
               chSetOsm((chUse && Zn.osm) || gt.osm || null),
               m(dn),
@@ -9615,10 +9651,40 @@ function n5({ session: e, onLogout: t }) {
                     ],
                   }),
                 (0, T.jsx)(L8, { value: y, onChange: m, onEnter: W }),
+                chAlt &&
+                  (0, T.jsxs)("div", {
+                    style: { margin: "10px 0 4px" },
+                    children: [
+                      (0, T.jsx)("p", { style: { margin: "0 0 2px", fontWeight: 600, fontSize: 15 }, children: P(n, "name_choice_title") }),
+                      (0, T.jsx)("p", { style: { margin: "0 0 10px", color: O.sub, fontSize: 13, lineHeight: 1.4 }, children: P(n, "name_choice_sub") }),
+                      (0, T.jsx)("div", {
+                        style: { display: "flex", gap: 10 },
+                        children: [
+                          [chAlt.map, P(n, "name_from_map")],
+                          [chAlt.post, P(n, "name_from_post", { code: chAlt.post.code })],
+                        ].map(([o, sub], i) => {
+                          let on = ChFold(g) === ChFold(o.place);
+                          return (0, T.jsxs)(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => (v(o.place), chSetOsm(o.osm)),
+                              style: { flex: 1, borderRadius: 14, padding: "10px 8px", textAlign: "center", border: on ? `2px solid ${O.accent}` : `1px solid ${O.line}`, background: on ? "rgba(217,113,63,.15)" : "transparent", color: O.text, fontFamily: "inherit", cursor: "pointer" },
+                              children: [
+                                (0, T.jsx)("b", { style: { display: "block", fontSize: 16, marginBottom: 2 }, children: o.place }),
+                                (0, T.jsx)("span", { style: { color: O.sub, fontSize: 12 }, children: sub }),
+                              ],
+                            },
+                            i,
+                          );
+                        }),
+                      }),
+                    ],
+                  }),
                 (0, T.jsx)(i5, {
                   value: g,
                   country: y,
-                  onChange: (F) => (v(F), chSetOsm(null), A(null)),
+                  onChange: (F) => (v(F), chSetOsm(null), A(null), chSetAlt(null)),
                   onPick: async (F) => {
                     (v(F.place),
                       F.country && m(F.country),

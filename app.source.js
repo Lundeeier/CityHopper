@@ -745,6 +745,28 @@ var O = {
       chars_left: "{n} tegn igjen",
       save_changes: "Lagre",
       close_sheet: "Lukk",
+      wish_title: "Ønskeliste",
+      wish_search: "Søk etter et sted du vil til",
+      wish_find: "Søk",
+      wish_add: "Legg til",
+      wish_nohit: "Fant ingen steder.",
+      wish_empty: "Ingen steder ennå. Søk etter et sted du drømmer om å besøke. Bare du ser listen.",
+      wish_been: "Jeg har vært her",
+      wish_remove: "Fjern",
+      wish_err: "Noe gikk galt. Prøv igjen.",
+      import_btn: "Importer fra Google-tidslinje",
+      import_title: "Importer steder",
+      import_intro: "Last ned tidslinjen din fra Google Maps (Innstillinger \u2192 Personvern \u2192 Tidslinje \u2192 Eksporter tidslinjedata) og velg filen her. Filen leses kun p\u00E5 telefonen din. Bare omr\u00E5de-posisjoner sl\u00E5s opp.",
+      import_pick: "Velg tidslinjefil (.json)",
+      import_none: "Fant ingen steder i filen.",
+      import_err: "Kunne ikke lese filen. Er det en tidslinje-JSON fra Google?",
+      import_reading: "Leser filen\u2026",
+      import_looking: "Sl\u00E5r opp steder\u2026 {k} av {n}",
+      import_review: "Fant {n} nye steder. Fjern de du ikke vil ha med.",
+      import_all: "Velg alle",
+      import_clear: "Fjern alle",
+      import_add: "Legg til {n} steder",
+      import_done: "Ferdig! La til {n} steder.",
       open_in_maps: "\xC5pne i Google Maps",
       remove_photo: "Fjern bilde",
       clear_rating: "Nullstill rating",
@@ -764,6 +786,10 @@ var O = {
       trophy_sub: "{n} av {t} land · {p} %",
       trophy_share: "Del kartet",
       trophy_zoom: "Trykk på kartet for å zoome",
+      reg_map_visited: "Besøkt",
+      reg_map_missing: "Mangler",
+      reg_map_loading: "Laster kart…",
+      reg_map_open: "Se kart",
       privacy_link: "Personvernerkl\u00e6ring",
       delete_account: "Slett konto",
       delete_title: "Slette kontoen?",
@@ -1086,6 +1112,28 @@ var O = {
       chars_left: "{n} characters left",
       save_changes: "Save",
       close_sheet: "Close",
+      wish_title: "Wishlist",
+      wish_search: "Search for a place you want to visit",
+      wish_find: "Search",
+      wish_add: "Add",
+      wish_nohit: "No places found.",
+      wish_empty: "Nothing yet. Search for a place you dream of visiting. Only you can see this list.",
+      wish_been: "I've been here",
+      wish_remove: "Remove",
+      wish_err: "Something went wrong. Try again.",
+      import_btn: "Import from Google Timeline",
+      import_title: "Import places",
+      import_intro: "Export your timeline from Google Maps (Settings \u2192 Personal content / Privacy \u2192 Timeline \u2192 Export timeline data) and pick the file here. The file is only read on your device. Only area-level positions are looked up.",
+      import_pick: "Choose timeline file (.json)",
+      import_none: "No places found in the file.",
+      import_err: "Could not read the file. Is it a Google timeline JSON?",
+      import_reading: "Reading file\u2026",
+      import_looking: "Looking up places\u2026 {k} of {n}",
+      import_review: "Found {n} new places. Untick any you don't want.",
+      import_all: "Select all",
+      import_clear: "Clear all",
+      import_add: "Add {n} places",
+      import_done: "Done! Added {n} places.",
       open_in_maps: "Open in Google Maps",
       remove_photo: "Remove photo",
       clear_rating: "Clear rating",
@@ -1105,6 +1153,10 @@ var O = {
       trophy_sub: "{n} of {t} countries · {p}%",
       trophy_share: "Share map",
       trophy_zoom: "Tap the map to zoom",
+      reg_map_visited: "Visited",
+      reg_map_missing: "Missing",
+      reg_map_loading: "Loading map…",
+      reg_map_open: "View map",
       privacy_link: "Privacy policy",
       delete_account: "Delete account",
       delete_title: "Delete your account?",
@@ -1448,6 +1500,10 @@ var O = {
       trophy_sub: "{n} van {t} landen · {p}%",
       trophy_share: "Deel kaart",
       trophy_zoom: "Tik op de kaart om in te zoomen",
+      reg_map_visited: "Bezocht",
+      reg_map_missing: "Ontbreekt",
+      reg_map_loading: "Kaart laden…",
+      reg_map_open: "Bekijk kaart",
       privacy_link: "Privacybeleid",
       delete_account: "Account verwijderen",
       delete_title: "Account verwijderen?",
@@ -1786,6 +1842,10 @@ var O = {
       trophy_sub: "{n} von {t} Ländern · {p} %",
       trophy_share: "Karte teilen",
       trophy_zoom: "Tippe auf die Karte zum Zoomen",
+      reg_map_visited: "Besucht",
+      reg_map_missing: "Fehlt",
+      reg_map_loading: "Karte wird geladen…",
+      reg_map_open: "Karte ansehen",
       privacy_link: "Datenschutzerkl\u00e4rung",
       delete_account: "Konto l\u00f6schen",
       delete_title: "Konto l\u00f6schen?",
@@ -2124,6 +2184,10 @@ var O = {
       trophy_sub: "{n} av {t} länder · {p} %",
       trophy_share: "Dela kartan",
       trophy_zoom: "Tryck på kartan för att zooma",
+      reg_map_visited: "Besökt",
+      reg_map_missing: "Saknas",
+      reg_map_loading: "Laddar kartan…",
+      reg_map_open: "Visa karta",
       privacy_link: "Integritetspolicy",
       delete_account: "Radera konto",
       delete_title: "Radera kontot?",
@@ -2462,6 +2526,10 @@ var O = {
       trophy_sub: "{n} af {t} lande · {p} %",
       trophy_share: "Del kortet",
       trophy_zoom: "Tryk på kortet for at zoome",
+      reg_map_visited: "Besøgt",
+      reg_map_missing: "Mangler",
+      reg_map_loading: "Indlæser kort…",
+      reg_map_open: "Se kort",
       privacy_link: "Privatlivspolitik",
       delete_account: "Slet konto",
       delete_title: "Slette kontoen?",
@@ -2803,6 +2871,10 @@ var O = {
       trophy_sub: "{n} de {t} países · {p}%",
       trophy_share: "Compartir mapa",
       trophy_zoom: "Toca el mapa para acercar",
+      reg_map_visited: "Visitado",
+      reg_map_missing: "Falta",
+      reg_map_loading: "Cargando mapa…",
+      reg_map_open: "Ver mapa",
       privacy_link: "Política de privacidad",
       delete_account: "Eliminar cuenta",
       delete_title: "¿Eliminar tu cuenta?",
@@ -3265,9 +3337,63 @@ async function f8(e, t) {
       s = ChRollUp(r, i.addresstype || i.type, ChMonoName(i.name) || h8(r, null)),
       l = d8(s),
       c = o8(r);
-    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i) };
+    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: ChOsm(i), own: ChOwnName({ kind: i.addresstype || i.type }) || !!(r.village || r.town || r.city), muni: r.municipality || null };
   } catch (chE) { ChLogError("reverse_geo", chE); }
   throw new Error("not found");
+}
+/* Flytter nalen til selve stedets sentrum (by/tettsted) i stedet for hvor man tilfeldig sto eller trykket.
+   Bruker OpenStreetMap-id'en til stedet; bare hvis sentrum ligger under 25 km fra posisjonen. */
+async function ChCenterOf(osm, lat, lng) {
+  if (!osm || !/^[NWR]\d+$/.test(String(osm))) return null;
+  try {
+    let r = await (await fetch(`https://nominatim.openstreetmap.org/lookup?format=jsonv2&osm_ids=${osm}`)).json(),
+      h = r && r[0];
+    if (!h) return null;
+    let la = +h.lat,
+      ln = +h.lon,
+      d = ChDistKm(lat, lng, la, ln);
+    return isFinite(la) && isFinite(ln) && d !== null && d <= 25 ? { lat: la, lng: ln } : null;
+  } catch (chE) {
+    ChLogError("center_lookup", chE);
+    return null;
+  }
+}
+/* Engangsjobb: flytter brukerens gamle naaler til stedets sentrum. Ett oppslag per 50 steder. */
+async function ChCenterAll(uid, visits, setVisits) {
+  let flag = "ch_centered_v1_" + uid;
+  try {
+    if (localStorage.getItem(flag)) return;
+  } catch {}
+  let withOsm = (visits || []).filter((v) => v && v.osm_id && /^[NWR]\d+$/.test(String(v.osm_id)) && v.lat != null && v.lng != null),
+    byId = new Map();
+  for (let i = 0; i < withOsm.length; i += 50) {
+    let chunk = withOsm.slice(i, i + 50);
+    try {
+      let r = await (
+        await fetch(`https://nominatim.openstreetmap.org/lookup?format=jsonv2&osm_ids=${[...new Set(chunk.map((v) => v.osm_id))].join(",")}`)
+      ).json();
+      for (let h of r || []) byId.set(String(h.osm_type).charAt(0).toUpperCase() + h.osm_id, h);
+    } catch (chE) {
+      ChLogError("center_all", chE);
+      return;
+    }
+    await new Promise((ok) => setTimeout(ok, 1100));
+  }
+  let changed = [];
+  for (let v of withOsm) {
+    let h = byId.get(String(v.osm_id));
+    if (!h) continue;
+    let la = +h.lat,
+      ln = +h.lon,
+      d = ChDistKm(+v.lat, +v.lng, la, ln);
+    if (!isFinite(la) || !isFinite(ln) || d === null || d < 0.3 || d > 25) continue;
+    let { error } = await ze.from("visits").update({ lat: la, lng: ln }).eq("id", v.id).eq("user_id", uid);
+    error || changed.push({ id: v.id, lat: la, lng: ln });
+  }
+  try {
+    localStorage.setItem(flag, "1");
+  } catch {}
+  changed.length && setVisits((all) => all.map((v) => { let c = changed.find((x) => x.id === v.id); return c ? { ...v, lat: c.lat, lng: c.lng } : v; }));
 }
 async function t5(e) {
   try {
@@ -5435,13 +5561,321 @@ function ChReportBlock({ lang, meId, uid, name, onBlocked }) {
 }
 
 
+
+/* Import fra Google-tidslinje: leser filen paa telefonen, grupperer besokene steder i omrader paa ca. 10 km,
+   slaar opp by og land (OpenStreetMap, maks ett oppslag per sekund) og lar brukeren velge hva som legges til. */
+function ChImportParse(json) {
+  let out = [],
+    ll = (s) => {
+      let m = /(-?\d+(?:\.\d+)?)\s*°?\s*,\s*(-?\d+(?:\.\d+)?)/.exec(String(s || ""));
+      return m ? [+m[1], +m[2]] : null;
+    },
+    add = (lat, lng, t) => {
+      if (isFinite(lat) && isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 && !(lat === 0 && lng === 0))
+        out.push({ lat, lng, t: t ? String(t).slice(0, 10) : null });
+    },
+    segs = Array.isArray(json) ? json : json && json.semanticSegments;
+  if (Array.isArray(segs))
+    for (let s of segs) {
+      let v = s && s.visit,
+        pl = v && v.topCandidate && v.topCandidate.placeLocation,
+        p = pl && ll(pl.latLng);
+      p && add(p[0], p[1], s.startTime);
+    }
+  if (json && Array.isArray(json.timelineObjects))
+    for (let o of json.timelineObjects) {
+      let pv = o && o.placeVisit,
+        lo = pv && pv.location;
+      lo && lo.latitudeE7 != null && add(lo.latitudeE7 / 1e7, lo.longitudeE7 / 1e7, pv.duration && pv.duration.startTimestamp);
+    }
+  if (json && Array.isArray(json.locations))
+    for (let o of json.locations)
+      o && o.latitudeE7 != null && add(o.latitudeE7 / 1e7, o.longitudeE7 / 1e7, o.timestamp || null);
+  return out;
+}
+function ChImportCluster(points) {
+  let m = new Map();
+  for (let p of points) {
+    let k = Math.round(p.lat * 10) + "," + Math.round(p.lng * 10),
+      c = m.get(k);
+    c || m.set(k, (c = { lat: 0, lng: 0, n: 0, t: null }));
+    ((c.lat += p.lat), (c.lng += p.lng), c.n++);
+    p.t && (!c.t || p.t < c.t) && (c.t = p.t);
+  }
+  return [...m.values()]
+    .map((c) => ({ lat: c.lat / c.n, lng: c.lng / c.n, n: c.n, t: c.t }))
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 150);
+}
+function ChImportPanel({ uid, onClose }) {
+  let [lang] = Un(),
+    [existing, setExisting] = (0, U.useState)([]),
+    [stage, setStage] = (0, U.useState)("pick"),
+    [prog, setProg] = (0, U.useState)({ k: 0, n: 0 }),
+    [items, setItems] = (0, U.useState)([]),
+    [err, setErr] = (0, U.useState)(""),
+    [added, setAdded] = (0, U.useState)(0),
+    stop = (0, U.useRef)(!1);
+  (0, U.useEffect)(() => {
+    ze.from("visits").select("place,country,lat,lng").eq("user_id", uid).then(({ data }) => data && setExisting(data));
+    return () => {
+      stop.current = !0;
+    };
+  }, []);
+  async function pick(ev) {
+    let files = [...(ev.target.files || [])];
+    if (!files.length) return;
+    setErr("");
+    setStage("read");
+    try {
+      let pts = [];
+      for (let f of files) pts = pts.concat(ChImportParse(JSON.parse(await f.text())));
+      let cl = ChImportCluster(pts);
+      if (!cl.length) {
+        setErr(P(lang, "import_none"));
+        setStage("pick");
+        return;
+      }
+      setStage("look");
+      setProg({ k: 0, n: cl.length });
+      let found = [],
+        seen = new Set((existing || []).map((v) => ChKeyOf(v)));
+      for (let i = 0; i < cl.length; i++) {
+        if (stop.current) return;
+        let c = cl[i];
+        try {
+          let r = await f8(c.lat, c.lng),
+            row = { place: r.place, country: r.country, lat: c.lat, lng: c.lng, date: c.t, osm: r.osm || null, on: !0 },
+            key = ChKeyOf(row);
+          yc(row.country) && !seen.has(key) && (seen.add(key), found.push(row));
+        } catch {}
+        setProg({ k: i + 1, n: cl.length });
+        i < cl.length - 1 && (await new Promise((ok) => setTimeout(ok, 1100)));
+      }
+      if (!found.length) {
+        setErr(P(lang, "import_none"));
+        setStage("pick");
+        return;
+      }
+      setItems(found);
+      setStage("review");
+    } catch (e2) {
+      ChLogError("import_parse", e2);
+      setErr(P(lang, "import_err"));
+      setStage("pick");
+    }
+  }
+  async function save() {
+    let sel = items.filter((x) => x.on);
+    if (!sel.length) return;
+    setStage("save");
+    let rows = sel.map((x) => ({
+        place: x.place,
+        country: yf(yc(x.country).name),
+        lat: x.lat,
+        lng: x.lng,
+        user_id: uid,
+        visited_on: x.date || null,
+        osm_id: x.osm ?? null,
+        photos: [],
+      })),
+      done = [];
+    for (let i = 0; i < rows.length; i += 40) {
+      let chunk = rows.slice(i, i + 40),
+        { data, error } = await ze.from("visits").insert(chunk).select();
+      if (!error && data) done = done.concat(data);
+      else
+        for (let r of chunk) {
+          let { data: d1, error: e1 } = await ze.from("visits").insert(r).select().single();
+          !e1 && d1 && done.push(d1);
+        }
+    }
+    setAdded(done.length);
+    setStage("done");
+  }
+  let n = items.filter((x) => x.on).length,
+    box = { marginTop: 12, color: O.sub, fontSize: 14, lineHeight: 1.5 };
+  return (0, T.jsxs)(ChPanel, {
+    title: P(lang, "import_title"),
+    onClose,
+    children: [
+      stage === "pick" &&
+        (0, T.jsxs)(T.Fragment, {
+          children: [
+            (0, T.jsx)("p", { style: { ...box, marginTop: 0 }, children: P(lang, "import_intro") }),
+            err && (0, T.jsx)("p", { style: { color: "#E5484D", fontSize: 14 }, children: err }),
+            (0, T.jsxs)("label", {
+              className: "ch-secondary",
+              style: { display: "block", textAlign: "center", marginTop: 14, cursor: "pointer" },
+              children: [P(lang, "import_pick"), (0, T.jsx)("input", { type: "file", accept: ".json,application/json", multiple: !0, onChange: pick, style: { display: "none" } })],
+            }),
+          ],
+        }),
+      stage === "read" && (0, T.jsx)("p", { style: box, children: P(lang, "import_reading") }),
+      stage === "look" &&
+        (0, T.jsxs)(T.Fragment, {
+          children: [
+            (0, T.jsx)("p", { style: box, children: P(lang, "import_looking", { k: prog.k, n: prog.n }) }),
+            (0, T.jsx)("div", { style: { height: 6, background: O.line, borderRadius: 3, marginTop: 8 }, children: (0, T.jsx)("div", { style: { height: 6, borderRadius: 3, background: O.accent, width: (prog.n ? (prog.k / prog.n) * 100 : 0) + "%" } }) }),
+          ],
+        }),
+      stage === "review" &&
+        (0, T.jsxs)(T.Fragment, {
+          children: [
+            (0, T.jsx)("p", { style: { ...box, marginTop: 0 }, children: P(lang, "import_review", { n: items.length }) }),
+            (0, T.jsxs)("div", {
+              style: { display: "flex", gap: 16, margin: "8px 0" },
+              children: [
+                (0, T.jsx)("button", { onClick: () => setItems(items.map((x) => ({ ...x, on: !0 }))), style: { background: "none", border: "none", color: O.nav, cursor: "pointer", fontFamily: "inherit", fontSize: 14, padding: 0 }, children: P(lang, "import_all") }),
+                (0, T.jsx)("button", { onClick: () => setItems(items.map((x) => ({ ...x, on: !1 }))), style: { background: "none", border: "none", color: O.nav, cursor: "pointer", fontFamily: "inherit", fontSize: 14, padding: 0 }, children: P(lang, "import_clear") }),
+              ],
+            }),
+            items.map((x, i) =>
+              (0, T.jsx)(
+                ChToggle,
+                {
+                  label: x.place + ", " + ChCN(yc(x.country).name) + (x.date ? " · " + x.date : ""),
+                  checked: x.on,
+                  onChange: (v) => setItems(items.map((y, j) => (j === i ? { ...y, on: v } : y))),
+                },
+                i,
+              ),
+            ),
+            (0, T.jsx)("button", { className: "ch-primary", onClick: save, disabled: !n, style: { width: "100%", marginTop: 14 }, children: P(lang, "import_add", { n }) }),
+          ],
+        }),
+      stage === "save" && (0, T.jsx)("p", { style: box, children: P(lang, "saving") }),
+      stage === "done" &&
+        (0, T.jsxs)(T.Fragment, {
+          children: [
+            (0, T.jsx)("p", { style: { ...box, color: O.text, fontSize: 16 }, children: P(lang, "import_done", { n: added }) }),
+            (0, T.jsx)("button", { className: "ch-secondary", onClick: () => location.reload(), style: { width: "100%", marginTop: 14 }, children: P(lang, "close_sheet") }),
+          ],
+        }),
+    ],
+  });
+}
+
+
+/* Privat oenskeliste: steder man vil til. Bare eieren ser den (RLS). */
+function ChWishPanel({ uid, onClose }) {
+  let [lang] = Un(),
+    [rows, setRows] = (0, U.useState)(null),
+    [q, setQ] = (0, U.useState)(""),
+    [hits, setHits] = (0, U.useState)([]),
+    [busy, setBusy] = (0, U.useState)(!1),
+    [msg, setMsg] = (0, U.useState)(""),
+    [went, setWent] = (0, U.useState)(!1);
+  async function load() {
+    let { data } = await ze.from("wishlist").select("*").eq("user_id", uid).order("created_at", { ascending: !1 });
+    setRows(data || []);
+  }
+  (0, U.useEffect)(() => {
+    load();
+  }, []);
+  async function search() {
+    if (!q.trim()) return;
+    setBusy(!0);
+    setMsg("");
+    try {
+      let r = await e5(q.trim(), "");
+      setHits(r);
+      r.length || setMsg(P(lang, "wish_nohit"));
+    } catch (e2) {
+      ChLogError("wish_search", e2);
+      setMsg(P(lang, "search_failed"));
+    }
+    setBusy(!1);
+  }
+  async function add(h) {
+    if (!yc(h.country)) return;
+    let { error } = await ze.from("wishlist").insert({ place: h.place, country: yf(yc(h.country).name), lat: h.lat, lng: h.lng, osm_id: h.osm || null, user_id: uid });
+    error ? (ChLogError("wish_add", error), setMsg(P(lang, "wish_err"))) : (setHits([]), setQ(""), load());
+  }
+  async function del(r) {
+    await ze.from("wishlist").delete().eq("id", r.id);
+    setRows((a) => a.filter((x) => x.id !== r.id));
+  }
+  async function been(r) {
+    let { error } = await ze.from("visits").insert({
+      place: r.place,
+      country: r.country,
+      lat: r.lat,
+      lng: r.lng,
+      user_id: uid,
+      visited_on: new Date().toISOString().slice(0, 10),
+      osm_id: r.osm_id || null,
+      photos: [],
+    });
+    if (error) {
+      ChLogError("wish_visit", error);
+      setMsg(P(lang, "wish_err"));
+      return;
+    }
+    await ze.from("wishlist").delete().eq("id", r.id);
+    setWent(!0);
+    setRows((a) => a.filter((x) => x.id !== r.id));
+  }
+  let sm = { background: "none", border: `1px solid ${O.line}`, color: O.text, borderRadius: 10, padding: "6px 10px", fontSize: 14, fontFamily: "inherit", cursor: "pointer" };
+  return (0, T.jsxs)(ChPanel, {
+    title: P(lang, "wish_title"),
+    onClose: () => (went ? location.reload() : onClose()),
+    children: [
+      (0, T.jsxs)("div", {
+        style: { display: "flex", gap: 8 },
+        children: [
+          (0, T.jsx)("input", { className: "ch-field", style: { flex: 1 }, placeholder: P(lang, "wish_search"), value: q, "aria-label": P(lang, "wish_search"), onChange: (e2) => setQ(e2.target.value), onKeyDown: (e2) => e2.key === "Enter" && search() }),
+          (0, T.jsx)("button", { className: "ch-secondary", onClick: search, disabled: busy, children: busy ? "…" : P(lang, "wish_find") }),
+        ],
+      }),
+      msg && (0, T.jsx)("p", { style: { color: O.sub, fontSize: 14 }, children: msg }),
+      hits.map((h, i) =>
+        (0, T.jsxs)(
+          "div",
+          {
+            style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${O.line}` },
+            children: [
+              (0, T.jsxs)("span", { style: { flex: 1, fontSize: 15 }, children: [h.place, ", ", ChCN(yc(h.country) ? yc(h.country).name : h.country)] }),
+              (0, T.jsx)("button", { style: sm, onClick: () => add(h), children: P(lang, "wish_add") }),
+            ],
+          },
+          i,
+        ),
+      ),
+      rows === null
+        ? (0, T.jsx)("p", { style: { color: O.sub }, children: "…" })
+        : rows.length === 0
+          ? (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15, marginTop: 16 }, children: P(lang, "wish_empty") })
+          : (0, T.jsx)("div", {
+              style: { marginTop: 16 },
+              children: rows.map((r) =>
+                (0, T.jsxs)(
+                  "div",
+                  {
+                    style: { display: "flex", alignItems: "center", gap: 8, padding: "10px 0", borderBottom: `1px solid ${O.line}` },
+                    children: [
+                      (0, T.jsxs)("span", { style: { flex: 1, fontSize: 15 }, children: [r.place, ", ", ChCN(yc(r.country) ? yc(r.country).name : r.country)] }),
+                      (0, T.jsx)("button", { style: { ...sm, borderColor: O.accent, color: O.accent }, onClick: () => been(r), children: P(lang, "wish_been") }),
+                      (0, T.jsx)("button", { style: sm, onClick: () => del(r), "aria-label": P(lang, "wish_remove"), children: "✕" }),
+                    ],
+                  },
+                  r.id,
+                ),
+              ),
+            }),
+    ],
+  });
+}
+
 function ChSettings({ meId, meName, onClose, onLogout }) {
   let [lang, setLang] = Un(),
     [chCopied, chSetCopied] = (0, U.useState)(!1),
     [priv, setPriv] = (0, U.useState)(!1),
     [msgOnly, setMsgOnly] = (0, U.useState)(!1),
     [note, setNote] = (0, U.useState)(""),
-    [push, setPush] = (0, U.useState)(ChPushState());
+    [push, setPush] = (0, U.useState)(ChPushState()),
+    [chImp, setChImp] = (0, U.useState)(!1),
+    [chWish, setChWish] = (0, U.useState)(!1);
   async function chShare() {
     if (!meName) return;
     let url = ChInviteLink(meName);
@@ -5565,6 +5999,10 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
           style: { width: "100%", marginTop: 14 },
           children: chCopied ? P(lang, "invite_copied") : P(lang, "invite_share"),
         }),
+      (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChImp(!0), style: { width: "100%", marginTop: 14 }, children: P(lang, "import_btn") }),
+      (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChWish(!0), style: { width: "100%", marginTop: 14 }, children: P(lang, "wish_title") }),
+      chWish && (0, T.jsx)(ChWishPanel, { uid: meId, onClose: () => setChWish(!1) }),
+      chImp && (0, T.jsx)(ChImportPanel, { uid: meId, onClose: () => setChImp(!1) }),
       (0, T.jsx)(ChBlockedList, { lang, meId }),
       (0, T.jsx)("div", {
         style: { marginTop: 18, textAlign: "center" },
@@ -6051,6 +6489,285 @@ function ChTrophyMap({ codes, dots, lang, n, total, own }) {
   });
 }
 
+/* Regionkart: viser et lands fylker/kommuner/provinser med de du har besokt i oransje.
+   mode: "par" = overordnet niva (fylker), "all" = alle enheter, "fylke" = kommuner i ett norsk fylke. */
+function ChRegBadgeTarget(id) {
+  let m = /^reg-([A-Z0-9-]+?)-(?:(u)|(m)(?:-\d+)?|(all)|f-(\w+))$/.exec(id || "");
+  if (!m || !CH_REG_META[m[1]]) return null;
+  return { cc: m[1], mode: m[2] ? "par" : m[5] ? "fylke" : "all", id: m[5] || null };
+}
+function ChRegMapBuild(cc, mode, fid, hit, px) {
+  let data = window.CH_REGIONS && window.CH_REGIONS.c[cc];
+  if (!data) return null;
+  let list = data.r.filter((r) => mode !== "fylke" || r[1] === fid);
+  if (!list.length) return null;
+  let x0 = 1e9,
+    x1 = -1e9,
+    y0 = 1e9,
+    y1 = -1e9;
+  for (let r of list) {
+    let b = r[2];
+    (b[0] < x0 && (x0 = b[0]), b[2] > x1 && (x1 = b[2]), b[1] < y0 && (y0 = b[1]), b[3] > y1 && (y1 = b[3]));
+  }
+  (x0 /= 1000, x1 /= 1000, y0 /= 1000, y1 /= 1000);
+  let k = Math.cos((((y0 + y1) / 2) * Math.PI) / 180),
+    W = 1000,
+    S = (W - 20) / ((x1 - x0) * k),
+    H = Math.round((y1 - y0) * S + 20),
+    seen = new Set(),
+    parts = [],
+    on = "#D9713F",
+    off = "#3A322A",
+    n = 0,
+    got = 0;
+  for (let r of list) {
+    let vis = mode === "par" ? !!(hit && hit.par.has(r[1])) : !!(hit && (mode === "fylke" ? hit.byPar[fid] && hit.byPar[fid].has(r[0]) : hit.all.has(r[0])));
+    let d = "";
+    for (let rings of ChRegPolys(cc, r))
+      for (let a of rings) {
+        for (let i = 0; i < a.length; i += 2) d += (i ? "L" : "M") + (10 + (a[i] - x0) * k * S).toFixed(1) + "," + (10 + (y1 - a[i + 1]) * S).toFixed(1);
+        d += "Z";
+      }
+    if (mode === "par") {
+      seen.has(r[1]) || (seen.add(r[1]), n++, vis && got++);
+    } else (n++, vis && got++);
+    parts.push('<path d="' + d + '" fill="' + (vis ? on : off) + '" stroke="#1A1714" stroke-width="' + (list.length > 120 ? 0.6 : 1.2) + '" fill-rule="evenodd"/>');
+  }
+  let size = px ? ' width="' + px + '" height="' + Math.round((px * H) / W) + '"' : ' width="100%"';
+  return { svg: '<svg xmlns="http://www.w3.org/2000/svg"' + size + ' viewBox="0 0 ' + W + " " + H + '">' + parts.join("") + "</svg>", W, H, n, got };
+}
+function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
+  let box = (0, U.useRef)(null),
+    [ready, setReady] = (0, U.useState)(!!window.CH_REGIONS),
+    [busy, setBusy] = (0, U.useState)(!1);
+  (0, U.useEffect)(() => {
+    if (ready) return;
+    let alive = !0;
+    return (
+      ChLoadRegions()
+        .then(() => alive && setReady(!0))
+        .catch(() => {}),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [ready]);
+  let m = (0, U.useMemo)(() => (ready ? ChRegMapBuild(cc, mode, fid, hit) : null), [ready, cc, mode, fid, hit]),
+    sub = m ? P(lang, "prog_of", { k: m.got, n: m.n }) + (unit ? " " + unit : "") : "";
+  (0, U.useEffect)(() => {
+    let el = box.current,
+      svg = el && el.querySelector("svg");
+    if (!svg || !m) return;
+    svg.style.touchAction = "none";
+    svg.style.display = "block";
+    svg.setAttribute("height", "100%");
+    let W = m.W,
+      H = m.H,
+      r0 = el.getBoundingClientRect(),
+      a = r0.width / r0.height,
+      full = a > W / H ? { w: H * a, h: H } : { w: W, h: W / a },
+      vb = { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h },
+      ptrs = new Map(),
+      lastD = 0;
+    function apply() {
+      vb.w = Math.min(full.w, Math.max(30, vb.w));
+      vb.h = vb.w / a;
+      svg.setAttribute("viewBox", vb.x + " " + vb.y + " " + vb.w + " " + vb.h);
+    }
+    function pt(e) {
+      let r = el.getBoundingClientRect();
+      return [e.clientX - r.left, e.clientY - r.top];
+    }
+    function zoomAt(px, py, f) {
+      let r = el.getBoundingClientRect(),
+        sx = vb.x + (px / r.width) * vb.w,
+        sy = vb.y + (py / r.height) * vb.h,
+        nw = Math.min(full.w, Math.max(30, vb.w / f));
+      ((vb.x = sx - (px / r.width) * nw), (vb.w = nw), (vb.h = nw / a), (vb.y = sy - (py / r.height) * vb.h), apply());
+    }
+    function dist() {
+      let p = [...ptrs.values()];
+      return p.length > 1 ? Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) : 0;
+    }
+    function down(e) {
+      (svg.setPointerCapture && svg.setPointerCapture(e.pointerId), ptrs.set(e.pointerId, pt(e)));
+      lastD = dist();
+    }
+    function move(e) {
+      if (!ptrs.has(e.pointerId)) return;
+      let prev = ptrs.get(e.pointerId),
+        cur = pt(e),
+        r = el.getBoundingClientRect();
+      ptrs.set(e.pointerId, cur);
+      if (ptrs.size === 1) {
+        ((vb.x -= ((cur[0] - prev[0]) / r.width) * vb.w), (vb.y -= ((cur[1] - prev[1]) / r.height) * vb.h), apply());
+      } else if (ptrs.size === 2) {
+        let d = dist(),
+          p = [...ptrs.values()];
+        lastD > 0 && zoomAt((p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2, d / lastD);
+        lastD = d;
+      }
+    }
+    function up(e) {
+      (ptrs.delete(e.pointerId), (lastD = 0));
+    }
+    function wheel(e) {
+      e.preventDefault();
+      let p = pt(e);
+      zoomAt(p[0], p[1], e.deltaY < 0 ? 1.25 : 0.8);
+    }
+    (svg.addEventListener("pointerdown", down),
+      svg.addEventListener("pointermove", move),
+      svg.addEventListener("pointerup", up),
+      svg.addEventListener("pointercancel", up),
+      svg.addEventListener("wheel", wheel, { passive: !1 }));
+    el.__zoom = (f) => {
+      let r = el.getBoundingClientRect();
+      zoomAt(r.width / 2, r.height / 2, f);
+    };
+    el.__reset = () => ((vb = { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h }), apply());
+    apply();
+    return () => {
+      (svg.removeEventListener("pointerdown", down),
+        svg.removeEventListener("pointermove", move),
+        svg.removeEventListener("pointerup", up),
+        svg.removeEventListener("pointercancel", up),
+        svg.removeEventListener("wheel", wheel));
+    };
+  }, [m]);
+  async function share() {
+    if (busy || !m) return;
+    setBusy(!0);
+    try {
+      let w = 2160,
+        mw = w - 160,
+        b = ChRegMapBuild(cc, mode, fid, hit, mw),
+        mh = Math.round((mw * b.H) / b.W),
+        h = mh + 660,
+        cv = document.createElement("canvas");
+      ((cv.width = w), (cv.height = h));
+      let g = cv.getContext("2d");
+      try {
+        await document.fonts.load("600 96px Fraunces");
+      } catch {}
+      ((g.fillStyle = O.bg), g.fillRect(0, 0, w, h));
+      let fs = 112;
+      g.font = "600 " + fs + "px Fraunces, Georgia, serif";
+      while (g.measureText(title).width > w - 160 && fs > 48) ((fs -= 6), (g.font = "600 " + fs + "px Fraunces, Georgia, serif"));
+      ((g.fillStyle = O.text), g.fillText(title, 80, 200));
+      ((g.fillStyle = O.textDim), (g.font = "400 64px Archivo, -apple-system, sans-serif"), g.fillText(sub, 80, 312));
+      let img = new Image();
+      await new Promise((ok, no) => {
+        ((img.onload = ok), (img.onerror = no));
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(b.svg);
+      });
+      g.drawImage(img, 80, 400, mw, mh);
+      ((g.fillStyle = O.accent), (g.font = "600 72px Fraunces, Georgia, serif"), (g.textAlign = "right"));
+      g.fillText("CityHopper", w - 80, h - 88);
+      let blob = await new Promise((ok) => cv.toBlob(ok, "image/png")),
+        file = new File([blob], "cityhopper-regionkart.png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "CityHopper", text: "cityhoppers.netlify.app" });
+        } catch {}
+      } else {
+        let a = document.createElement("a");
+        ((a.href = URL.createObjectURL(blob)), (a.download = file.name), document.body.appendChild(a), a.click(), a.remove());
+      }
+    } catch {}
+    setBusy(!1);
+  }
+  let btn = {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    border: `1px solid ${O.line}`,
+    background: O.card || O.bg,
+    color: O.text,
+    fontSize: 22,
+    lineHeight: 1,
+    cursor: "pointer",
+  };
+  return (0, T.jsxs)("div", {
+    style: { position: "fixed", inset: 0, zIndex: 2000, background: O.bg, color: O.text, display: "flex", flexDirection: "column", fontFamily: "'Archivo', -apple-system, sans-serif" },
+    children: [
+      (0, T.jsxs)("div", {
+        style: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "calc(env(safe-area-inset-top, 0px) + 10px) 14px 6px" },
+        children: [
+          (0, T.jsxs)("div", {
+            style: { minWidth: 0 },
+            children: [
+              (0, T.jsx)("div", { style: { fontSize: 17, fontWeight: 700 }, children: title }),
+              (0, T.jsx)("div", { style: { fontSize: 13, color: O.sub, marginTop: 2 }, children: ready ? sub : P(lang, "reg_map_loading") }),
+            ],
+          }),
+          (0, T.jsx)("button", { style: btn, onClick: onClose, "aria-label": "Close", children: "×" }),
+        ],
+      }),
+      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: { __html: m ? m.svg : "" } }),
+      (0, T.jsxs)("div", {
+        style: { display: "flex", gap: 14, justifyContent: "center", fontSize: 13, color: O.sub, padding: "6px 14px 0" },
+        children: [
+          (0, T.jsxs)("span", { children: [(0, T.jsx)("i", { style: { display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "#D9713F", marginRight: 6 } }), P(lang, "reg_map_visited")] }),
+          (0, T.jsxs)("span", { children: [(0, T.jsx)("i", { style: { display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "#3A322A", marginRight: 6 } }), P(lang, "reg_map_missing")] }),
+        ],
+      }),
+      (0, T.jsxs)("div", {
+        style: { display: "flex", gap: 10, justifyContent: "center", alignItems: "center", padding: "10px 14px calc(env(safe-area-inset-bottom, 0px) + 14px)" },
+        children: [
+          (0, T.jsx)("button", { style: btn, onClick: () => box.current && box.current.__zoom && box.current.__zoom(1.6), "aria-label": "Zoom in", children: "+" }),
+          (0, T.jsx)("button", { style: btn, onClick: () => box.current && box.current.__zoom && box.current.__zoom(1 / 1.6), "aria-label": "Zoom out", children: "−" }),
+          (0, T.jsx)("button", { style: { ...btn, fontSize: 16 }, onClick: () => box.current && box.current.__reset && box.current.__reset(), "aria-label": "Reset", children: "⤢" }),
+          (0, T.jsx)("button", { className: "ch-secondary", onClick: share, disabled: busy || !m, style: { height: 44, padding: "0 18px", marginLeft: 6 }, children: P(lang, "trophy_share") }),
+        ],
+      }),
+    ],
+  });
+}
+/* Liten forhandsvisning av regionkartet for et land i Statistikk. Trykk for storre kart. */
+function ChCountryRegions({ cc, visits, lang }) {
+  let meta = CH_REG_META[cc],
+    [ok, setOk] = (0, U.useState)(!!window.CH_REGIONS),
+    [full, setFull] = (0, U.useState)(!1);
+  (0, U.useEffect)(() => {
+    if (!meta || ok) return;
+    let alive = !0;
+    return (
+      ChLoadRegions()
+        .then(() => alive && setOk(!0))
+        .catch(() => {}),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [meta, ok]);
+  let hit = (0, U.useMemo)(() => {
+      if (!meta || !ok) return null;
+      let h = ChRegionHits((visits || []).filter((v) => (yc(v.country) || {}).code === cc));
+      return (h && h[cc]) || { all: new Set(), par: new Set(), byPar: {} };
+    }, [meta, ok, visits, cc]),
+    m = (0, U.useMemo)(() => (hit ? ChRegMapBuild(cc, "all", null, hit) : null), [hit, cc]);
+  if (!meta || !m) return null;
+  let unit = ChUnit(meta[1] || meta[0], lang),
+    c = vc.find((x) => x.code === cc),
+    title = (c ? ChCN(c.name) : cc) + " – " + unit,
+    sub = P(lang, "prog_of", { k: m.got, n: m.n }) + " " + unit;
+  return (0, T.jsxs)("div", {
+    style: { margin: "14px 0 4px" },
+    children: [
+      (0, T.jsx)("div", { style: { fontSize: 13, color: O.sub, marginBottom: 6 }, children: sub }),
+      (0, T.jsx)("div", {
+        role: "button",
+        onClick: () => setFull(!0),
+        style: { width: "100%", lineHeight: 0, cursor: "pointer" },
+        dangerouslySetInnerHTML: { __html: m.svg },
+      }),
+      (0, T.jsx)("p", { style: { color: O.sub, fontSize: 12, margin: "8px 0 0" }, children: P(lang, "trophy_zoom") }),
+      full && (0, T.jsx)(ChRegionMap, { cc, mode: "all", fid: null, hit, lang, title, unit, onClose: () => setFull(!1) }),
+    ],
+  });
+}
+
 function ChStatsPanel({ uid, meId, onClose }) {
   let [lang] = Un(),
     [visits, setVisits] = (0, U.useState)(null),
@@ -6262,6 +6979,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
                                   value: cstat.low ? cstat.low.place : "\u2013",
                                   sub: cstat.low && P(lang, "st_masl", { n: Math.round(cstat.low.elevation) }),
                                 }),
+                                (0, T.jsx)(ChCountryRegions, { cc: csel.code, visits, lang }),
                               ],
                             }),
                       ],
@@ -6543,8 +7261,8 @@ var ChTourText = {
   nl: ["Welkom bij CityHopper", "Check in op steden en plaatsen waar je bent geweest, geef sterren en voeg een foto en notitie toe.", "Bekijk ze op de kaart en in je statistieken en verzamel badges voor landen, plaatsen en prestaties.", "Voeg vrienden toe, bekijk ranglijsten en vergelijk wie waar is geweest.", "Jij bepaalt of je profiel open of privé is bij Instellingen.", "Volgende", "Overslaan", "Aan de slag"],
   de: ["Willkommen bei CityHopper", "Checke in Städten und Orten ein, vergib Sterne und füge Foto und Notiz hinzu.", "Sieh sie auf der Karte und in der Statistik und sammle Abzeichen für Länder, Orte und Leistungen.", "Füge Freunde hinzu, sieh Ranglisten und vergleiche, wer wo war.", "In den Einstellungen entscheidest du, ob dein Profil offen oder privat ist.", "Weiter", "Überspringen", "Los geht's"],
   sv: ["Välkommen till CityHopper", "Checka in på städer och platser du varit på, ge stjärnor och lägg till foto och anteckning.", "Se dem på kartan och i statistiken och samla märken för länder, platser och bragder.", "Lägg till vänner, se topplistor och jämför vem som varit var.", "Du bestämmer om profilen är öppen eller privat under Inställningar.", "Nästa", "Hoppa över", "Kom igång"],
-  da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"]
-  es: ["Te damos la bienvenida a CityHopper", "Regístrate en las ciudades y lugares donde has estado, da estrellas y añade una foto y una nota.", "Míralos en el mapa y en las estadísticas, y colecciona insignias de países, lugares y hazañas.", "Añade amigos, mira las clasificaciones y compara quién ha estado dónde.", "Tú decides si tu perfil es abierto o privado en Ajustes.", "Siguiente", "Omitir", "Empezar"],,
+  da: ["Velkommen til CityHopper", "Tjek ind på byer og steder, du har været, giv stjerner og tilføj billede og note.", "Se dem på kortet og i statistikken, og saml mærker for lande, steder og bedrifter.", "Tilføj venner, se topplister og sammenlign, hvem der har været hvor.", "Du bestemmer, om profilen er åben eller privat under Indstillinger.", "Næste", "Spring over", "Kom i gang"],
+  es: ["Te damos la bienvenida a CityHopper", "Regístrate en las ciudades y lugares donde has estado, da estrellas y añade una foto y una nota.", "Míralos en el mapa y en las estadísticas, y colecciona insignias de países, lugares y hazañas.", "Añade amigos, mira las clasificaciones y compara quién ha estado dónde.", "Tú decides si tu perfil es abierto o privado en Ajustes.", "Siguiente", "Omitir", "Empezar"],
 };
 function ChTour({ lang, uid }) {
   let key = "ch_tour_" + uid,
@@ -6771,6 +7489,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
     [visits, setVisits] = (0, U.useState)(null),
     [tab, setTab] = (0, U.useState)("counts"),
     [open, setOpen] = (0, U.useState)(null),
+    [regMap, setRegMap] = (0, U.useState)(null),
     [hide, setHide] = (0, U.useState)(!0);
   (0, U.useEffect)(() => {
     let alive = !0;
@@ -6937,8 +7656,28 @@ function ChBadgesPanel({ uid, meId, onClose }) {
                 },
                 children: open.earned ? P(lang, "badge_earned") : P(lang, "b_locked"),
               }),
+              ChRegBadgeTarget(open.id) &&
+                (0, T.jsx)("button", {
+                  className: "ch-secondary",
+                  style: { width: "100%", marginTop: 14 },
+                  onClick: () => {
+                    (setRegMap({ ...ChRegBadgeTarget(open.id), title: open.label }), setOpen(null));
+                  },
+                  children: P(lang, "reg_map_open"),
+                }),
             ],
           }),
+        }),
+      regMap &&
+        (0, T.jsx)(ChRegionMap, {
+          cc: regMap.cc,
+          mode: regMap.mode,
+          fid: regMap.id,
+          hit: (chReg && chReg[regMap.cc]) || { all: new Set(), par: new Set(), byPar: {} },
+          lang,
+          title: regMap.title,
+          unit: ChUnit(regMap.mode === "par" ? CH_REG_META[regMap.cc][0] : CH_REG_META[regMap.cc][1] || CH_REG_META[regMap.cc][0], lang),
+          onClose: () => setRegMap(null),
         }),
     ],
   });
@@ -7991,6 +8730,10 @@ function n5({ session: e, onLogout: t }) {
       l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, lat: Se, lng: at }))
     )
       return P(n, "err_already_logged", { place: gt });
+    if (chO && Se != null && at != null) {
+      let chC2 = await ChCenterOf(chO, Se, at);
+      chC2 && ((Se = chC2.lat), (at = chC2.lng));
+    }
     let chHoyde = null;
     if (Se != null && at != null)
       try {
@@ -8103,6 +8846,9 @@ function n5({ session: e, onLogout: t }) {
       localStorage.setItem(F, JSON.stringify(Se));
     } catch {}
   }, [l, n, h, e.user.id, chRegMain]);
+  (0, U.useEffect)(() => {
+    l.length > 0 && ChCenterAll(e.user.id, l, c);
+  }, [l.length > 0, e.user.id]);
   function ve(F = !0) {
     if ((D(""), M(!1), !navigator.geolocation)) {
       (D(P(n, "err_no_geo")), M(!0));
@@ -8118,8 +8864,9 @@ function n5({ session: e, onLogout: t }) {
             let gt = await f8(Se, at),
               dn = yf(gt.country) || "",
               Zn = gt.postcode ? await ChPostTown(gt.postcode, dn) : null;
-            (v((ChPostOk(Zn, Se, at) && Zn.place) || gt.place || ""),
-              chSetOsm((ChPostOk(Zn, Se, at) && Zn.osm) || gt.osm || null),
+            let chUse = ChPostOk(Zn, Se, at) && !gt.own && !(gt.muni && ChFold(Zn.place) === ChFold(d8(gt.muni)) && ChFold(gt.place) !== ChFold(Zn.place));
+            (v((chUse && Zn.place) || gt.place || ""),
+              chSetOsm((chUse && Zn.osm) || gt.osm || null),
               m(dn),
               S(P(n, "status_confirm_and_checkin")));
           } catch {
@@ -9559,7 +10306,22 @@ function s5({ session: e, onOpen: chOpen }) {
     [v, y] = (0, U.useState)("");
   (0, U.useEffect)(() => {
     (async () => {
-      let { data: N, error: M } = await ze.from("visits").select("user_id, country, place, rating, osm_id, lat, lng, visited_on, created_at, photos, comment");
+      let N = [],
+        M = null;
+      for (let from = 0; from < 50000; from += 1000) {
+        let { data: part, error: pe } = await ze
+          .from("visits")
+          .select("user_id, country, place, rating, osm_id, lat, lng, visited_on, created_at, photos, comment")
+          .order("created_at", { ascending: !1 })
+          .order("id")
+          .range(from, from + 999);
+        if (pe) {
+          M = pe;
+          break;
+        }
+        N = N.concat(part || []);
+        if (!part || part.length < 1000) break;
+      }
       if (M) {
         (y(P(t, "err_load_leaderboard")), r(!1));
         return;
@@ -9920,7 +10682,7 @@ function o5({
       I({ lat: K, lng: Ie });
       return;
     }
-    if (i) {
+    {
       (E(!0), N(P(h, "status_looking_up_place")));
       try {
         let mt = await f8(K, Ie);
@@ -9953,7 +10715,7 @@ function o5({
     (b(null), N(""), r(!1));
   }
   let xe = e.find((K) => K.id === A),
-    he = i || !!s;
+    he = !0;
   return (0, T.jsxs)("div", {
     children: [
       (0, T.jsxs)("div", {

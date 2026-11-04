@@ -6696,7 +6696,8 @@ function ChRegMapBuild(cc, mode, fid, hit, px) {
     n = 0,
     got = 0,
     visIds = [],
-    misIds = [];
+    misIds = [],
+    groups = new Map();
   for (let r of list) {
     let vis = mode === "par" ? !!(hit && hit.par.has(r[1])) : !!(hit && (mode === "fylke" ? hit.byPar[fid] && hit.byPar[fid].has(r[0]) : hit.all.has(r[0])));
     let d = "";
@@ -6708,7 +6709,15 @@ function ChRegMapBuild(cc, mode, fid, hit, px) {
     if (mode === "par") {
       seen.has(r[1]) || (seen.add(r[1]), n++, vis && got++, (vis ? visIds : misIds).push(r[1]));
     } else (n++, vis && got++, (vis ? visIds : misIds).push(r[0]));
-    parts.push('<path data-i="' + (mode === "par" ? r[1] : r[0]) + '" d="' + d + '" fill="' + (vis ? on : off) + '" stroke="#1A1714" stroke-width="' + (list.length > 120 ? 0.6 : 1.2) + '" fill-rule="evenodd"/>');
+    if (mode === "par") {
+      // Kommunegrenser skal ikke synes på første nivå: hvert fylke tegnes med bred mørk kant først, deretter fyll med fyllfarge som kant (dekker sømmene inni fylket).
+      let g = groups.get(r[1]) || (groups.set(r[1], []), groups.get(r[1]));
+      g.push([d, vis ? on : off]);
+    } else parts.push('<path data-i="' + r[0] + '" d="' + d + '" fill="' + (vis ? on : off) + '" stroke="#1A1714" stroke-width="' + (list.length > 120 ? 0.6 : 1.2) + '" fill-rule="evenodd"/>');
+  }
+  for (let [pid, g] of groups) {
+    for (let e of g) parts.push('<path d="' + e[0] + '" fill="none" stroke="#1A1714" stroke-width="4" stroke-linejoin="round" pointer-events="none"/>');
+    for (let e of g) parts.push('<path data-i="' + pid + '" d="' + e[0] + '" fill="' + e[1] + '" stroke="' + e[1] + '" stroke-width="1.6" stroke-linejoin="round" fill-rule="evenodd"/>');
   }
   let size = px ? ' width="' + px + '" height="' + Math.round((px * H) / W) + '"' : ' width="100%"';
   return { svg: '<svg xmlns="http://www.w3.org/2000/svg"' + size + ' viewBox="0 0 ' + W + " " + H + '">' + parts.join("") + "</svg>", W, H, n, got, visIds, misIds };
@@ -6760,7 +6769,7 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       selPaths = [],
       lastD = 0;
     function clearSel() {
-      for (let s of selPaths) (s.setAttribute("stroke", "#1A1714"), s.setAttribute("stroke-width", s.dataset.sw || "1"), s.removeAttribute("data-sel"));
+      for (let s of selPaths) (s.dataset.sw ? (s.setAttribute("stroke", "#1A1714"), s.setAttribute("stroke-width", s.dataset.sw)) : (s.style.filter = ""));
       selPaths = [];
     }
     function tap(x, y) {
@@ -6773,11 +6782,14 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
         return;
       }
       for (let s of svg.querySelectorAll('[data-i="' + id + '"]')) {
-        s.dataset.sw = s.getAttribute("stroke-width");
-        s.setAttribute("stroke", "#F5F1E8");
-        s.setAttribute("stroke-width", String(Math.max(2.5, (vb.w / 1000) * 3)));
+        if (mode === "par") s.style.filter = "brightness(1.45)";
+        else {
+          s.dataset.sw = s.getAttribute("stroke-width");
+          s.setAttribute("stroke", "#F5F1E8");
+          s.setAttribute("stroke-width", String(Math.max(2.5, (vb.w / 1000) * 3)));
+          s.parentNode.appendChild(s);
+        }
         selPaths.push(s);
-        s.parentNode.appendChild(s);
       }
       chSetTap({ name, vis: m.visIds.indexOf(id) >= 0 });
     }

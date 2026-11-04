@@ -6651,7 +6651,7 @@ function ChRegMapBuild(cc, mode, fid, hit, px) {
     if (mode === "par") {
       seen.has(r[1]) || (seen.add(r[1]), n++, vis && got++, (vis ? visIds : misIds).push(r[1]));
     } else (n++, vis && got++, (vis ? visIds : misIds).push(r[0]));
-    parts.push('<path d="' + d + '" fill="' + (vis ? on : off) + '" stroke="#1A1714" stroke-width="' + (list.length > 120 ? 0.6 : 1.2) + '" fill-rule="evenodd"/>');
+    parts.push('<path data-i="' + (mode === "par" ? r[1] : r[0]) + '" d="' + d + '" fill="' + (vis ? on : off) + '" stroke="#1A1714" stroke-width="' + (list.length > 120 ? 0.6 : 1.2) + '" fill-rule="evenodd"/>');
   }
   let size = px ? ' width="' + px + '" height="' + Math.round((px * H) / W) + '"' : ' width="100%"';
   return { svg: '<svg xmlns="http://www.w3.org/2000/svg"' + size + ' viewBox="0 0 ' + W + " " + H + '">' + parts.join("") + "</svg>", W, H, n, got, visIds, misIds };
@@ -6663,7 +6663,8 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
     [chSheet, chSetSheet] = (0, U.useState)(!1),
     [chTxt, chSetTxt] = (0, U.useState)(""),
     [chCopied, chSetCopied] = (0, U.useState)(!1),
-    [chList, chSetList] = (0, U.useState)(null);
+    [chList, chSetList] = (0, U.useState)(null),
+    [chTap, chSetTap] = (0, U.useState)(null);
   (0, U.useEffect)(() => {
     if (ready) return;
     let alive = !0;
@@ -6692,7 +6693,31 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       full = a > W / H ? { w: H * a, h: H } : { w: W, h: W / a },
       vb = { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h },
       ptrs = new Map(),
+      tapStart = null,
+      selPaths = [],
       lastD = 0;
+    function clearSel() {
+      for (let s of selPaths) (s.setAttribute("stroke", "#1A1714"), s.setAttribute("stroke-width", s.dataset.sw || "1"), s.removeAttribute("data-sel"));
+      selPaths = [];
+    }
+    function tap(x, y) {
+      let t = document.elementFromPoint(x, y),
+        id = t && t.getAttribute && t.getAttribute("data-i");
+      clearSel();
+      let name = id && ChRegName(cc, id);
+      if (!name) {
+        chSetTap(null);
+        return;
+      }
+      for (let s of svg.querySelectorAll('[data-i="' + id + '"]')) {
+        s.dataset.sw = s.getAttribute("stroke-width");
+        s.setAttribute("stroke", "#F5F1E8");
+        s.setAttribute("stroke-width", String(Math.max(2.5, (vb.w / 1000) * 3)));
+        selPaths.push(s);
+        s.parentNode.appendChild(s);
+      }
+      chSetTap({ name, vis: m.visIds.indexOf(id) >= 0 });
+    }
     function apply() {
       vb.w = Math.min(full.w, Math.max(30, vb.w));
       vb.h = vb.w / a;
@@ -6715,10 +6740,12 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
     }
     function down(e) {
       (svg.setPointerCapture && svg.setPointerCapture(e.pointerId), ptrs.set(e.pointerId, pt(e)));
+      tapStart = ptrs.size === 1 ? { x: e.clientX, y: e.clientY, t: Date.now() } : null;
       lastD = dist();
     }
     function move(e) {
       if (!ptrs.has(e.pointerId)) return;
+      tapStart && Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y) > 8 && (tapStart = null);
       let prev = ptrs.get(e.pointerId),
         cur = pt(e),
         r = el.getBoundingClientRect();
@@ -6733,7 +6760,8 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       }
     }
     function up(e) {
-      (ptrs.delete(e.pointerId), (lastD = 0));
+      tapStart && ptrs.size === 1 && e.type === "pointerup" && Date.now() - tapStart.t < 600 && tap(e.clientX, e.clientY);
+      (ptrs.delete(e.pointerId), (lastD = 0), (tapStart = null));
     }
     function wheel(e) {
       e.preventDefault();
@@ -6832,6 +6860,14 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
   return ChPortal((0, T.jsxs)("div", {
     style: { position: "fixed", inset: 0, zIndex: 9000, background: O.bg, color: O.text, display: "flex", flexDirection: "column", fontFamily: "'Archivo', -apple-system, sans-serif" },
     children: [
+      chTap &&
+        (0, T.jsxs)("div", {
+          style: { position: "absolute", left: "50%", transform: "translateX(-50%)", top: "calc(env(safe-area-inset-top, 0px) + 74px)", zIndex: 3, background: O.surface || O.row, border: `1px solid ${O.line}`, borderRadius: 14, padding: "8px 16px", boxShadow: "0 4px 16px rgba(0,0,0,.5)", textAlign: "center", pointerEvents: "none", whiteSpace: "nowrap" },
+          children: [
+            (0, T.jsx)("div", { style: { fontSize: 16, fontWeight: 700 }, children: chTap.name }),
+            (0, T.jsx)("div", { style: { fontSize: 13, color: chTap.vis ? "#D9713F" : O.sub, marginTop: 2 }, children: P(lang, chTap.vis ? "reg_map_visited" : "reg_map_missing") }),
+          ],
+        }),
       chList &&
         chCanList &&
         (0, T.jsxs)("div", {

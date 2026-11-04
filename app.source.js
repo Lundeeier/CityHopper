@@ -6475,7 +6475,8 @@ function ChMapZoom({ codes, dots, cols, fit, onClose }) {
         svg.removeEventListener("wheel", wheel));
     };
   }, [html]);
-  let info = sel ? vc.find((n) => n.code === sel) : null,
+  let chHtmlObj = (0, U.useMemo)(() => ({ __html: html }), [html]),
+    info = sel ? vc.find((n) => n.code === sel) : null,
     btn = {
       width: 44,
       height: 44,
@@ -6507,7 +6508,7 @@ function ChMapZoom({ codes, dots, cols, fit, onClose }) {
           (0, T.jsx)("button", { style: btn, onClick: onClose, "aria-label": "Close", children: "\u00D7" }),
         ],
       }),
-      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: { __html: html } }),
+      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: chHtmlObj }),
       (0, T.jsxs)("div", {
         style: {
           display: "flex",
@@ -6611,8 +6612,64 @@ function ChRegBadgeTarget(id) {
 }
 /* Navn paa norske fylker (2 siffer) og kommuner (4 siffer), nummer fra regions.js. Kilde: Brings postnummerregister (NLOD). */
 var Ch_NO_NAMES = {"11":"Rogaland","15":"Møre og Romsdal","18":"Nordland","31":"Østfold","32":"Akershus","33":"Buskerud","34":"Innlandet","39":"Vestfold","40":"Telemark","42":"Agder","46":"Vestland","50":"Trøndelag","55":"Troms","56":"Finnmark","1101":"Eigersund","1103":"Stavanger","1106":"Haugesund","1108":"Sandnes","1111":"Sokndal","1112":"Lund","1114":"Bjerkreim","1119":"Hå","1120":"Klepp","1121":"Time","1122":"Gjesdal","1124":"Sola","1127":"Randaberg","1130":"Strand","1133":"Hjelmeland","1134":"Suldal","1135":"Sauda","1144":"Kvitsøy","1145":"Bokn","1146":"Tysvær","1149":"Karmøy","1151":"Utsira","1160":"Vindafjord","1505":"Kristiansund","1506":"Molde","1508":"Ålesund","1511":"Vanylven","1514":"Sande","1515":"Herøy (Møre og Romsdal)","1516":"Ulstein","1517":"Hareid","1520":"Ørsta","1525":"Stranda","1528":"Sykkylven","1531":"Sula","1532":"Giske","1535":"Vestnes","1539":"Rauma","1547":"Aukra","1554":"Averøy","1557":"Gjemnes","1560":"Tingvoll","1563":"Sunndal","1566":"Surnadal","1573":"Smøla","1576":"Aure","1577":"Volda","1578":"Fjord","1579":"Hustadvika","1580":"Haram","1804":"Bodø","1806":"Narvik","1811":"Bindal","1812":"Sømna","1813":"Brønnøy","1815":"Vega","1816":"Vevelstad","1818":"Herøy (Nordland)","1820":"Alstahaug","1822":"Leirfjord","1824":"Vefsn","1825":"Grane","1826":"Hattfjelldal","1827":"Dønna","1828":"Nesna","1832":"Hemnes","1833":"Rana","1834":"Lurøy","1835":"Træna","1836":"Rødøy","1837":"Meløy","1838":"Gildeskål","1839":"Beiarn","1840":"Saltdal","1841":"Fauske","1845":"Sørfold","1848":"Steigen","1851":"Lødingen","1853":"Evenes","1856":"Røst","1857":"Værøy","1859":"Flakstad","1860":"Vestvågøy","1865":"Vågan","1866":"Hadsel","1867":"Bø","1868":"Øksnes","1870":"Sortland","1871":"Andøy","1874":"Moskenes","1875":"Hamarøy","3101":"Halden","3103":"Moss","3105":"Sarpsborg","3107":"Fredrikstad","3110":"Hvaler","3112":"Råde","3114":"Våler (Østfold)","3116":"Skiptvet","3118":"Indre Østfold","3120":"Rakkestad","3122":"Marker","3124":"Aremark","3201":"Bærum","3203":"Asker","3205":"Lillestrøm","3207":"Nordre Follo","3209":"Ullensaker","3212":"Nesodden","3214":"Frogn","3216":"Vestby","3218":"Ås","3220":"Enebakk","3222":"Lørenskog","3224":"Rælingen","3226":"Aurskog-Høland","3228":"Nes","3230":"Gjerdrum","3232":"Nittedal","3234":"Lunner","3236":"Jevnaker","3238":"Nannestad","3240":"Eidsvoll","3242":"Hurdal","3301":"Drammen","3303":"Kongsberg","3305":"Ringerike","3310":"Hole","3312":"Lier","3314":"Øvre Eiker","3316":"Modum","3318":"Krødsherad","3320":"Flå","3322":"Nesbyen","3324":"Gol","3326":"Hemsedal","3328":"Ål","3330":"Hol","3332":"Sigdal","3334":"Flesberg","3336":"Rollag","3338":"Nore og Uvdal","3401":"Kongsvinger","3403":"Hamar","3405":"Lillehammer","3407":"Gjøvik","3411":"Ringsaker","3412":"Løten","3413":"Stange","3414":"Nord-Odal","3415":"Sør-Odal","3416":"Eidskog","3417":"Grue","3418":"Åsnes","3419":"Våler (Innlandet)","3420":"Elverum","3421":"Trysil","3422":"Åmot","3423":"Stor-Elvdal","3424":"Rendalen","3425":"Engerdal","3426":"Tolga","3427":"Tynset","3428":"Alvdal","3429":"Folldal","3430":"Os","3431":"Dovre","3432":"Lesja","3433":"Skjåk","3434":"Lom","3435":"Vågå","3436":"Nord-Fron","3437":"Sel","3438":"Sør-Fron","3439":"Ringebu","3440":"Øyer","3441":"Gausdal","3442":"Østre Toten","3443":"Vestre Toten","3446":"Gran","3447":"Søndre Land","3448":"Nordre Land","3449":"Sør-Aurdal","3450":"Etnedal","3451":"Nord-Aurdal","3452":"Vestre Slidre","3453":"Øystre Slidre","3454":"Vang","3901":"Horten","3903":"Holmestrand","3905":"Tønsberg","3907":"Sandefjord","3909":"Larvik","3911":"Færder","4001":"Porsgrunn","4003":"Skien","4005":"Notodden","4010":"Siljan","4012":"Bamble","4014":"Kragerø","4016":"Drangedal","4018":"Nome","4020":"Midt-Telemark","4022":"Seljord","4024":"Hjartdal","4026":"Tinn","4028":"Kviteseid","4030":"Nissedal","4032":"Fyresdal","4034":"Tokke","4036":"Vinje","4201":"Risør","4202":"Grimstad","4203":"Arendal","4204":"Kristiansand","4205":"Lindesnes","4206":"Farsund","4207":"Flekkefjord","4211":"Gjerstad","4212":"Vegårshei","4213":"Tvedestrand","4214":"Froland","4215":"Lillesand","4216":"Birkenes","4217":"Åmli","4218":"Iveland","4219":"Evje og Hornnes","4220":"Bygland","4221":"Valle","4222":"Bykle","4223":"Vennesla","4224":"Åseral","4225":"Lyngdal","4226":"Hægebostad","4227":"Kvinesdal","4228":"Sirdal","4601":"Bergen","4602":"Kinn","4611":"Etne","4612":"Sveio","4613":"Bømlo","4614":"Stord","4615":"Fitjar","4616":"Tysnes","4617":"Kvinnherad","4618":"Ullensvang","4619":"Eidfjord","4620":"Ulvik","4621":"Voss","4622":"Kvam","4623":"Samnanger","4624":"Bjørnafjorden","4625":"Austevoll","4626":"Øygarden","4627":"Askøy","4628":"Vaksdal","4629":"Modalen","4630":"Osterøy","4631":"Alver","4632":"Austrheim","4633":"Fedje","4634":"Masfjorden","4635":"Gulen","4636":"Solund","4637":"Hyllestad","4638":"Høyanger","4639":"Vik","4640":"Sogndal","4641":"Aurland","4642":"Lærdal","4643":"Årdal","4644":"Luster","4645":"Askvoll","4646":"Fjaler","4647":"Sunnfjord","4648":"Bremanger","4649":"Stad","4650":"Gloppen","4651":"Stryn","5001":"Trondheim","5006":"Steinkjer","5007":"Namsos","5014":"Frøya","5020":"Osen","5021":"Oppdal","5022":"Rennebu","5025":"Røros","5026":"Holtålen","5027":"Midtre Gauldal","5028":"Melhus","5029":"Skaun","5031":"Malvik","5032":"Selbu","5033":"Tydal","5034":"Meråker","5035":"Stjørdal","5036":"Frosta","5037":"Levanger","5038":"Verdal","5041":"Snåsa","5042":"Lierne","5043":"Røyrvik","5044":"Namsskogan","5045":"Grong","5046":"Høylandet","5047":"Overhalla","5049":"Flatanger","5052":"Leka","5053":"Inderøy","5054":"Indre Fosen","5055":"Heim","5056":"Hitra","5057":"Ørland","5058":"Åfjord","5059":"Orkland","5060":"Nærøysund","5061":"Rindal","5501":"Tromsø","5503":"Harstad","5510":"Kvæfjord","5512":"Tjeldsund","5514":"Ibestad","5516":"Gratangen","5518":"Lavangen","5520":"Bardu","5522":"Salangen","5524":"Målselv","5526":"Sørreisa","5528":"Dyrøy","5530":"Senja","5532":"Balsfjord","5534":"Karlsøy","5536":"Lyngen","5538":"Storfjord","5540":"Kåfjord","5542":"Skjervøy","5544":"Nordreisa","5546":"Kvænangen","5601":"Alta","5603":"Hammerfest","5605":"Sør-Varanger","5607":"Vadsø","5610":"Karasjok","5612":"Kautokeino","5614":"Loppa","5616":"Hasvik","5618":"Måsøy","5620":"Nordkapp","5622":"Porsanger","5624":"Lebesby","5626":"Gamvik","5628":"Tana","5630":"Berlevåg","5632":"Båtsfjord","5634":"Vardø","5636":"Nesseby","0301":"Oslo","03":"Oslo"};
+/* Sverige: kommunekode og lan (npm kommunkoder). Danmark: kommunekode og region. Nederland: provinsnummer i regions.js. */
+var Ch_SE_NAMES = {"1060":"Olofström","1080":"Karlskrona","1081":"Ronneby","1082":"Karlshamn","1083":"Sölvesborg","1214":"Svalöv","1230":"Staffanstorp","1231":"Burlöv","1233":"Vellinge","1256":"Östra Göinge","1257":"Örkelljunga","1260":"Bjuv","1261":"Kävlinge","1262":"Lomma","1263":"Svedala","1264":"Skurup","1265":"Sjöbo","1266":"Hörby","1267":"Höör","1270":"Tomelilla","1272":"Bromölla","1273":"Osby","1275":"Perstorp","1276":"Klippan","1277":"Åstorp","1278":"Båstad","1280":"Malmö","1281":"Lund","1282":"Landskrona","1283":"Helsingborg","1284":"Höganäs","1285":"Eslöv","1286":"Ystad","1287":"Trelleborg","1290":"Kristianstad","1291":"Simrishamn","1292":"Ängelholm","1293":"Hässleholm","1315":"Hylte","1380":"Halmstad","1381":"Laholm","1382":"Falkenberg","1383":"Varberg","1384":"Kungsbacka","1401":"Härryda","1402":"Partille","1407":"Öckerö","1415":"Stenungsund","1419":"Tjörn","1421":"Orust","1427":"Sotenäs","1430":"Munkedal","1435":"Tanum","1438":"Dals-Ed","1439":"Färgelanda","1440":"Ale","1441":"Lerum","1442":"Vårgårda","1443":"Bollebygd","1444":"Grästorp","1445":"Essunga","1446":"Karlsborg","1447":"Gullspång","1452":"Tranemo","1460":"Bengtsfors","1461":"Mellerud","1462":"Lilla Edet","1463":"Mark","1465":"Svenljunga","1466":"Herrljunga","1470":"Vara","1471":"Götene","1472":"Tibro","1473":"Töreboda","1480":"Göteborg","1481":"Mölndal","1482":"Kungälv","1484":"Lysekil","1485":"Uddevalla","1486":"Strömstad","1487":"Vänersborg","1488":"Trollhättan","1489":"Alingsås","1490":"Borås","1491":"Ulricehamn","1492":"Åmål","1493":"Mariestad","1494":"Lidköping","1495":"Skara","1496":"Skövde","1497":"Hjo","1498":"Tidaholm","1499":"Falköping","1715":"Kil","1730":"Eda","1737":"Torsby","1760":"Storfors","1761":"Hammarö","1762":"Munkfors","1763":"Forshaga","1764":"Grums","1765":"Årjäng","1766":"Sunne","1780":"Karlstad","1781":"Kristinehamn","1782":"Filipstad","1783":"Hagfors","1784":"Arvika","1785":"Säffle","1814":"Lekeberg","1860":"Laxå","1861":"Hallsberg","1862":"Degerfors","1863":"Hällefors","1864":"Ljusnarsberg","1880":"Örebro","1881":"Kumla","1882":"Askersund","1883":"Karlskoga","1884":"Nora","1885":"Lindesberg","1904":"Skinnskatteberg","1907":"Surahammar","1960":"Kungsör","1961":"Hallstahammar","1962":"Norberg","1980":"Västerås","1981":"Sala","1982":"Fagersta","1983":"Köping","1984":"Arboga","2021":"Vansbro","2023":"Malung-Sälen","2026":"Gagnef","2029":"Leksand","2031":"Rättvik","2034":"Orsa","2039":"Älvdalen","2061":"Smedjebacken","2062":"Mora","2080":"Falun","2081":"Borlänge","2082":"Säter","2083":"Hedemora","2084":"Avesta","2085":"Ludvika","2101":"Ockelbo","2104":"Hofors","2121":"Ovanåker","2132":"Nordanstig","2161":"Ljusdal","2180":"Gävle","2181":"Sandviken","2182":"Söderhamn","2183":"Bollnäs","2184":"Hudiksvall","2260":"Ånge","2262":"Timrå","2280":"Härnösand","2281":"Sundsvall","2282":"Kramfors","2283":"Sollefteå","2284":"Örnsköldsvik","2303":"Ragunda","2305":"Bräcke","2309":"Krokom","2313":"Strömsund","2321":"Åre","2326":"Berg","2361":"Härjedalen","2380":"Östersund","2401":"Nordmaling","2403":"Bjurholm","2404":"Vindeln","2409":"Robertsfors","2417":"Norsjö","2418":"Malå","2421":"Storuman","2422":"Sorsele","2425":"Dorotea","2460":"Vännäs","2462":"Vilhelmina","2463":"Åsele","2480":"Umeå","2481":"Lycksele","2482":"Skellefteå","2505":"Arvidsjaur","2506":"Arjeplog","2510":"Jokkmokk","2513":"Överkalix","2514":"Kalix","2518":"Övertorneå","2521":"Pajala","2523":"Gällivare","2560":"Älvsbyn","2580":"Luleå","2581":"Piteå","2582":"Boden","2583":"Haparanda","2584":"Kiruna","0114":"Upplands Väsby","0115":"Vallentuna","0117":"Österåker","0120":"Värmdö","0123":"Järfälla","0125":"Ekerö","0126":"Huddinge","0127":"Botkyrka","0128":"Salem","0136":"Haninge","0138":"Tyresö","0139":"Upplands-Bro","0140":"Nykvarn","0160":"Täby","0162":"Danderyd","0163":"Sollentuna","0180":"Stockholm","0181":"Södertälje","0182":"Nacka","0183":"Sundbyberg","0184":"Solna","0186":"Lidingö","0187":"Vaxholm","0188":"Norrtälje","0191":"Sigtuna","0192":"Nynäshamn","0305":"Håbo","0319":"Älvkarleby","0330":"Knivsta","0331":"Heby","0360":"Tierp","0380":"Uppsala","0381":"Enköping","0382":"Östhammar","0428":"Vingåker","0461":"Gnesta","0480":"Nyköping","0481":"Oxelösund","0482":"Flen","0483":"Katrineholm","0484":"Eskilstuna","0486":"Strängnäs","0488":"Trosa","0509":"Ödeshög","0512":"Ydre","0513":"Kinda","0560":"Boxholm","0561":"Åtvidaberg","0562":"Finspång","0563":"Valdemarsvik","0580":"Linköping","0581":"Norrköping","0582":"Söderköping","0583":"Motala","0584":"Vadstena","0586":"Mjölby","0604":"Aneby","0617":"Gnosjö","0642":"Mullsjö","0643":"Habo","0662":"Gislaved","0665":"Vaggeryd","0680":"Jönköping","0682":"Nässjö","0683":"Värnamo","0684":"Sävsjö","0685":"Vetlanda","0686":"Eksjö","0687":"Tranås","0760":"Uppvidinge","0761":"Lessebo","0763":"Tingsryd","0764":"Alvesta","0765":"Älmhult","0767":"Markaryd","0780":"Växjö","0781":"Ljungby","0821":"Högsby","0834":"Torsås","0840":"Mörbylånga","0860":"Hultsfred","0861":"Mönsterås","0862":"Emmaboda","0880":"Kalmar","0881":"Nybro","0882":"Oskarshamn","0883":"Västervik","0884":"Vimmerby","0885":"Borgholm","0980":"Gotland","10":"Blekinge län","12":"Skåne län","13":"Hallands län","14":"Västra Götalands län","17":"Värmlands län","18":"Örebro län","19":"Västmanlands län","20":"Dalarnas län","21":"Gävleborgs län","22":"Västernorrlands län","23":"Jämtlands län","24":"Västerbottens län","25":"Norrbottens län","01":"Stockholms län","03":"Uppsala län","04":"Södermanlands län","05":"Östergötlands län","06":"Jönköpings län","07":"Kronobergs län","08":"Kalmar län","09":"Gotlands län"};
+var Ch_DK_NAMES = {"101":"København","147":"Frederiksberg","151":"Ballerup","153":"Brøndby","155":"Dragør","157":"Gentofte","159":"Gladsaxe","161":"Glostrup","163":"Herlev","165":"Albertslund","167":"Hvidovre","169":"Høje-Taastrup","173":"Lyngby-Taarbæk","175":"Rødovre","183":"Ishøj","185":"Tårnby","187":"Vallensbæk","190":"Furesø","201":"Allerød","210":"Fredensborg","217":"Helsingør","219":"Hillerød","223":"Hørsholm","230":"Rudersdal","240":"Egedal","250":"Frederikssund","253":"Greve","259":"Køge","260":"Halsnæs","265":"Roskilde","269":"Solrød","270":"Gribskov","306":"Odsherred","316":"Holbæk","320":"Faxe","326":"Kalundborg","329":"Ringsted","330":"Slagelse","336":"Stevns","340":"Sorø","350":"Lejre","360":"Lolland","370":"Næstved","376":"Guldborgsund","390":"Vordingborg","400":"Bornholm","410":"Middelfart","420":"Assens","430":"Faaborg-Midtfyn","440":"Kerteminde","450":"Nyborg","461":"Odense","479":"Svendborg","480":"Nordfyns","482":"Langeland","492":"Ærø","510":"Haderslev","530":"Billund","540":"Sønderborg","550":"Tønder","561":"Esbjerg","563":"Fanø","573":"Varde","575":"Vejen","580":"Aabenraa","607":"Fredericia","615":"Horsens","621":"Kolding","630":"Vejle","657":"Herning","661":"Holstebro","665":"Lemvig","671":"Struer","706":"Syddjurs","707":"Norddjurs","710":"Favrskov","727":"Odder","730":"Randers","740":"Silkeborg","741":"Samsø","746":"Skanderborg","751":"Aarhus","756":"Ikast-Brande","760":"Ringkøbing-Skjern","766":"Hedensted","773":"Morsø","779":"Skive","787":"Thisted","791":"Viborg","810":"Brønderslev","813":"Frederikshavn","820":"Vesthimmerlands","825":"Læsø","840":"Rebild","846":"Mariagerfjord","849":"Jammerbugt","851":"Aalborg","860":"Hjørring","DK-81":"Region Nordjylland","DK-82":"Region Midtjylland","DK-83":"Region Syddanmark","DK-84":"Region Hovedstaden","DK-85":"Region Sjælland"};
+var Ch_NL_NAMES = {"1":"Groningen","2":"Drenthe","3":"Overijssel","4":"Gelderland","5":"Limburg","6":"Zeeland","7":"Noord-Brabant","8":"Zuid-Holland","9":"Noord-Holland","10":"Friesland","11":"Flevoland","12":"Utrecht"};
 function ChRegName(cc, id) {
-  return cc === "NO" ? Ch_NO_NAMES[id] || null : null;
+  if (cc === "*") {
+    let c = vc.find((x) => x.code === id);
+    return c ? ChCN(c.name) : null;
+  }
+  let t = cc === "NO" ? Ch_NO_NAMES : cc === "SE" ? Ch_SE_NAMES : cc === "DK" ? Ch_DK_NAMES : cc === "NL" ? Ch_NL_NAMES : null;
+  return (t && t[id]) || null;
+}
+/* Verdenskart for bragder: targets = landkoder merkene gjelder (null = alle), vis = landkoder brukeren har besokt.
+   Uten px: hele verden (med fit = startutsnitt). Med px (deling): beskaaret til fit. */
+function ChWorldMapBuild(targets, vis, px) {
+  let keys = Object.keys(CH_WORLD),
+    tset = targets ? ChExpandCodes(new Set(targets)) : null,
+    v = ChExpandCodes(vis || new Set()),
+    on = "#D9713F",
+    miss = tset ? "#6A5646" : "#3A322A",
+    dim = "#2A241E",
+    parts = [],
+    visIds = [],
+    misIds = [];
+  for (let k of keys) {
+    let isT = !tset || tset.has(k),
+      isV = v.has(k);
+    isT && (isV ? visIds : misIds).push(k);
+    parts.push('<path data-i="' + k + '" d="' + CH_WORLD[k] + '" fill="' + (isT ? (isV ? on : miss) : dim) + '"/>');
+  }
+  let fit = tset ? ChFitView(new Set([...tset].filter((k) => CH_WORLD[k])), []) : null;
+  fit && fit[2] >= 1000 && (fit = null);
+  let H = CH_WORLD_H,
+    box = px && fit ? fit : [0, 0, 1000, H],
+    size = px ? ' width="' + px + '" height="' + Math.round((px * box[3]) / box[2]) + '"' : ' width="100%"';
+  return {
+    svg: '<svg xmlns="http://www.w3.org/2000/svg"' + size + ' viewBox="' + box.map((n) => +n.toFixed(2)).join(" ") + '"><g stroke="#1A1714" stroke-width="0.35" stroke-linejoin="round">' + parts.join("") + "</g></svg>",
+    W: px && fit ? fit[2] : 1000,
+    H: px && fit ? fit[3] : H,
+    n: visIds.length + misIds.length,
+    got: visIds.length,
+    visIds,
+    misIds,
+    fit,
+    world: !0,
+    missCol: miss,
+  };
+}
+/* Hvilke land et bragdmerke gjelder for (null = alle land). */
+function ChWorldTarget(b) {
+  let id = (b && b.id) || "";
+  if (id === "norden") return Ch_NORDIC;
+  if (id.indexOf("grp-") === 0) {
+    let g = CH_GROUPS.find((x) => "grp-" + x.id === id);
+    return g ? g.codes : null;
+  }
+  if (id.indexOf("kont-") === 0 && id !== "kont-alle") return Ch_CONT[id.slice(5)] || null;
+  return { "cap-high": ["BO"], "cap-low": ["AZ"], "cap-north": ["IS"], "cap-south": ["NZ"] }[id] || null;
 }
 function ChRegMapBuild(cc, mode, fid, hit, px) {
   let data = window.CH_REGIONS && window.CH_REGIONS.c[cc];
@@ -6658,7 +6715,7 @@ function ChRegMapBuild(cc, mode, fid, hit, px) {
 }
 function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
   let box = (0, U.useRef)(null),
-    [ready, setReady] = (0, U.useState)(!!window.CH_REGIONS),
+    [ready, setReady] = (0, U.useState)(mode === "world" || !!window.CH_REGIONS),
     [busy, setBusy] = (0, U.useState)(!1),
     [chSheet, chSetSheet] = (0, U.useState)(!1),
     [chTxt, chSetTxt] = (0, U.useState)(""),
@@ -6677,7 +6734,7 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       }
     );
   }, [ready]);
-  let m = (0, U.useMemo)(() => (ready ? ChRegMapBuild(cc, mode, fid, hit) : null), [ready, cc, mode, fid, hit]),
+  let m = (0, U.useMemo)(() => (mode === "world" ? ChWorldMapBuild(fid, hit && hit.vis) : ready ? ChRegMapBuild(cc, mode, fid, hit) : null), [ready, cc, mode, fid, hit]),
     sub = m ? P(lang, "prog_of", { k: m.got, n: m.n }) + (unit ? " " + unit : "") : "";
   (0, U.useEffect)(() => {
     let el = box.current,
@@ -6691,7 +6748,13 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       r0 = el.getBoundingClientRect(),
       a = r0.width / r0.height,
       full = a > W / H ? { w: H * a, h: H } : { w: W, h: W / a },
-      vb = { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h },
+      start = () => {
+        let f = m.fit;
+        if (!f) return { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h };
+        let w = f[2] / f[3] > a ? f[2] : f[3] * a;
+        return { x: f[0] + f[2] / 2 - w / 2, y: f[1] + f[3] / 2 - w / a / 2, w, h: w / a };
+      },
+      vb = start(),
       ptrs = new Map(),
       tapStart = null,
       selPaths = [],
@@ -6777,7 +6840,7 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       let r = el.getBoundingClientRect();
       zoomAt(r.width / 2, r.height / 2, f);
     };
-    el.__reset = () => ((vb = { x: W / 2 - full.w / 2, y: H / 2 - full.h / 2, w: full.w, h: full.h }), apply());
+    el.__reset = () => ((vb = start()), apply());
     apply();
     return () => {
       (svg.removeEventListener("pointerdown", down),
@@ -6793,7 +6856,7 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
     try {
       let w = 2160,
         mw = w - 160,
-        b = ChRegMapBuild(cc, mode, fid, hit, mw),
+        b = mode === "world" ? ChWorldMapBuild(fid, hit && hit.vis, mw) : ChRegMapBuild(cc, mode, fid, hit, mw),
         mh = Math.round((mw * b.H) / b.W),
         h = mh + 660,
         cv = document.createElement("canvas");
@@ -6829,7 +6892,8 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
     } catch {}
     setBusy(!1);
   }
-  let chCanList = !!m && m.visIds.concat(m.misIds).every((i) => ChRegName(cc, i)),
+  let chHtml = (0, U.useMemo)(() => ({ __html: m ? m.svg : "" }), [m]),
+    chCanList = !!m && m.visIds.concat(m.misIds).every((i) => ChRegName(cc, i)),
     chLegBtn = { background: "none", border: `1px solid ${O.line}`, borderRadius: 14, padding: "5px 12px", color: O.text, fontSize: 13, fontFamily: "inherit", cursor: "pointer" },
     chPars = m ? { title, sub, got: m.got, n: m.n, unit: unit || "", pct: Math.round((100 * m.got) / Math.max(1, m.n)) } : {},
     chTpl = [1, 2, 3, 5].concat(m && m.got === m.n ? [4] : []),
@@ -6927,12 +6991,12 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
           (0, T.jsx)("button", { style: btn, onClick: onClose, "aria-label": "Close", children: "×" }),
         ],
       }),
-      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: { __html: m ? m.svg : "" } }),
+      (0, T.jsx)("div", { ref: box, style: { flex: 1, minHeight: 0, lineHeight: 0, overflow: "hidden" }, dangerouslySetInnerHTML: chHtml }),
       (0, T.jsxs)("div", {
         style: { display: "flex", gap: 14, justifyContent: "center", fontSize: 13, color: O.sub, padding: "6px 14px 0" },
         children: [
           (0, T.jsxs)(chCanList ? "button" : "span", { ...(chCanList ? { onClick: () => (chSetSheet(!1), chSetList("vis")), style: chLegBtn } : {}), children: [(0, T.jsx)("i", { style: { display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "#D9713F", marginRight: 6 } }), P(lang, "reg_map_visited") + (chCanList ? " (" + m.got + ")" : ""), chCanList && " \u203A"] }),
-          (0, T.jsxs)(chCanList ? "button" : "span", { ...(chCanList ? { onClick: () => (chSetSheet(!1), chSetList("mis")), style: chLegBtn } : {}), children: [(0, T.jsx)("i", { style: { display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "#3A322A", marginRight: 6 } }), P(lang, "reg_map_missing") + (chCanList ? " (" + (m.n - m.got) + ")" : ""), chCanList && " \u203A"] }),
+          (0, T.jsxs)(chCanList ? "button" : "span", { ...(chCanList ? { onClick: () => (chSetSheet(!1), chSetList("mis")), style: chLegBtn } : {}), children: [(0, T.jsx)("i", { style: { display: "inline-block", width: 10, height: 10, borderRadius: 2, background: (m && m.missCol) || "#3A322A", marginRight: 6 } }), P(lang, "reg_map_missing") + (chCanList ? " (" + (m.n - m.got) + ")" : ""), chCanList && " \u203A"] }),
         ],
       }),
       (0, T.jsxs)("div", {
@@ -7727,6 +7791,15 @@ function ChBadgesPanel({ uid, meId, onClose }) {
     );
   }, [uid]);
   let chReg = useChRegHits(visits),
+    chVis = (0, U.useMemo)(() => {
+      let s = new Set();
+      for (let v of visits || []) {
+        let c = yc(v.country);
+        c && s.add(c.code);
+      }
+      return s;
+    }, [visits]),
+    chWorldHit = (0, U.useMemo)(() => ({ vis: chVis }), [chVis]),
     all = (0, U.useMemo)(() => (visits ? ChBadges(visits, lang, chReg) : []), [visits, lang, chReg]),
     mine = all.filter((b) => b.group === tab),
     sorted = tab === "countries" ? [...mine].sort((a, b) => b.earned - a.earned || a.label.localeCompare(b.label, "nb")) : mine,
@@ -7879,12 +7952,12 @@ function ChBadgesPanel({ uid, meId, onClose }) {
                 },
                 children: open.earned ? P(lang, "badge_earned") : P(lang, "b_locked"),
               }),
-              ChRegBadgeTarget(open.id) &&
+              (ChRegBadgeTarget(open.id) || open.group === "special") &&
                 (0, T.jsx)("button", {
                   className: "ch-secondary",
                   style: { width: "100%", marginTop: 14 },
                   onClick: () => {
-                    (setRegMap({ ...ChRegBadgeTarget(open.id), title: open.label }), setOpen(null));
+                    (setRegMap({ ...(ChRegBadgeTarget(open.id) || { cc: "*", mode: "world", id: ChWorldTarget(open) }), title: open.label }), setOpen(null));
                   },
                   children: P(lang, "reg_map_open"),
                 }),
@@ -7896,10 +7969,10 @@ function ChBadgesPanel({ uid, meId, onClose }) {
           cc: regMap.cc,
           mode: regMap.mode,
           fid: regMap.id,
-          hit: (chReg && chReg[regMap.cc]) || { all: new Set(), par: new Set(), byPar: {} },
+          hit: regMap.mode === "world" ? chWorldHit : (chReg && chReg[regMap.cc]) || { all: new Set(), par: new Set(), byPar: {} },
           lang,
           title: regMap.title,
-          unit: ChUnit(regMap.mode === "par" ? CH_REG_META[regMap.cc][0] : CH_REG_META[regMap.cc][1] || CH_REG_META[regMap.cc][0], lang),
+          unit: regMap.mode === "world" ? P(lang, "countries") : ChUnit(regMap.mode === "par" ? CH_REG_META[regMap.cc][0] : CH_REG_META[regMap.cc][1] || CH_REG_META[regMap.cc][0], lang),
           onClose: () => setRegMap(null),
         }),
     ],

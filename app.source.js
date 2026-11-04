@@ -773,7 +773,7 @@ var O = {
       wish_err: "Noe gikk galt. Prøv igjen.",
       import_btn: "Importer fra Google-tidslinje",
       import_title: "Importer steder",
-      import_intro: "Last ned tidslinjen din fra Google Maps (Innstillinger \u2192 Personvern \u2192 Tidslinje \u2192 Eksporter tidslinjedata) og velg filen her. Filen leses kun p\u00E5 telefonen din. Bare omr\u00E5de-posisjoner sl\u00E5s opp.",
+      import_intro: "Slik gj\u00F8r du det (Android):\n1. \u00C5pne telefonens Innstillinger.\n2. G\u00E5 til Plassering \u2192 Plasseringstjenester \u2192 Tidslinje.\n3. Trykk \u00ABEksporter tidslinjedata\u00BB og lagre p\u00E5 telefonen.\n4. Trykk her og velg filen (ofte i Nedlastinger).\nFilen leses kun p\u00E5 telefonen din. Bare omr\u00E5de-posisjoner sl\u00E5s opp. Menynavn kan variere litt mellom telefoner.",
       import_pick: "Velg tidslinjefil (.json)",
       import_none: "Fant ingen steder i filen.",
       import_err: "Kunne ikke lese filen. Er det en tidslinje-JSON fra Google?",
@@ -1156,7 +1156,7 @@ var O = {
       wish_err: "Something went wrong. Try again.",
       import_btn: "Import from Google Timeline",
       import_title: "Import places",
-      import_intro: "Export your timeline from Google Maps (Settings \u2192 Personal content / Privacy \u2192 Timeline \u2192 Export timeline data) and pick the file here. The file is only read on your device. Only area-level positions are looked up.",
+      import_intro: "How to do it (Android):\n1. Open your phone's Settings.\n2. Go to Location \u2192 Location services \u2192 Timeline.\n3. Tap \u201CExport Timeline data\u201D and save it to your phone.\n4. Tap below and choose the file (often in Downloads).\nThe file is only read on your device. Only area-level positions are looked up. Menu names can differ slightly between phones.",
       import_pick: "Choose timeline file (.json)",
       import_none: "No places found in the file.",
       import_err: "Could not read the file. Is it a Google timeline JSON?",
@@ -5815,7 +5815,7 @@ function ChImportPanel({ uid, onClose }) {
       stage === "pick" &&
         (0, T.jsxs)(T.Fragment, {
           children: [
-            (0, T.jsx)("p", { style: { ...box, marginTop: 0 }, children: P(lang, "import_intro") }),
+            (0, T.jsx)("p", { style: { ...box, marginTop: 0, whiteSpace: "pre-line" }, children: P(lang, "import_intro") }),
             err && (0, T.jsx)("p", { style: { color: "#E5484D", fontSize: 14 }, children: err }),
             (0, T.jsxs)("label", {
               className: "ch-secondary",

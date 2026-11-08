@@ -232,3 +232,12 @@ test("merkeikon: flagg for land, kart for kartmerker", () => {
   assert.equal(R.ChBadgeEmoji({ id: "land-GB-ENG" }), "🗺️");
   assert.ok(R.ChBadgeEmoji({ id: "ukjent" }));
 });
+
+// TWA: Android godtar appen bare når assetlinks.json har pakkenavnet og fingeravtrykket fra Play-appsignering.
+test("assetlinks.json kobler Play-appen til nettsiden", () => {
+  const al = JSON.parse(readFileSync("assetlinks.json", "utf8"));
+  const t = al[0].target;
+  assert.equal(t.package_name, "no.cityhopper.app");
+  assert.ok(t.sha256_cert_fingerprints.includes("E8:3D:32:24:83:AC:BE:2D:82:75:0B:83:B7:D7:D9:3F:0B:BA:95:E5:7B:B4:A6:89:71:4A:45:19:71:F5:66:5D"));
+  for (const f of t.sha256_cert_fingerprints) assert.match(f, /^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
+});

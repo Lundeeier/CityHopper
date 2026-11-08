@@ -6,7 +6,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "no.cityhopper.app",
-      "sha256_cert_fingerprints": []
+      "sha256_cert_fingerprints": [
+        "E8:3D:32:24:83:AC:BE:2D:82:75:0B:83:B7:D7:D9:3F:0B:BA:95:E5:7B:B4:A6:89:71:4A:45:19:71:F5:66:5D"
+      ]
     }
   }
 ]

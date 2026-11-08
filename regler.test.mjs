@@ -336,3 +336,33 @@ test("treff på vei bruker tettstedet, uten veiens id", async () => {
     w.fetch = old;
   }
 });
+
+// 8. nov: stort søk (ca. 570 ekte stedsnavn) – gjenstående feil var gård/dal med nøyaktig navn.
+test("gård og dal med nøyaktig navn gir treff (Ænes, Vestre Gausdal)", async () => {
+  const old = w.fetch;
+  try {
+    w.fetch = fake([{ name: "Ænes", addresstype: "farm", type: "farm", lat: "60.0", lon: "6.2", osm_type: "node", osm_id: 11, address: no({ farm: "Ænes", municipality: "Kvinnherad", county: "Vestland" }), namedetails: { name: "Ænes" } }]);
+    assert.equal((await R.e5("Ænes", "Norge"))[0].place, "Ænes");
+    w.fetch = fake([{ name: "Vestre Gausdal", addresstype: "valley", type: "valley", lat: "61.2", lon: "9.9", osm_type: "relation", osm_id: 12, address: no({ municipality: "Gausdal", county: "Innlandet" }), namedetails: { name: "Vestre Gausdal" } }]);
+    assert.equal((await R.e5("Vestre Gausdal", "Norge"))[0].place, "Vestre Gausdal");
+    w.fetch = fake([{ name: "Storgården", addresstype: "farm", type: "farm", lat: "60.0", lon: "6.2", osm_type: "node", osm_id: 13, address: no({ farm: "Storgården", municipality: "X" }), namedetails: { name: "Storgården" } }]);
+    assert.equal((await R.e5("Stor", "Norge")).length, 0);
+  } finally {
+    w.fetch = old;
+  }
+});
+
+// 8. nov: merker for 1000, 2500, 5000 og 10 000 steder.
+test("merker for 1000, 2500, 5000 og 10 000 steder", () => {
+  const visits = [];
+  for (let i = 0; i < 2500; i++) visits.push({ id: "v" + i, place: "Teststed " + i, country: "Norge", lat: 58 + (i % 50) * 0.3, lng: 5 + Math.floor(i / 50) * 0.3, visited_on: "2026-01-01" });
+  const b = R.ChBadges(visits, "no", null);
+  const get = (n) => b.find((x) => x.id === "ant-sted-" + n);
+  for (const n of [1000, 2500, 5000, 10000]) assert.ok(get(n), "mangler merke for " + n);
+  assert.equal(get(1000).earned, true);
+  assert.equal(get(2500).earned, true);
+  assert.equal(get(5000).earned, false);
+  assert.equal(get(10000).earned, false);
+  assert.match(get(10000).label, /10 000/);
+  assert.match(get(1000).label, /^1000 /);
+});

@@ -3461,6 +3461,8 @@ async function e5(e, t) {
         /* Treff på vei, bygning o.l. (f.eks. «Mauseidvåg» er en vei): bruk tettstedet adressen ligger i. */
         if (!Xy.has(h)) {
           let st = f.village || f.hamlet || f.town || f.city || f.suburb;
+          /* Gård eller dal med nøyaktig navnet brukeren skrev (f.eks. «Ænes», «Vestre Gausdal») er stedet selv. */
+          !st && ["farm", "valley"].includes(h) && ChFold(ChMonoName(c.name) || "") === ChFold(e.trim()) && (st = ChMonoName(c.name));
           if (!st) return;
           ((h = f.village ? "village" : f.hamlet ? "hamlet" : f.town ? "town" : f.city ? "city" : "suburb"), (c = { ...c, name: st }), (chRoad = !0));
         }
@@ -4897,13 +4899,14 @@ function ChBadges(visits, lang, reg) {
       earned: nCountries >= i,
     });
 
-  for (let n of [1, 10, 25, 50, 100, 150, 200, 250, 500])
+  // 1000–10 000 lagt til 8. nov (Kristian). Store tall vises med mellomrom: «10 000 steder».
+  for (let n of [1, 10, 25, 50, 100, 150, 200, 250, 500, 1000, 2500, 5000, 10000])
     out.push({
       id: "ant-sted-" + n,
       group: "counts",
-      label: P(lang, "b_places", { n }),
+      label: P(lang, "b_places", { n: ChBigNum(n) }),
       num: n,
-      desc: P(lang, n === 1 ? "d_places_one" : "d_places", { n }),
+      desc: P(lang, n === 1 ? "d_places_one" : "d_places", { n: ChBigNum(n) }),
       earned: nPlaces >= n,
     });
   for (let n of [1, 5, 10, 25])
@@ -7845,6 +7848,9 @@ function ChBadgeMapSvg(b, chReg, visCodes, px) {
   return w && w.svg;
 }
 /* Stort ikon i fullskjermen (Kristian valgte kart-ikonet, 8. nov): flagg for landmerker, kart for kartmerker. */
+function ChBigNum(n) {
+  return n >= 1e4 ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00A0") : String(n);
+}
 function ChBadgeEmoji(b) {
   let id = (b && b.id) || "",
     m = /^land-([A-Z]{2})$/.exec(id);
@@ -12285,7 +12291,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadges, ChBigNum, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

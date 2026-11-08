@@ -3446,7 +3446,7 @@ async function e5(e, t) {
   try {
     let s = await (
         await fetch(
-          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&addressdetails=1&extratags=1&accept-language=nb,en" +
+          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&addressdetails=1&extratags=1&namedetails=1&accept-language=nb,en" +
             (n ? "&countrycodes=" + n : "") +
             "&q=" +
             encodeURIComponent(e),
@@ -3455,13 +3455,22 @@ async function e5(e, t) {
       l = [];
     if (
       ((s || []).forEach((c) => {
-        let h = c.addresstype || c.type;
-        if (!Xy.has(h)) return;
-        let f = c.address || {},
-          chOwn = ChMonoName(c.name),
+        let h = c.addresstype || c.type,
+          f = c.address || {},
+          chRoad = !1;
+        /* Treff på vei, bygning o.l. (f.eks. «Mauseidvåg» er en vei): bruk tettstedet adressen ligger i. */
+        if (!Xy.has(h)) {
+          let st = f.village || f.hamlet || f.town || f.city || f.suburb;
+          if (!st) return;
+          ((h = f.village ? "village" : f.hamlet ? "hamlet" : f.town ? "town" : f.city ? "city" : "suburb"), (c = { ...c, name: st }), (chRoad = !0));
+        }
+        /* Brukeren skrev et annet navn på stedet (f.eks. «Vossestrand» for Vinje, «Oppstryn» for Fosnes):
+           behold navnet brukeren søkte på når det er et av stedets registrerte navn. */
+        let chAlias = h !== "municipality" && !chRoad && Object.values(c.namedetails || {}).find((x) => ChFold(ChMonoName(x) || "") === ChFold(e.trim())),
+          chOwn = chAlias ? ChMonoName(chAlias) : ChMonoName(c.name),
           /* Kommune koblet til by med samme navn (Harstad, Stavanger) er et ekte sted. Mangler extratags,
              godtas kommunen bare hvis brukeren skrev akkurat det navnet. */
-          chLk = ChLinked(c) || (h === "municipality" && !c.extratags && ChFold(d8(chOwn || "")) === ChFold(e.trim())),
+          chLk = ChLinked(c) || (h === "municipality" && ChFold(d8(chOwn || "")) === ChFold(e.trim()) && !ChMergedMuni(chOwn)),
           g = ChPlaceFrom(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0]), chLk),
           /* Skrev brukeren navnet paa stedet selv (f.eks. "Loeken"), beholder vi det
              i stedet for aa rulle opp til byen eller kommunen det ligger i. */
@@ -3470,7 +3479,10 @@ async function e5(e, t) {
           y = o8(f);
         if (!v || !y || ChIsAdmin(v)) return;
         if (h === "municipality" && !chLk && !(f.city || f.town || f.village)) return;
-        let m = ChKey(v, y);
+        let m = ChKey(v, y),
+          chDup = l.findIndex((k) => ChKey(k.place, k.country) === m);
+        // Samme navn to ganger: et ekte tettsted (f.eks. Vik med navnet Flatanger) slår kommunens midtpunkt.
+        chDup >= 0 && l[chDup].kind === "municipality" && h !== "municipality" && l.splice(chDup, 1);
         l.some((k) => ChKey(k.place, k.country) === m) ||
           l.push({
             place: ChCanon(v, y),
@@ -3478,7 +3490,7 @@ async function e5(e, t) {
             lat: +c.lat,
             lng: +c.lon,
             postcode: f.postcode || null,
-            osm: ChOsm(c),
+            osm: chRoad ? null : ChOsm(c),
             kind: h,
           });
       }),
@@ -3500,6 +3512,12 @@ var Ch_LINKED = ["city", "town", "village", "hamlet", "suburb", "borough", "quar
 function ChLinked(obj) {
   let x = obj && obj.extratags;
   return !!(x && Ch_LINKED.includes(x.linked_place || x.place));
+}
+/* Sammenslåtte kommunenavn (Aurskog-Høland, Nordre Follo, Indre Østfold) er ikke steder. Enkle kommunenavn som
+   brukeren skriver selv (Stryn, Lom, Trysil) er også navnet på tettstedet og godtas i søket (8. nov). */
+function ChMergedMuni(name) {
+  let n = d8(String(name || "")).trim();
+  return /[-\u2013]| og | i /i.test(n) || /^(nordre|søndre|østre|vestre|indre|ytre|midtre|midt|øvre|nedre|nord|sør|øst|vest)\b/i.test(n);
 }
 function ChPlaceFrom(addr, type, name, linked) {
   let a = addr || {},
@@ -12267,7 +12285,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

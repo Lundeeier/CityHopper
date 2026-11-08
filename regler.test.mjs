@@ -241,3 +241,98 @@ test("assetlinks.json kobler Play-appen til nettsiden", () => {
   assert.ok(t.sha256_cert_fingerprints.includes("E8:3D:32:24:83:AC:BE:2D:82:75:0B:83:B7:D7:D9:3F:0B:BA:95:E5:7B:B4:A6:89:71:4A:45:19:71:F5:66:5D"));
   for (const f of t.sha256_cert_fingerprints) assert.match(f, /^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
 });
+
+// 8. nov: ekte Nominatim-svar (hentet via nettleseren) for steder som bare finnes som kommune i søket.
+const muniOnly = (name, county) => [{ name, addresstype: "municipality", type: "administrative", lat: "61.9", lon: "6.7", osm_type: "relation", osm_id: 9, address: { municipality: name, county, country: "Norge", country_code: "no" }, extratags: { place: "municipality" } }];
+test("søk etter Stryn, Lom og Trysil gir treff (kommunenavn = tettsted)", async () => {
+  const old = w.fetch;
+  try {
+    for (const [n, c] of [["Stryn", "Vestland"], ["Lom", "Innlandet"], ["Trysil", "Innlandet"]]) {
+      w.fetch = fake(muniOnly(n, c));
+      const r = await R.e5(n, "Norge");
+      assert.equal(r[0] && r[0].place, n, n + " ga ikke treff");
+    }
+  } finally {
+    w.fetch = old;
+  }
+});
+test("sammenslåtte kommuner gir fortsatt ikke treff", async () => {
+  const old = w.fetch;
+  try {
+    for (const n of ["Aurskog-Høland", "Nordre Follo", "Indre Østfold", "Evje og Hornnes"]) {
+      w.fetch = fake(muniOnly(n, "X"));
+      assert.equal((await R.e5(n, "Norge")).length, 0, n + " skulle ikke gitt treff");
+    }
+    assert.equal(R.ChMergedMuni("Stryn"), false);
+    assert.equal(R.ChMergedMuni("Øvre Eiker"), true);
+  } finally {
+    w.fetch = old;
+  }
+});
+test("søk etter Molde (kommune + by) gir byen", async () => {
+  const old = w.fetch;
+  w.fetch = fake([
+    { name: "Molde", addresstype: "municipality", type: "administrative", lat: "62.7", lon: "7.2", osm_type: "relation", osm_id: 1, address: { municipality: "Molde", county: "Møre og Romsdal", country: "Norge", country_code: "no" }, extratags: { place: "municipality" } },
+    { name: "Molde", addresstype: "town", type: "town", lat: "62.73", lon: "7.16", osm_type: "node", osm_id: 2, address: { town: "Molde", municipality: "Molde", county: "Møre og Romsdal", postcode: "6413", country: "Norge", country_code: "no" }, extratags: {} },
+  ]);
+  try {
+    const r = await R.e5("Molde", "Norge");
+    assert.equal(r.length, 1);
+    assert.equal(r[0].place, "Molde");
+  } finally {
+    w.fetch = old;
+  }
+});
+
+// 8. nov: Kristians liste over steder som feilet. Svarene under er ekte Nominatim-svar (forkortet).
+const no = (o) => ({ country: "Norge", country_code: "no", ...o });
+const NOM = {
+  Vossestrand: [{ name: "Vinje", addresstype: "village", type: "village", lat: "60.79", lon: "6.51", osm_type: "node", osm_id: 264564816, address: no({ village: "Vinje", municipality: "Voss", county: "Vestland", postcode: "5713" }), extratags: {}, namedetails: { name: "Vinje", alt_name: "Vossestrand" } }],
+  Oppstryn: [{ name: "Fosnes", addresstype: "village", type: "village", lat: "61.91", lon: "7.06", osm_type: "node", osm_id: 2, address: no({ village: "Fosnes", municipality: "Stryn", county: "Vestland", postcode: "6799" }), extratags: {}, namedetails: { name: "Fosnes", alt_name: "Oppstryn" } }],
+  Mauseidvåg: [{ name: "Mauseidvåg", addresstype: "highway", type: "bus_stop", lat: "62.42", lon: "6.27", osm_type: "node", osm_id: 3, address: no({ highway: "Mauseidvåg", road: "Furnesvegen", hamlet: "Karlsbakken", village: "Mauseidvågen", municipality: "Sula", county: "Møre og Romsdal", postcode: "6035" }), namedetails: { name: "Mauseidvåg" } }],
+  Flatanger: [
+    { name: "Flatanger", addresstype: "municipality", type: "administrative", lat: "64.53", lon: "10.62", osm_type: "relation", osm_id: 4, address: no({ municipality: "Flatanger", county: "Trøndelag" }), extratags: { place: "municipality" }, namedetails: { name: "Flatanger", ref: "5049" } },
+    { name: "Vik", addresstype: "village", type: "village", lat: "64.46", lon: "10.73", osm_type: "node", osm_id: 5, address: no({ village: "Vik", municipality: "Flatanger", county: "Trøndelag", postcode: "7770" }), extratags: {}, namedetails: { name: "Vik", alt_name: "Flatanger" } },
+  ],
+  Lier: [
+    { name: "Lier", addresstype: "municipality", type: "administrative", lat: "59.79", lon: "10.24", osm_type: "relation", osm_id: 6, address: no({ municipality: "Lier", county: "Buskerud" }), extratags: { place: "municipality" }, namedetails: { name: "Lier" } },
+    { name: "Lierbyen", addresstype: "village", type: "village", lat: "59.78", lon: "10.24", osm_type: "node", osm_id: 7, address: no({ village: "Lierbyen", municipality: "Lier", county: "Buskerud" }), extratags: {}, namedetails: { name: "Lierbyen" } },
+  ],
+};
+for (const n of ["Nannestad", "Inderøy", "Skjåk", "Tydal"]) NOM[n] = muniOnly(n, "X");
+test("Kristians liste: alle stedene gir treff med navnet han skrev", async () => {
+  const old = w.fetch;
+  try {
+    const want = { Vossestrand: "Vossestrand", Oppstryn: "Oppstryn", Mauseidvåg: "Mauseidvågen", Flatanger: "Flatanger", Lier: "Lier", Nannestad: "Nannestad", Inderøy: "Inderøy", Skjåk: "Skjåk", Tydal: "Tydal" };
+    for (const [q, place] of Object.entries(want)) {
+      w.fetch = fake(NOM[q]);
+      const r = await R.e5(q, "Norge");
+      assert.equal(r[0] && r[0].place, place, q + " ga " + JSON.stringify(r.map((x) => x.place)));
+    }
+  } finally {
+    w.fetch = old;
+  }
+});
+test("Flatanger: tettstedet (Vik) vinner over kommunens midtpunkt", async () => {
+  const old = w.fetch;
+  w.fetch = fake(NOM.Flatanger);
+  try {
+    const r = await R.e5("Flatanger", "Norge");
+    assert.equal(r.length, 1);
+    assert.equal(r[0].kind, "village");
+    assert.equal(r[0].lat, 64.46);
+  } finally {
+    w.fetch = old;
+  }
+});
+test("treff på vei bruker tettstedet, uten veiens id", async () => {
+  const old = w.fetch;
+  w.fetch = fake(NOM["Mauseidvåg"]);
+  try {
+    const r = await R.e5("Mauseidvåg", "Norge");
+    assert.equal(r[0].place, "Mauseidvågen");
+    assert.equal(r[0].osm, null);
+  } finally {
+    w.fetch = old;
+  }
+});

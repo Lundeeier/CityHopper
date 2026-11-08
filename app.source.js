@@ -758,6 +758,12 @@ var O = {
       chars_left: "{n} tegn igjen",
       save_changes: "Lagre",
       close_sheet: "Lukk",
+      bc_share: "Del merket",
+      bc_done: "Fortsett",
+      bc_next: "Neste merke",
+      bc_text: "Jeg fikk merket «{name}» på CityHopper!",
+      show_on_map: "Vis på kartet ›",
+      push_inapp: "Varsler virker ikke i Android-appen ennå. Åpne cityhoppers.netlify.app i Chrome for å slå dem på der.",
       app_pitch: "Logg byene og stedene du har vært, samle merker og sammenlign med venner.",
       first_title: "Hvor har du vært?",
       first_sub: "Start med ett sted, for eksempel byen du er i nå.",
@@ -1141,6 +1147,12 @@ var O = {
       chars_left: "{n} characters left",
       save_changes: "Save",
       close_sheet: "Close",
+      bc_share: "Share badge",
+      bc_done: "Continue",
+      bc_next: "Next badge",
+      bc_text: "I earned the badge “{name}” on CityHopper!",
+      show_on_map: "Show on map ›",
+      push_inapp: "Notifications don't work in the Android app yet. Open cityhoppers.netlify.app in Chrome to turn them on there.",
       app_pitch: "Log the cities and places you've been, collect badges and compare with friends.",
       first_title: "Where have you been?",
       first_sub: "Start with one place, for example the town you're in now.",
@@ -1526,6 +1538,12 @@ var O = {
       chars_left: "Nog {n} tekens",
       save_changes: "Opslaan",
       close_sheet: "Sluiten",
+      bc_share: "Deel badge",
+      bc_done: "Doorgaan",
+      bc_next: "Volgende badge",
+      bc_text: "Ik heb de badge ‘{name}’ verdiend op CityHopper!",
+      show_on_map: "Toon op kaart ›",
+      push_inapp: "Meldingen werken nog niet in de Android-app. Open cityhoppers.netlify.app in Chrome om ze daar aan te zetten.",
       app_pitch: "Houd bij welke steden en plaatsen je hebt bezocht, verzamel badges en vergelijk met vrienden.",
       first_title: "Waar ben je geweest?",
       first_sub: "Begin met één plek, bijvoorbeeld de stad waar je nu bent.",
@@ -1884,6 +1902,12 @@ var O = {
       chars_left: "Noch {n} Zeichen",
       save_changes: "Speichern",
       close_sheet: "Schließen",
+      bc_share: "Abzeichen teilen",
+      bc_done: "Weiter",
+      bc_next: "Nächstes Abzeichen",
+      bc_text: "Ich habe das Abzeichen „{name}“ auf CityHopper bekommen!",
+      show_on_map: "Auf Karte zeigen ›",
+      push_inapp: "Benachrichtigungen funktionieren in der Android-App noch nicht. Öffne cityhoppers.netlify.app in Chrome, um sie dort einzuschalten.",
       app_pitch: "Halte fest, welche Städte und Orte du besucht hast, sammle Abzeichen und vergleiche dich mit Freunden.",
       first_title: "Wo warst du schon?",
       first_sub: "Fang mit einem Ort an, zum Beispiel der Stadt, in der du gerade bist.",
@@ -2242,6 +2266,12 @@ var O = {
       chars_left: "{n} tecken kvar",
       save_changes: "Spara",
       close_sheet: "Stäng",
+      bc_share: "Dela märket",
+      bc_done: "Fortsätt",
+      bc_next: "Nästa märke",
+      bc_text: "Jag fick märket ”{name}” på CityHopper!",
+      show_on_map: "Visa på kartan ›",
+      push_inapp: "Aviseringar fungerar inte i Android-appen än. Öppna cityhoppers.netlify.app i Chrome för att slå på dem där.",
       app_pitch: "Logga städerna och platserna du varit på, samla märken och jämför med vänner.",
       first_title: "Var har du varit?",
       first_sub: "Börja med en plats, till exempel staden du är i nu.",
@@ -2600,6 +2630,12 @@ var O = {
       chars_left: "{n} tegn tilbage",
       save_changes: "Gem",
       close_sheet: "Luk",
+      bc_share: "Del mærket",
+      bc_done: "Fortsæt",
+      bc_next: "Næste mærke",
+      bc_text: "Jeg fik mærket »{name}« på CityHopper!",
+      show_on_map: "Vis på kortet ›",
+      push_inapp: "Notifikationer virker ikke i Android-appen endnu. Åbn cityhoppers.netlify.app i Chrome for at slå dem til der.",
       app_pitch: "Log de byer og steder, du har været, saml mærker og sammenlign med venner.",
       first_title: "Hvor har du været?",
       first_sub: "Start med ét sted, for eksempel byen, du er i nu.",
@@ -2961,6 +2997,12 @@ var O = {
       chars_left: "{n} caracteres restantes",
       save_changes: "Guardar",
       close_sheet: "Cerrar",
+      bc_share: "Compartir insignia",
+      bc_done: "Continuar",
+      bc_next: "Siguiente insignia",
+      bc_text: "¡He conseguido la insignia «{name}» en CityHopper!",
+      show_on_map: "Ver en el mapa ›",
+      push_inapp: "Las notificaciones aún no funcionan en la app de Android. Abre cityhoppers.netlify.app en Chrome para activarlas allí.",
       app_pitch: "Registra las ciudades y lugares donde has estado, colecciona insignias y compárate con tus amigos.",
       first_title: "¿Dónde has estado?",
       first_sub: "Empieza con un lugar, por ejemplo la ciudad donde estás ahora.",
@@ -3404,7 +3446,7 @@ async function e5(e, t) {
   try {
     let s = await (
         await fetch(
-          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&addressdetails=1&accept-language=nb,en" +
+          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&addressdetails=1&extratags=1&accept-language=nb,en" +
             (n ? "&countrycodes=" + n : "") +
             "&q=" +
             encodeURIComponent(e),
@@ -3417,14 +3459,17 @@ async function e5(e, t) {
         if (!Xy.has(h)) return;
         let f = c.address || {},
           chOwn = ChMonoName(c.name),
-          g = ChPlaceFrom(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0])),
+          /* Kommune koblet til by med samme navn (Harstad, Stavanger) er et ekte sted. Mangler extratags,
+             godtas kommunen bare hvis brukeren skrev akkurat det navnet. */
+          chLk = ChLinked(c) || (h === "municipality" && !c.extratags && ChFold(d8(chOwn || "")) === ChFold(e.trim())),
+          g = ChPlaceFrom(f, h, chOwn || h8(f, (c.display_name || "").split(",")[0]), chLk),
           /* Skrev brukeren navnet paa stedet selv (f.eks. "Loeken"), beholder vi det
              i stedet for aa rulle opp til byen eller kommunen det ligger i. */
           chKeep = chOwn && h !== "municipality" && ChFold(chOwn).startsWith(ChFold(e.trim())),
           v = d8(chKeep ? chOwn : g, e, h === "municipality"),
           y = o8(f);
         if (!v || !y || ChIsAdmin(v)) return;
-        if (h === "municipality" && !(f.city || f.town || f.village)) return;
+        if (h === "municipality" && !chLk && !(f.city || f.town || f.village)) return;
         let m = ChKey(v, y);
         l.some((k) => ChKey(k.place, k.country) === m) ||
           l.push({
@@ -3449,15 +3494,22 @@ async function e5(e, t) {
    Bare ekte steder (by, tettsted, landsby, grend, bydel). Kommunenavnet godtas bare når det
    også er navnet på selve byen/tettstedet (f.eks. Oslo, Lillestrøm). Gir null hvis ingen sted finnes. */
 var Ch_SETTLE = ["city", "town", "village", "hamlet"];
-function ChPlaceFrom(addr, type, name) {
+/* linked: kommunen er koblet til en by/et tettsted med samme navn i OpenStreetMap (extratags.linked_place),
+   f.eks. Harstad og Stavanger. Da er navnet et ekte sted og skal godtas. */
+var Ch_LINKED = ["city", "town", "village", "hamlet", "suburb", "borough", "quarter", "neighbourhood"];
+function ChLinked(obj) {
+  let x = obj && obj.extratags;
+  return !!(x && Ch_LINKED.includes(x.linked_place || x.place));
+}
+function ChPlaceFrom(addr, type, name, linked) {
   let a = addr || {},
-    settle = a.city || a.town || a.village || a.hamlet || null,
+    settle = a.city || a.town || a.village || a.hamlet || (linked && ChMonoName(name)) || null,
     muni = a.municipality ? d8(a.municipality) : null,
     isMuni = (x) => !!muni && ChFold(d8(x)) === ChFold(muni) && !(settle && ChFold(d8(settle)) === ChFold(d8(x))),
     own = ChMonoName(name),
     cand = [];
   Ch_SUB.has(type) && (a.city || a.town) && cand.push(a.city || a.town);
-  type !== "municipality" && cand.push(own);
+  (type !== "municipality" || linked) && cand.push(own);
   cand.push(settle, a.suburb, a.quarter, a.neighbourhood, a.locality);
   for (let c of cand) if (c && !isMuni(c) && !ChIsAdmin(d8(c))) return c;
   return null;
@@ -3487,15 +3539,16 @@ async function f8(e, t) {
   try {
     let i = await (
         await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${e}&lon=${t}&zoom=13&addressdetails=1&accept-language=nb,en`,
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${e}&lon=${t}&zoom=13&addressdetails=1&extratags=1&accept-language=nb,en`,
         )
       ).json(),
       r = i.address || {},
       chT = i.addresstype || i.type,
-      s = ChPlaceFrom(r, chT, i.name),
+      chL = ChLinked(i),
+      s = ChPlaceFrom(r, chT, i.name, chL),
       l = s ? d8(s) : null,
       c = o8(r);
-    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: chT === "municipality" ? null : ChOsm(i), own: (Ch_SETTLE.includes(chT) && ChFold(l) === ChFold(d8(ChMonoName(i.name) || ""))) || !!(r.village || r.town || r.city), muni: r.municipality || null };
+    if (l && c) return { place: l, country: c, postcode: r.postcode || null, osm: chT === "municipality" && !chL ? null : ChOsm(i), own: ((Ch_SETTLE.includes(chT) || chL) && ChFold(l) === ChFold(d8(ChMonoName(i.name) || ""))) || !!(r.village || r.town || r.city), muni: r.municipality || null };
   } catch (chE) { ChLogError("reverse_geo", chE); }
   throw new Error("not found");
 }
@@ -4373,6 +4426,10 @@ function ChPushSupported() {
   return typeof window < "u" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
+/* Inne i Android-appen (WebView) finnes ikke nettvarsler. */
+function ChInApp() {
+  return typeof navigator < "u" && /; wv\)/.test(navigator.userAgent || "");
+}
 function ChPushState() {
   return ChPushSupported() ? Notification.permission : "unsupported";
 }
@@ -5221,7 +5278,7 @@ function ChPanel({ title, onClose, children, hideBack: chHB, action: chAct, them
   });
 }
 
-function ChToggle({ label, checked, onChange }) {
+function ChToggle({ label, checked, onChange, disabled }) {
   return (0, T.jsxs)("label", {
     style: {
       display: "flex",
@@ -5229,11 +5286,13 @@ function ChToggle({ label, checked, onChange }) {
       gap: 10,
       padding: "10px 0",
       fontSize: 15,
-      cursor: "pointer",
+      cursor: disabled ? "default" : "pointer",
+      opacity: disabled ? 0.5 : 1,
     },
     children: [
       (0, T.jsx)("input", {
         type: "checkbox",
+        disabled: !!disabled,
         checked: !!checked,
         onChange: (e) => onChange(e.target.checked),
         style: { width: 20, height: 20, accentColor: O.accent, flex: "0 0 auto" },
@@ -6079,6 +6138,7 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
       (0, T.jsx)(ChToggle, {
         label: P(lang, "push_toggle"),
         checked: push === "granted",
+        disabled: push === "unsupported",
         onChange: async (v) => {
           if (!v) {
             (await ChPushOff(meId), setPush(ChPushState()));
@@ -6104,7 +6164,7 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
         push !== "default" &&
         (0, T.jsx)("p", {
           style: { color: O.sub, fontSize: 12, lineHeight: 1.45, margin: "0 0 10px" },
-          children: push === "denied" ? P(lang, "push_blocked") : P(lang, "push_unsupported"),
+          children: push === "denied" ? P(lang, "push_blocked") : P(lang, ChInApp() ? "push_inapp" : "push_unsupported"),
         }),
       (0, T.jsx)("div", { style: { height: 6, borderBottom: `1px solid ${O.line}`, marginBottom: 10 } }),
       (0, T.jsx)(ChToggle, {
@@ -6818,15 +6878,23 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       selPaths = [];
     }
     function tap(x, y) {
-      let t = document.elementFromPoint(x, y),
-        id = t && t.getAttribute && t.getAttribute("data-i");
+      let t = document.elementFromPoint(x, y);
+      select(t && t.getAttribute && t.getAttribute("data-i"));
+    }
+    /* Marker en region (fra trykk på kartet eller fra listen). Gir regionens ramme i kartets koordinater. */
+    function select(id) {
       clearSel();
       let name = id && ChRegName(cc, id);
       if (!name) {
         chSetTap(null);
-        return;
+        return null;
       }
-      for (let s of svg.querySelectorAll('[data-i="' + id + '"]')) {
+      let bb = null;
+      for (let s of svg.querySelectorAll('[data-i="' + CSS.escape(String(id)) + '"]')) {
+        try {
+          let b = s.getBBox();
+          bb = bb ? { x0: Math.min(bb.x0, b.x), y0: Math.min(bb.y0, b.y), x1: Math.max(bb.x1, b.x + b.width), y1: Math.max(bb.y1, b.y + b.height) } : { x0: b.x, y0: b.y, x1: b.x + b.width, y1: b.y + b.height };
+        } catch {}
         if (mode === "par") s.style.filter = "brightness(1.45)";
         else {
           s.dataset.sw = s.getAttribute("stroke-width");
@@ -6837,6 +6905,7 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
         selPaths.push(s);
       }
       chSetTap({ name, vis: m.visIds.indexOf(id) >= 0 });
+      return bb;
     }
     function apply() {
       vb.w = Math.min(full.w, Math.max(30, vb.w));
@@ -6898,6 +6967,17 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
       zoomAt(r.width / 2, r.height / 2, f);
     };
     el.__reset = () => ((vb = start()), apply());
+    /* Fra listen: vis hvor regionen ligger (zoomer inn og markerer den). */
+    el.__focus = (id) => {
+      let bb = select(id);
+      if (!bb) return;
+      let bw = Math.max(bb.x1 - bb.x0, 1),
+        bh = Math.max(bb.y1 - bb.y0, 1),
+        w = Math.max(60, Math.min(full.w, Math.max(bw, bh * a) * 2.2));
+      ((vb.w = w), (vb.h = w / a), (vb.x = (bb.x0 + bb.x1) / 2 - w / 2), (vb.y = (bb.y0 + bb.y1) / 2 - w / a / 2), apply());
+      // Kanten tilpasses zoomen, ellers blir den altfor tykk når vi zoomer langt inn.
+      for (let s of selPaths) s.dataset.sw && s.setAttribute("stroke-width", String(Math.max(0.3, (vb.w / 1000) * 3)));
+    };
     apply();
     return () => {
       (svg.removeEventListener("pointerdown", down),
@@ -7007,9 +7087,22 @@ function ChRegionMap({ cc, mode, fid, hit, lang, title, unit, onClose }) {
             (0, T.jsx)("div", {
               style: { overflowY: "auto", WebkitOverflowScrolling: "touch" },
               children: (chList === "vis" ? m.visIds : m.misIds)
-                .map((i) => ChRegName(cc, i))
-                .sort((x, y) => x.localeCompare(y, "nb"))
-                .map((nm) => (0, T.jsx)("div", { style: { padding: "9px 2px", borderBottom: `1px solid ${O.line}`, fontSize: 15 }, children: nm }, nm)),
+                .map((i) => [i, ChRegName(cc, i)])
+                .filter((x) => x[1])
+                .sort((x, y) => x[1].localeCompare(y[1], "nb"))
+                .map(([i, nm]) =>
+                  (0, T.jsxs)(
+                    "button",
+                    {
+                      type: "button",
+                      className: "ch-reglist-item",
+                      onClick: () => (chSetList(null), box.current && box.current.__focus && box.current.__focus(i)),
+                      style: { display: "flex", alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", borderBottom: `1px solid ${O.line}`, color: O.text, padding: "11px 2px", fontSize: 15, fontFamily: "inherit", cursor: "pointer" },
+                      children: [(0, T.jsx)("span", { style: { flex: 1 }, children: nm }), (0, T.jsx)("span", { style: { color: O.sub, fontSize: 13 }, children: P(lang, "show_on_map") })],
+                    },
+                    i,
+                  ),
+                ),
             }),
           ],
         }),
@@ -7719,54 +7812,129 @@ function ChInviteBanner({ lang, who, onYes, onNo }) {
   });
 }
 
-function ChBadgeToast({ badges, lang, onClose }) {
-  ((0, U.useEffect)(() => {
-    let t = setTimeout(onClose, 6e3);
-    return () => clearTimeout(t);
-  }, [onClose]));
-  return (0, T.jsxs)("div", {
-    onClick: onClose,
-    style: {
-      position: "fixed",
-      left: 12,
-      right: 12,
-      bottom: "calc(92px + env(safe-area-inset-bottom))",
-      zIndex: 1450,
-      maxWidth: 420,
-      margin: "0 auto",
-      background: O.bar,
-      border: `1px solid ${O.accent}`,
-      borderRadius: 10,
-      padding: 12,
-      display: "flex",
-      alignItems: "center",
-      gap: 12,
-      fontFamily: "'Archivo', -apple-system, sans-serif",
-      cursor: "pointer",
-    },
-    children: [
-      (0, T.jsx)(ChBadgeFace, { b: badges[0], size: 44 }),
-      (0, T.jsxs)("div", {
-        style: { flex: 1, minWidth: 0 },
-        children: [
-          (0, T.jsx)("div", {
-            style: { color: O.accent, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" },
-            children: badges.length > 1 ? P(lang, "new_badges", { n: badges.length }) : P(lang, "new_badge"),
-          }),
-          (0, T.jsx)("div", {
-            style: {
-              fontSize: 15,
-              fontWeight: 600,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            },
-            children: badges.map((b) => b.label).join(", "),
-          }),
-        ],
-      }),
-    ],
-  });
+/* Kart til et merke (valg B, 8. nov): regionmerker gir regionkartet, landmerker landet, andre merker verdenskartet
+   med landene merket gjelder for. Gir null hvis regiondata ikke er lastet. */
+function ChBadgeMapSvg(b, chReg, visCodes, px) {
+  let t = ChRegBadgeTarget(b && b.id);
+  if (t) {
+    if (!window.CH_REGIONS || !window.CH_REGIONS.c[t.cc]) return null;
+    let r = ChRegMapBuild(t.cc, t.mode, t.id, (chReg && chReg[t.cc]) || { all: new Set(), par: new Set(), byPar: {} }, px);
+    return r && r.svg;
+  }
+  let m = /^land-([A-Z-]+)$/.exec((b && b.id) || ""),
+    tg = m ? [m[1]] : ChWorldTarget(b),
+    w = ChWorldMapBuild(tg, visCodes || new Set(), tg ? px : px);
+  return w && w.svg;
+}
+/* Stort ikon i fullskjermen (Kristian valgte kart-ikonet, 8. nov): flagg for landmerker, kart for kartmerker. */
+function ChBadgeEmoji(b) {
+  let id = (b && b.id) || "",
+    m = /^land-([A-Z]{2})$/.exec(id);
+  if (m) return String.fromCodePoint(...[...m[1]].map((c) => 127397 + c.charCodeAt(0)));
+  if (id.indexOf("reg-") === 0 || id.indexOf("land-") === 0 || id.indexOf("grp-") === 0 || id === "norden") return "\u{1F5FA}\uFE0F";
+  if (id.indexOf("kont-") === 0) return "\u{1F30D}";
+  let t = { "cap-high": "\u{1F3D4}\uFE0F", "cap-low": "\u{1F30A}", "cap-north": "\u{1F9ED}", "cap-south": "\u{1F9ED}", uke: "\u{1F4C5}", natt: "\u{1F319}", "tre-land": "\u2708\uFE0F" };
+  if (t[id]) return t[id];
+  if (id.indexOf("foto-") === 0) return "\u{1F4F8}";
+  if (id.indexOf("vurdert-") === 0) return "\u2B50";
+  if (id.indexOf("rad-") === 0) return "\u{1F525}";
+  if (id.indexOf("ant-") === 0) return "\u{1F4CD}";
+  return "\u{1F5FA}\uFE0F";
+}
+/* Fullskjerm når man får nye merker: kartet øverst, merket, tekst, Del og Fortsett/Neste. */
+function ChBadgeCelebrate({ badges, lang, chReg, visCodes, onClose }) {
+  let [i, setI] = (0, U.useState)(0),
+    [ready, setReady] = (0, U.useState)(!!window.CH_REGIONS),
+    [busy, setBusy] = (0, U.useState)(!1),
+    b = badges[Math.min(i, badges.length - 1)],
+    last = i >= badges.length - 1;
+  (0, U.useEffect)(() => {
+    if (ready || !ChRegBadgeTarget(b && b.id)) return;
+    let alive = !0;
+    return (
+      ChLoadRegions()
+        .then(() => alive && setReady(!0))
+        .catch(() => {}),
+      () => {
+        alive = !1;
+      }
+    );
+  }, [ready, b]);
+  let svg = (0, U.useMemo)(() => {
+      try {
+        return ChBadgeMapSvg(b, chReg, visCodes, 800);
+      } catch {
+        return null;
+      }
+    }, [b, chReg, visCodes, ready]),
+    svgHtml = (0, U.useMemo)(() => (svg ? { __html: svg.replace(/ width="\d+" height="\d+"/, ' width="100%" height="100%" preserveAspectRatio="xMidYMid meet"') } : null), [svg]);
+  async function share() {
+    setBusy(!0);
+    let txt = P(lang, "bc_text", { name: b.label }) + " cityhoppers.netlify.app";
+    try {
+      let file = null;
+      if (svg) {
+        let cv = document.createElement("canvas"),
+          w = 1080,
+          h = 1350;
+        ((cv.width = w), (cv.height = h));
+        let g = cv.getContext("2d");
+        ((g.fillStyle = O.bg), g.fillRect(0, 0, w, h));
+        let img = new Image();
+        await new Promise((ok, no) => {
+          ((img.onload = ok), (img.onerror = no), (img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg)));
+        });
+        let s = Math.min((w - 160) / img.width, 820 / img.height);
+        g.drawImage(img, (w - img.width * s) / 2, 120, img.width * s, img.height * s);
+        ((g.fillStyle = O.accent), (g.font = "700 40px Archivo, -apple-system, sans-serif"), (g.textAlign = "center"), g.fillText(P(lang, "new_badge").toUpperCase(), w / 2, 1040));
+        ((g.fillStyle = O.text), (g.font = "600 72px Fraunces, Georgia, serif"), g.fillText(b.label, w / 2, 1130, w - 120));
+        ((g.fillStyle = O.accent), (g.font = "600 48px Fraunces, Georgia, serif"), g.fillText("CityHopper", w / 2, h - 80));
+        let blob = await new Promise((ok) => cv.toBlob(ok, "image/png"));
+        blob && (file = new File([blob], "cityhopper-merke.png", { type: "image/png" }));
+      }
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: "CityHopper", text: txt });
+      else if (navigator.share) await navigator.share({ title: "CityHopper", text: txt });
+      else await navigator.clipboard.writeText(txt);
+    } catch {}
+    setBusy(!1);
+  }
+  return ChPortal(
+    (0, T.jsxs)("div", {
+      role: "dialog",
+      "aria-modal": "true",
+      className: "ch-celebrate",
+      style: { position: "fixed", inset: 0, zIndex: 9200, background: O.bg, color: O.text, display: "flex", flexDirection: "column", fontFamily: "'Archivo', -apple-system, sans-serif", overflow: "hidden" },
+      children: [
+        (0, T.jsx)("button", { type: "button", onClick: onClose, "aria-label": P(lang, "close_sheet"), style: { position: "absolute", top: "calc(env(safe-area-inset-top, 0px) + 14px)", right: 14, zIndex: 2, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${O.line}`, background: O.bg, color: O.text, fontSize: 18, cursor: "pointer" }, children: "✕" }),
+        (0, T.jsx)("div", {
+          className: "ch-celebrate-map",
+          style: { flex: "1 1 45%", minHeight: 0, background: `linear-gradient(180deg, ${O.row} 0%, ${O.row} 70%, ${O.bg} 100%)`, padding: "calc(env(safe-area-inset-top, 0px) + 24px) 40px 56px", boxSizing: "border-box" },
+          children: svgHtml ? (0, T.jsx)("div", { style: { width: "100%", height: "100%" }, dangerouslySetInnerHTML: svgHtml }) : null,
+        }),
+        (0, T.jsxs)("div", {
+          style: { flex: "0 0 auto", marginTop: -48, textAlign: "center", padding: "0 24px", position: "relative" },
+          children: [
+            (0, T.jsx)("div", {
+              className: "ch-celebrate-badge",
+              style: { width: 112, height: 112, margin: "0 auto", borderRadius: "50%", border: `4px solid ${O.accent}`, background: O.row, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 54, lineHeight: 1, boxShadow: "0 0 34px rgba(217,113,63,.55)" },
+              children: ChBadgeEmoji(b),
+            }),
+            (0, T.jsx)("div", { style: { color: O.accent, fontWeight: 800, letterSpacing: ".12em", fontSize: 13, marginTop: 16 }, children: badges.length > 1 ? P(lang, "new_badges", { n: badges.length }).toUpperCase() + " · " + (i + 1) + "/" + badges.length : P(lang, "new_badge").toUpperCase() }),
+            (0, T.jsx)("div", { className: "ch-celebrate-title", style: { fontSize: 26, fontWeight: 700, margin: "8px 0 6px", fontFamily: "'Fraunces', Georgia, serif", lineHeight: 1.15 }, children: b.label }),
+            b.desc && (0, T.jsx)("div", { style: { color: O.sub, fontSize: 15, lineHeight: 1.45, maxWidth: 360, margin: "0 auto" }, children: b.desc }),
+          ],
+        }),
+        (0, T.jsxs)("div", {
+          style: { flex: "0 0 auto", padding: "20px 22px calc(env(safe-area-inset-bottom, 0px) + 22px)", display: "flex", flexDirection: "column", gap: 10, maxWidth: 480, width: "100%", boxSizing: "border-box", margin: "0 auto" },
+          children: [
+            (0, T.jsx)("button", { type: "button", className: "ch-primary", disabled: busy, onClick: share, children: P(lang, "bc_share") }),
+            (0, T.jsx)("button", { type: "button", className: "ch-secondary ch-celebrate-next", onClick: () => (last ? onClose() : setI(i + 1)), children: P(lang, last ? "bc_done" : "bc_next") }),
+          ],
+        }),
+      ],
+    }),
+    document.body,
+  );
 }
 
 function ChBadgeFace({ b, size: sz = 56 }) {
@@ -9185,7 +9353,15 @@ function n5({ session: e, onLogout: t }) {
       alive = !1;
     };
   }, [e.user.id]);
-  let chRegMain = useChRegHits(h ? null : l);
+  let chRegMain = useChRegHits(h ? null : l),
+    chVisCodes = (0, U.useMemo)(() => {
+      let s = new Set();
+      for (let v of l || []) {
+        let c = yc(v.country);
+        c && s.add(c.code);
+      }
+      return s;
+    }, [l]);
   /* Viser nye merker. Hvilke du har sett ligger lagret paa telefonen, ellers ville
      alt sett nytt ut hver gang appen startet. Foerste gang lagres de i stillhet. */
   (0, U.useEffect)(() => {
@@ -9879,7 +10055,7 @@ function n5({ session: e, onLogout: t }) {
             }),
           !h && l.length === 0 && (0, T.jsx)(ChTour, { lang: n, uid: e.user.id, onStart: () => s("innsjekk") }),
           chNytt &&
-            (0, T.jsx)(ChBadgeToast, { badges: chNytt, lang: n, onClose: () => chSetNytt(null) }),
+            (0, T.jsx)(ChBadgeCelebrate, { badges: chNytt, lang: n, chReg: chRegMain, visCodes: chVisCodes, onClose: () => chSetNytt(null) }),
           chInv &&
             (0, T.jsx)(ChInviteBanner, {
               lang: n,
@@ -11125,12 +11301,13 @@ function o5({
     children: [
       chHint &&
         (0, T.jsxs)("div", {
-          style: { display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", background: O.row, borderBottom: `1px solid ${O.line}` },
+          className: "ch-maphint",
+          style: { display: "flex", flexDirection: "column", alignItems: "stretch", gap: 10, padding: "12px 16px", background: O.row, borderBottom: `1px solid ${O.line}` },
           children: [
-            (0, T.jsx)("span", { style: { flex: 1, fontSize: 14, lineHeight: 1.4 }, children: P(h, "map_hint") }),
+            (0, T.jsx)("span", { style: { fontSize: 15, lineHeight: 1.45 }, children: P(h, "map_hint") }),
             (0, T.jsx)("button", {
               className: "ch-secondary",
-              style: { height: 36, padding: "0 14px", flex: "0 0 auto" },
+              style: { height: 40, padding: "0 18px", width: "auto", alignSelf: "flex-end" },
               onClick: () => {
                 try {
                   localStorage.setItem("ch_maphint_v1", "1");
@@ -12090,7 +12267,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChBadges, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

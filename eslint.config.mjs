@@ -16,7 +16,7 @@ export default [
         TextEncoder: "readonly", TextDecoder: "readonly", crypto: "readonly", alert: "readonly", confirm: "readonly",
         matchMedia: "readonly", ResizeObserver: "readonly", IntersectionObserver: "readonly", HTMLElement: "readonly",
         Event: "readonly", structuredClone: "readonly", queueMicrotask: "readonly", screen: "readonly", innerWidth: "readonly", innerHeight: "readonly",
-        createImageBitmap: "readonly", OffscreenCanvas: "readonly", ClipboardItem: "readonly", MutationObserver: "readonly", DOMParser: "readonly", Response: "readonly", Request: "readonly", Headers: "readonly",
+        createImageBitmap: "readonly", CSS: "readonly", OffscreenCanvas: "readonly", ClipboardItem: "readonly", MutationObserver: "readonly", DOMParser: "readonly", Response: "readonly", Request: "readonly", Headers: "readonly",
       },
     },
     rules: {

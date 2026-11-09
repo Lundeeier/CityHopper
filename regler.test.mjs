@@ -366,3 +366,14 @@ test("merker for 1000, 2500, 5000 og 10 000 steder", () => {
   assert.match(get(10000).label, /10 000/);
   assert.match(get(1000).label, /^1000 /);
 });
+
+// Regel: profil, statistikk og lister skal telle alle innsjekker, ikke stoppe på 1000 (Supabase-grensen).
+test("ChAllRows henter mer enn 1000 rader i biter", async () => {
+  const rows = Array.from({ length: 2345 }, (_, i) => ({ id: i }));
+  const calls = [];
+  const mk = () => ({ range: async (a, b) => (calls.push([a, b]), { data: rows.slice(a, Math.min(b + 1, 1000 + a)), error: null }) });
+  const { data, error } = await R.ChAllRows(mk);
+  assert.equal(error, null);
+  assert.equal(data.length, 2345);
+  assert.deepEqual(calls, [[0, 999], [1000, 1999], [2000, 2999]]);
+});

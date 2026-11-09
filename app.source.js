@@ -4002,6 +4002,18 @@ async function ChShrink(e, maks = 1400, kvalitet = 0.82) {
 
 /* Enkel feillogg: sender korte feilmeldinger til tabellen client_errors (maks 5 per okt). */
 var chErrCount = 0;
+/* Supabase gir maks 1000 rader per kall. ChAllRows henter alt i biter på 1000.
+   mk() må lage en ny spørring hver gang og være sortert (minst på id) så bitene ikke overlapper. */
+async function ChAllRows(mk, max = 50000) {
+  let out = [];
+  for (let from = 0; from < max; from += 1000) {
+    let { data, error } = await mk().range(from, from + 999);
+    if (error) return { data: out.length ? out : null, error };
+    out.push(...(data || []));
+    if (!data || data.length < 1000) break;
+  }
+  return { data: out, error: null };
+}
 function ChLogError(where, err) {
   try {
     if (chErrCount >= 5) return;
@@ -5855,7 +5867,7 @@ function ChImportPanel({ uid, onClose }) {
     [added, setAdded] = (0, U.useState)(0),
     stop = (0, U.useRef)(!1);
   (0, U.useEffect)(() => {
-    ze.from("visits").select("place,country,lat,lng").eq("user_id", uid).then(({ data }) => data && setExisting(data));
+    ChAllRows(() => ze.from("visits").select("place,country,lat,lng").eq("user_id", uid).order("id")).then(({ data }) => data && setExisting(data));
     return () => {
       stop.current = !0;
     };
@@ -6283,8 +6295,8 @@ function ChComparePanel({ uid, meId, name, onClose, onOpen }) {
     let alive = !0;
     return (
       (async () => {
-        let { data: a } = await ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", meId),
-          { data: b } = await ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", uid);
+        let { data: a } = await ChAllRows(() => ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", meId).order("id")),
+          { data: b } = await ChAllRows(() => ze.from("visits").select("id, place, country, lat, lng, osm_id").eq("user_id", uid).order("id"));
         if (!alive) return;
         let mine = new Map(),
           theirs = new Map();
@@ -7235,7 +7247,7 @@ function ChStatsPanel({ uid, meId, onClose }) {
     let alive = !0;
     return (
       (async () => {
-        let { data } = await ze.from("visits").select("id, place, country, lat, lng, visited_on, rating, elevation, added, created_at").eq("user_id", uid);
+        let { data } = await ChAllRows(() => ze.from("visits").select("id, place, country, lat, lng, visited_on, rating, elevation, added, created_at").eq("user_id", uid).order("id"));
         alive && setVisits(data || []);
       })(),
       () => {
@@ -7561,7 +7573,7 @@ function ChPlacesPanel({ uid, mine: chMine, onClose }) {
     let alive = !0;
     return (
       (async () => {
-        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        let { data } = await ChAllRows(() => ze.from("visits").select("*").eq("user_id", uid).order("id"));
         alive && chSetVis(data || []);
       })(),
       () => {
@@ -8031,7 +8043,7 @@ function ChBadgesPanel({ uid, meId, onClose }) {
     let alive = !0;
     return (
       (async () => {
-        let { data } = await ze.from("visits").select("*").eq("user_id", uid);
+        let { data } = await ChAllRows(() => ze.from("visits").select("*").eq("user_id", uid).order("id"));
         alive && setVisits(data || []);
       })(),
       () => {
@@ -8273,7 +8285,7 @@ function ChProfile({ uid, meId, onClose, onOpen, onLogout, bell: chBell }) {
           visible = !!fr2 && fr2.status === "accepted";
         }
         if (visible) {
-          let { data: vs } = await ze.from("visits").select("*").eq("user_id", uid);
+          let { data: vs } = await ChAllRows(() => ze.from("visits").select("*").eq("user_id", uid).order("id"));
           alive && setVisits(vs || []);
         }
         alive && setLoading(!1);
@@ -9013,7 +9025,7 @@ function ChPlaceFeed({ place, country, osm, meId, onClose, onOpen }) {
     let alive = !0;
     return (
       (async () => {
-        let { data: vs } = await ze.from("visits").select("id, user_id, place, country, comment, photos, rating, visited_on, created_at").eq("country", country);
+        let { data: vs } = await ChAllRows(() => ze.from("visits").select("id, user_id, place, country, comment, photos, rating, visited_on, created_at").eq("country", country).order("id"));
         let mine = (vs || []).filter((v) => ChKey(v.place, v.country) === key);
         let ids = [...new Set(mine.map((v) => v.user_id))],
           people = new Map();
@@ -9257,11 +9269,9 @@ function n5({ session: e, onLogout: t }) {
   }, [r]),
     (0, U.useEffect)(() => {
       (async () => {
-        let { data: F, error: te } = await ze
-          .from("visits")
-          .select("*")
-          .eq("user_id", e.user.id)
-          .order("place", { ascending: !0 });
+        let { data: F, error: te } = await ChAllRows(() =>
+          ze.from("visits").select("*").eq("user_id", e.user.id).order("place", { ascending: !0 }).order("id"),
+        );
         (te ? D(P(n, "err_load_list")) : c(F || []), f(!1));
       })();
     }, []));
@@ -10745,11 +10755,9 @@ function r5({ friend: e, onBack: t, onOpen: chOpen }) {
     [chFs, chSetFs] = (0, U.useState)(null);
   (0, U.useEffect)(() => {
     (async () => {
-      let { data: v, error: y } = await ze
-        .from("visits")
-        .select("*")
-        .eq("user_id", e.id)
-        .order("place", { ascending: !0 });
+      let { data: v, error: y } = await ChAllRows(() =>
+        ze.from("visits").select("*").eq("user_id", e.id).order("place", { ascending: !0 }).order("id"),
+      );
       (y ? h(P(n, "err_load_places")) : l(v || []), r(!1));
     })();
   }, [e.id]);
@@ -12291,7 +12299,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadges, ChBigNum, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadges, ChBigNum, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChAllRows, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {

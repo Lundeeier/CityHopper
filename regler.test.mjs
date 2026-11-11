@@ -377,3 +377,64 @@ test("ChAllRows henter mer enn 1000 rader i biter", async () => {
   assert.equal(data.length, 2345);
   assert.deepEqual(calls, [[0, 999], [1000, 1999], [2000, 2999]]);
 });
+
+// Regel: betaling (støtte, medlemskap, grense på 25 steder) er gjort klar, men skal være AV til Kristian sier fra.
+test("betaling er av: ingen knapper og ingen grense", async () => {
+  assert.equal(R.CH_PAY_ON, false);
+  assert.equal(R.ChPayAvailable(), false);
+  assert.equal(await R.ChLimitBlocked("uid", 1), false);
+});
+test("betaling vises bare i Play-appen (Digital Goods API), aldri på nettsiden", () => {
+  const play = { getDigitalGoodsService: () => {}, PaymentRequest: function () {} };
+  assert.equal(R.ChPayAvailable(true, play), true);
+  assert.equal(R.ChPayAvailable(true, {}), false);
+  assert.equal(R.ChPayAvailable(false, play), false);
+});
+test("gratis gir maks 25 steder, medlemmer har ingen grense", () => {
+  assert.equal(R.CH_FREE_LIMIT, 25);
+  assert.equal(R.ChLimitHit(24, false), false);
+  assert.equal(R.ChLimitHit(25, false), true);
+  assert.equal(R.ChLimitHit(1200, false), true);
+  assert.equal(R.ChLimitHit(1200, true), false);
+  assert.equal(R.ChLimitHit(20, false, 6), true);
+  assert.equal(R.ChLimitHit(20, false, 5), false);
+});
+test("beløp og priser: 25/50/100 + 250/500, og 19 kr/mnd og 149 kr/år", () => {
+  assert.equal(R.CH_PAY_GIFTS.map((x) => x.kr).join(), "25,50,100,250,500");
+  assert.equal(R.CH_PAY_GIFTS.filter((x) => x.more).map((x) => x.kr).join(), "250,500");
+  assert.equal(R.CH_PAY_SUBS.map((x) => x.kr).join(), "19,149");
+});
+test("betalingstekster finnes på alle sju språk", () => {
+  const keys = ["pay_support", "pay_support_text", "pay_other", "pay_via", "pay_thanks", "pay_failed", "pay_member", "pay_member_text", "pay_month", "pay_year", "pay_is_member", "pay_limit"];
+  for (const lang of ["no", "en", "nl", "de", "sv", "da", "es"]) for (const k of keys) assert.ok(R.LANGS[lang][k], `${lang}.${k} mangler`);
+  assert.equal(R.P("no", "pay_limit", { n: 25 }), "Gratis gir plass til 25 steder. Bli medlem under Innstillinger for å legge til flere.");
+});
+test("støttepanelet: 25/50/100, «Annet beløp» gir 250/500, kjøp gir takk", async () => {
+  const log = [];
+  w.getDigitalGoodsService = async () => ({
+    getDetails: async (ids) => ids.map((id) => ({ itemId: id, price: { currency: "NOK", value: id.split("_")[1] } })),
+    listPurchases: async () => [],
+    consume: async (t) => log.push("consume " + t),
+  });
+  w.PaymentRequest = function (m) {
+    this.show = async () => ({ details: { purchaseToken: "tok-" + m[0].data.sku }, complete: async () => log.push("complete") });
+  };
+  const el = w.document.createElement("div");
+  w.document.body.appendChild(el);
+  R.mountPay(el, { mode: "gift", onClose() {} });
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  await wait(80);
+  const labels = () => [...el.querySelectorAll("button")].map((b) => b.textContent);
+  const has = (t) => labels().some((l) => l.replace(/\s/g, " ").includes(t));
+  assert.ok(has("25") && has("50") && has("100"), labels().join("|"));
+  assert.ok(!has("250") && !has("500"), "250/500 skal være skjult først");
+  [...el.querySelectorAll("button")].at(-1).click();
+  await wait(50);
+  assert.ok(has("250") && has("500"), labels().join("|"));
+  [...el.querySelectorAll("button")].find((b) => /\b25\b/.test(b.textContent.replace(/\s/g, " "))).click();
+  await wait(80);
+  assert.equal(log.join(), "consume tok-stott_25,complete");
+  assert.ok(["no", "en"].some((l) => el.textContent.includes(R.P(l, "pay_thanks"))), el.textContent);
+  delete w.getDigitalGoodsService;
+  delete w.PaymentRequest;
+});

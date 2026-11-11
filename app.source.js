@@ -851,6 +851,18 @@ var O = {
       report_sent: "Takk. Rapporten er sendt.",
       report_failed: "Kunne ikke sende rapporten.",
       report_limit: "Du har sendt mange rapporter. Prøv igjen om en time.",
+      pay_support: "Støtt CityHopper",
+      pay_support_text: "Appen er gratis og uten reklame. Et bidrag hjelper med drift og nye funksjoner.",
+      pay_other: "Annet beløp",
+      pay_via: "Betaling skjer trygt via Google Play",
+      pay_thanks: "Tusen takk for støtten!",
+      pay_failed: "Betalingen ble ikke gjennomført.",
+      pay_member: "Medlemskap",
+      pay_member_text: "Som medlem kan du logge så mange steder du vil, og du støtter appen.",
+      pay_month: "{price} per måned",
+      pay_year: "{price} per år",
+      pay_is_member: "Du er medlem. Takk!",
+      pay_limit: "Gratis gir plass til {n} steder. Bli medlem under Innstillinger for å legge til flere.",
       report_details: "Forklar kort hva som er galt (valgfritt)",
       report_send: "Send rapport",
       block_user: "Blokker bruker",
@@ -1240,6 +1252,18 @@ var O = {
       report_sent: "Thanks. The report has been sent.",
       report_failed: "Could not send the report.",
       report_limit: "You have sent many reports. Try again in an hour.",
+      pay_support: "Support CityHopper",
+      pay_support_text: "The app is free and has no ads. A contribution helps with running costs and new features.",
+      pay_other: "Other amount",
+      pay_via: "Payment is handled securely by Google Play",
+      pay_thanks: "Thank you for your support!",
+      pay_failed: "The payment was not completed.",
+      pay_member: "Membership",
+      pay_member_text: "As a member you can log as many places as you like, and you support the app.",
+      pay_month: "{price} per month",
+      pay_year: "{price} per year",
+      pay_is_member: "You are a member. Thank you!",
+      pay_limit: "The free version has room for {n} places. Become a member in Settings to add more.",
       report_details: "Briefly explain what is wrong (optional)",
       report_send: "Send report",
       block_user: "Block user",
@@ -1609,6 +1633,18 @@ var O = {
       report_sent: "Bedankt. De melding is verstuurd.",
       report_failed: "De melding kon niet worden verstuurd.",
       report_limit: "Je hebt veel meldingen verstuurd. Probeer het over een uur opnieuw.",
+      pay_support: "Steun CityHopper",
+      pay_support_text: "De app is gratis en zonder advertenties. Een bijdrage helpt met de kosten en nieuwe functies.",
+      pay_other: "Ander bedrag",
+      pay_via: "Betaling verloopt veilig via Google Play",
+      pay_thanks: "Hartelijk dank voor je steun!",
+      pay_failed: "De betaling is niet voltooid.",
+      pay_member: "Lidmaatschap",
+      pay_member_text: "Als lid kun je zoveel plaatsen loggen als je wilt, en je steunt de app.",
+      pay_month: "{price} per maand",
+      pay_year: "{price} per jaar",
+      pay_is_member: "Je bent lid. Bedankt!",
+      pay_limit: "De gratis versie heeft ruimte voor {n} plaatsen. Word lid via Instellingen om er meer toe te voegen.",
       report_details: "Leg kort uit wat er mis is (optioneel)",
       report_send: "Melding versturen",
       block_user: "Gebruiker blokkeren",
@@ -1973,6 +2009,18 @@ var O = {
       report_sent: "Danke. Die Meldung wurde gesendet.",
       report_failed: "Die Meldung konnte nicht gesendet werden.",
       report_limit: "Du hast viele Meldungen gesendet. Versuche es in einer Stunde erneut.",
+      pay_support: "CityHopper unterstützen",
+      pay_support_text: "Die App ist kostenlos und ohne Werbung. Ein Beitrag hilft beim Betrieb und bei neuen Funktionen.",
+      pay_other: "Anderer Betrag",
+      pay_via: "Die Zahlung läuft sicher über Google Play",
+      pay_thanks: "Vielen Dank für deine Unterstützung!",
+      pay_failed: "Die Zahlung wurde nicht abgeschlossen.",
+      pay_member: "Mitgliedschaft",
+      pay_member_text: "Als Mitglied kannst du so viele Orte loggen, wie du willst, und du unterstützt die App.",
+      pay_month: "{price} pro Monat",
+      pay_year: "{price} pro Jahr",
+      pay_is_member: "Du bist Mitglied. Danke!",
+      pay_limit: "Die kostenlose Version bietet Platz für {n} Orte. Werde in den Einstellungen Mitglied, um mehr hinzuzufügen.",
       report_details: "Erkl\u00e4re kurz, was falsch ist (optional)",
       report_send: "Meldung senden",
       block_user: "Nutzer blockieren",
@@ -2337,6 +2385,18 @@ var O = {
       report_sent: "Tack. Rapporten har skickats.",
       report_failed: "Rapporten kunde inte skickas.",
       report_limit: "Du har skickat många rapporter. Försök igen om en timme.",
+      pay_support: "Stöd CityHopper",
+      pay_support_text: "Appen är gratis och utan reklam. Ett bidrag hjälper till med drift och nya funktioner.",
+      pay_other: "Annat belopp",
+      pay_via: "Betalningen sker säkert via Google Play",
+      pay_thanks: "Stort tack för ditt stöd!",
+      pay_failed: "Betalningen genomfördes inte.",
+      pay_member: "Medlemskap",
+      pay_member_text: "Som medlem kan du logga hur många platser du vill, och du stöder appen.",
+      pay_month: "{price} per månad",
+      pay_year: "{price} per år",
+      pay_is_member: "Du är medlem. Tack!",
+      pay_limit: "Gratisversionen har plats för {n} platser. Bli medlem under Inställningar för att lägga till fler.",
       report_details: "F\u00f6rklara kort vad som \u00e4r fel (valfritt)",
       report_send: "Skicka rapport",
       block_user: "Blockera anv\u00e4ndare",
@@ -2701,6 +2761,18 @@ var O = {
       report_sent: "Tak. Rapporten er sendt.",
       report_failed: "Rapporten kunne ikke sendes.",
       report_limit: "Du har sendt mange rapporter. Prøv igen om en time.",
+      pay_support: "Støt CityHopper",
+      pay_support_text: "Appen er gratis og uden reklamer. Et bidrag hjælper med drift og nye funktioner.",
+      pay_other: "Andet beløb",
+      pay_via: "Betalingen sker sikkert via Google Play",
+      pay_thanks: "Tusind tak for støtten!",
+      pay_failed: "Betalingen blev ikke gennemført.",
+      pay_member: "Medlemskab",
+      pay_member_text: "Som medlem kan du logge så mange steder, du vil, og du støtter appen.",
+      pay_month: "{price} pr. måned",
+      pay_year: "{price} pr. år",
+      pay_is_member: "Du er medlem. Tak!",
+      pay_limit: "Gratisversionen har plads til {n} steder. Bliv medlem under Indstillinger for at tilføje flere.",
       report_details: "Forklar kort hvad der er galt (valgfrit)",
       report_send: "Send rapport",
       block_user: "Bloker bruger",
@@ -3068,6 +3140,18 @@ var O = {
       report_sent: "Gracias. La denuncia se ha enviado.",
       report_failed: "No se pudo enviar la denuncia.",
       report_limit: "Has enviado muchas denuncias. Inténtalo de nuevo en una hora.",
+      pay_support: "Apoya CityHopper",
+      pay_support_text: "La app es gratis y sin anuncios. Una aportación ayuda con los costes y las nuevas funciones.",
+      pay_other: "Otra cantidad",
+      pay_via: "El pago se realiza de forma segura con Google Play",
+      pay_thanks: "¡Muchas gracias por tu apoyo!",
+      pay_failed: "El pago no se ha completado.",
+      pay_member: "Suscripción",
+      pay_member_text: "Como miembro puedes registrar todos los lugares que quieras y apoyas la app.",
+      pay_month: "{price} al mes",
+      pay_year: "{price} al año",
+      pay_is_member: "Eres miembro. ¡Gracias!",
+      pay_limit: "La versión gratuita tiene espacio para {n} lugares. Hazte miembro en Ajustes para añadir más.",
       report_details: "Explica brevemente qué ocurre (opcional)",
       report_send: "Enviar denuncia",
       block_user: "Bloquear usuario",
@@ -5918,6 +6002,7 @@ function ChImportPanel({ uid, onClose }) {
   async function save() {
     let sel = items.filter((x) => x.on);
     if (!sel.length) return;
+    if (await ChLimitBlocked(uid, sel.length)) return (setErr(P(lang, "pay_limit", { n: CH_FREE_LIMIT })), setStage("pick"));
     setStage("save");
     let rows = sel.map((x) => ({
         place: x.place,
@@ -6008,6 +6093,124 @@ function ChImportPanel({ uid, onClose }) {
 
 
 /* Privat oenskeliste: steder man vil til. Bare eieren ser den (RLS). */
+/* Betaling via Google Play (Digital Goods API i TWA-appen). Alt er AV til CH_PAY_ON settes til true.
+   Før det slås på: produktene under må finnes i Play Console, Play Billing må være på i TWA-bygget,
+   og abonnement må bekreftes på serveren (ellers refunderer Google etter 3 dager). Se ENDRINGER_NOV_2026.md. */
+var CH_PAY_ON = !1,
+  CH_FREE_LIMIT = 25,
+  CH_PAY_METHOD = "https://play.google.com/billing",
+  CH_PAY_GIFTS = [
+    { id: "stott_25", kr: 25 },
+    { id: "stott_50", kr: 50 },
+    { id: "stott_100", kr: 100 },
+    { id: "stott_250", kr: 250, more: !0 },
+    { id: "stott_500", kr: 500, more: !0 },
+  ],
+  CH_PAY_SUBS = [
+    { id: "medlem_mnd", kr: 19, key: "pay_month" },
+    { id: "medlem_aar", kr: 149, key: "pay_year" },
+  ];
+/* Betaling finnes bare i Play-appen (der nettleseren har Digital Goods API), aldri på nettsiden. */
+function ChPayAvailable(on = CH_PAY_ON, w = typeof window < "u" ? window : {}) {
+  return !!on && typeof w.getDigitalGoodsService == "function" && typeof w.PaymentRequest == "function";
+}
+/* Gratis: maks CH_FREE_LIMIT steder. Gjelder alle likt; de som har flere fra før beholder dem, men kan ikke legge til. */
+function ChLimitHit(count, member, add = 1, limit = CH_FREE_LIMIT) {
+  return !member && count + add > limit;
+}
+async function ChIsMember() {
+  if (!ChPayAvailable()) return !1;
+  try {
+    let list = await (await window.getDigitalGoodsService(CH_PAY_METHOD)).listPurchases();
+    return list.some((p) => CH_PAY_SUBS.some((x) => x.id === p.itemId));
+  } catch (e) {
+    return (ChLogError("pay_member", e), !1);
+  }
+}
+/* true = stopp, gratisgrensen er nådd. Alltid false når betaling er av eller utenfor Play-appen. */
+async function ChLimitBlocked(uid, add = 1) {
+  if (!ChPayAvailable()) return !1;
+  let { count, error } = await ze.from("visits").select("id", { count: "exact", head: !0 }).eq("user_id", uid);
+  if (error) return (ChLogError("pay_limit", error), !1);
+  return ChLimitHit(count || 0, await ChIsMember(), add);
+}
+async function ChPayBuy(sku, consume) {
+  let req = new window.PaymentRequest([{ supportedMethods: CH_PAY_METHOD, data: { sku } }], { total: { label: "Total", amount: { currency: "NOK", value: "0" } } }),
+    res = await req.show(),
+    token = res.details && res.details.purchaseToken;
+  consume && token && (await (await window.getDigitalGoodsService(CH_PAY_METHOD)).consume(token));
+  await res.complete("success");
+  return token;
+}
+function ChPayPanel({ mode, onClose }) {
+  let [lang] = Un(),
+    [more, setMore] = (0, U.useState)(!1),
+    [msg, setMsg] = (0, U.useState)(""),
+    [busy, setBusy] = (0, U.useState)(!1),
+    [member, setMember] = (0, U.useState)(!1),
+    [prices, setPrices] = (0, U.useState)({}),
+    gift = mode === "gift",
+    items = gift ? CH_PAY_GIFTS : CH_PAY_SUBS;
+  (0, U.useEffect)(() => {
+    let alive = !0;
+    (async () => {
+      try {
+        let svc = await window.getDigitalGoodsService(CH_PAY_METHOD),
+          det = await svc.getDetails(items.map((x) => x.id)),
+          m = {};
+        det.forEach((d) => {
+          try {
+            m[d.itemId] = new Intl.NumberFormat({ no: "nb-NO", en: "en-GB", nl: "nl-NL", de: "de-DE", sv: "sv-SE", da: "da-DK", es: "es-ES" }[lang] || "en-GB", { style: "currency", currency: d.price.currency, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(d.price.value);
+          } catch {}
+        });
+        alive && setPrices(m);
+      } catch (e) {
+        ChLogError("pay_details", e);
+      }
+      gift || ChIsMember().then((v) => alive && setMember(v));
+    })();
+    return () => {
+      alive = !1;
+    };
+  }, []);
+  let price = (x) => prices[x.id] || x.kr + " kr";
+  async function buy(x) {
+    if (busy) return;
+    setBusy(!0);
+    setMsg("");
+    try {
+      await ChPayBuy(x.id, gift);
+      setMsg(P(lang, "pay_thanks"));
+      gift || setMember(!0);
+    } catch (e) {
+      (e && e.name === "AbortError") || (ChLogError("pay_buy", e), setMsg(P(lang, "pay_failed")));
+    }
+    setBusy(!1);
+  }
+  let btn = (x, label) => (0, T.jsx)("button", { className: "ch-secondary", disabled: busy, onClick: () => buy(x), style: { minHeight: 48, fontSize: 16 }, children: label }, x.id);
+  return (0, T.jsxs)(ChPanel, {
+    title: P(lang, gift ? "pay_support" : "pay_member"),
+    onClose,
+    children: [
+      (0, T.jsx)("p", { style: { color: O.sub, fontSize: 15, marginTop: 0 }, children: P(lang, gift ? "pay_support_text" : "pay_member_text") }),
+      member && (0, T.jsx)("p", { style: { color: O.accent, fontSize: 15 }, children: P(lang, "pay_is_member") }),
+      (0, T.jsxs)("div", {
+        style: { display: "grid", gridTemplateColumns: gift ? "1fr 1fr" : "1fr", gap: 8 },
+        children: gift
+          ? [
+              ...items.filter((x) => !x.more || more).map((x) => btn(x, price(x))),
+              !more && (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setMore(!0), style: { minHeight: 48 }, children: P(lang, "pay_other") }, "more"),
+            ]
+          : member
+            ? []
+            : items.map((x) => btn(x, P(lang, x.key, { price: price(x) }))),
+      }),
+      msg && (0, T.jsx)("p", { role: "status", style: { color: O.text, fontSize: 15, marginTop: 14 }, children: msg }),
+      (0, T.jsx)("p", { style: { color: O.sub, fontSize: 13, textAlign: "center", marginTop: 14 }, children: P(lang, "pay_via") }),
+    ],
+  });
+}
+
 function ChWishPanel({ uid, onClose }) {
   let [lang] = Un(),
     [rows, setRows] = (0, U.useState)(null),
@@ -6047,6 +6250,7 @@ function ChWishPanel({ uid, onClose }) {
     setRows((a) => a.filter((x) => x.id !== r.id));
   }
   async function been(r) {
+    if (await ChLimitBlocked(uid)) return setMsg(P(lang, "pay_limit", { n: CH_FREE_LIMIT }));
     let { error } = await ze.from("visits").insert({
       place: r.place,
       country: r.country,
@@ -6125,7 +6329,8 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
     [note, setNote] = (0, U.useState)(""),
     [push, setPush] = (0, U.useState)(ChPushState()),
     [chImp, setChImp] = (0, U.useState)(!1),
-    [chWish, setChWish] = (0, U.useState)(!1);
+    [chWish, setChWish] = (0, U.useState)(!1),
+    [chPay, setChPay] = (0, U.useState)("");
   async function chShare() {
     if (!meName) return;
     let url = ChInviteLink(meName);
@@ -6252,6 +6457,9 @@ function ChSettings({ meId, meName, onClose, onLogout }) {
         }),
       (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChImp(!0), style: { width: "100%", marginTop: 14 }, children: P(lang, "import_btn") }),
       (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChWish(!0), style: { width: "100%", marginTop: 14 }, children: P(lang, "wish_title") }),
+      ChPayAvailable() && (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChPay("gift"), style: { width: "100%", marginTop: 14 }, children: P(lang, "pay_support") }),
+      ChPayAvailable() && (0, T.jsx)("button", { className: "ch-secondary", onClick: () => setChPay("member"), style: { width: "100%", marginTop: 14 }, children: P(lang, "pay_member") }),
+      chPay && (0, T.jsx)(ChPayPanel, { mode: chPay, onClose: () => setChPay("") }),
       chWish && (0, T.jsx)(ChWishPanel, { uid: meId, onClose: () => setChWish(!1) }),
       chImp && (0, T.jsx)(ChImportPanel, { uid: meId, onClose: () => setChImp(!1) }),
       (0, T.jsx)(ChBlockedList, { lang, meId }),
@@ -9286,6 +9494,7 @@ function n5({ session: e, onLogout: t }) {
       l.some((Hn) => ChKeyOf(Hn) === ChKeyOf({ place: gt, country: dn, lat: Se, lng: at }))
     )
       return P(n, "err_already_logged", { place: gt });
+    if (await ChLimitBlocked(e.user.id)) return P(n, "pay_limit", { n: CH_FREE_LIMIT });
     if (chO && Se != null && at != null) {
       let chC2 = await ChCenterOf(chO, Se, at);
       chC2 && ((Se = chC2.lat), (at = chC2.lng));
@@ -12299,7 +12508,7 @@ function f5() {
 /* Testkrok: tester (regler.test.mjs) setter window.__CH_TEST = {} før appen lastes. Gjør ingenting ellers. */
 typeof window < "u" &&
   window.__CH_TEST &&
-  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadges, ChBigNum, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, ChLinked, ChInApp, ChAllRows, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChRegName });
+  Object.assign(window.__CH_TEST, { P, LANGS: _c, ChBadges, ChBigNum, ChMergedMuni, ChBadgeMapSvg, ChBadgeEmoji, mount: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChBadgeCelebrate, props)), e5, f8, mountPay: (el, props) => (0, r8.createRoot)(el).render((0, T.jsx)(ChPayPanel, props)), ChLinked, ChInApp, ChAllRows, ChPayAvailable, ChLimitHit, ChLimitBlocked, CH_PAY_ON, CH_FREE_LIMIT, CH_PAY_GIFTS, CH_PAY_SUBS, ChPlaceFrom, ChPostName, ChNameChoice, ChPostOk, ChKey, ChFold, d8, ChIsAdmin, ChRegName });
 function ChNetBanner() {
   let [s, setS] = (0, U.useState)(typeof navigator < "u" && navigator.onLine === !1 ? "offline" : Ch_NET);
   (0, U.useEffect)(() => {
